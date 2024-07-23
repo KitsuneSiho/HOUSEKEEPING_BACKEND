@@ -1,11 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,6 +27,4 @@ public class Comment {
 
     @Column(nullable = false)
     private LocalDateTime commentCreatedDate = LocalDateTime.now();
-
-    // Getters and Setters
 }

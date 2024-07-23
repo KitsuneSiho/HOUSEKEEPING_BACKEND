@@ -1,11 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,12 +15,12 @@ public class Message {
     private Long messageId;
 
     @ManyToOne
-    @JoinColumn(name = "messageSenderId", nullable = false)
-    private User messageSender;
+    @JoinColumn(name = "chatRoomId", nullable = false)
+    private ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(name = "messageReceiverId", nullable = false)
-    private User messageReceiver;
+    @JoinColumn(name = "messageSenderId", nullable = false)
+    private User messageSender;
 
     @Column(nullable = false)
     private String messageContent;
@@ -34,6 +30,4 @@ public class Message {
 
     @Column(nullable = false)
     private boolean messageIsRead = false;
-
-    // Getters and Setters
 }

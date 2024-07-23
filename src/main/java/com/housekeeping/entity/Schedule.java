@@ -1,11 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,4 +29,7 @@ public class Schedule {
 
     @Column(nullable = false)
     private boolean scheduleIsChecked = false;
+
+    @Column(nullable = false)
+    private boolean scheduleIsAlarm = true;
 }
