@@ -1,11 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,7 +26,11 @@ public class Guestbook {
     private String guestbookContent;
 
     @Column(nullable = false)
-    private LocalDateTime guestbookTimestamp = LocalDateTime.now();
+    private boolean guestbookIsSecret = false;
 
-    // Getters and Setters
+    @Column(nullable = false)
+    private boolean guestbookIsRead = false;
+
+    @Column(nullable = false)
+    private LocalDateTime guestbookTimestamp = LocalDateTime.now();
 }
