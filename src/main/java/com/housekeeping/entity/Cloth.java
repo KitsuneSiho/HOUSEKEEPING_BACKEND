@@ -1,10 +1,8 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.enums.ClothSeason;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
@@ -29,10 +27,9 @@ public class Cloth {
     @Column(nullable = false)
     private String clothColor;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String clothMaterial;
+    private ClothSeason clothSeason;
 
     private String clothCustomTag;
-
-    // Getters and Setters
 }

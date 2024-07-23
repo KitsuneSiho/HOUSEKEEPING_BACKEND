@@ -1,10 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
@@ -24,11 +21,6 @@ public class FurniturePlacement {
     @JoinColumn(name = "furnitureId", nullable = false)
     private Furniture furniture;
 
-    @Column(nullable = false, columnDefinition = "JSON")
+    @Column(columnDefinition = "json", nullable = false)
     private String placementLocation;
-
-    @Column(nullable = false)
-    private int placementCleaningPeriod;
-
-    // Getters and Setters
 }

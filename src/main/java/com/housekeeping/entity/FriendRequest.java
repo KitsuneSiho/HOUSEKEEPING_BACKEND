@@ -2,11 +2,7 @@ package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.RequestStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,6 +29,4 @@ public class FriendRequest {
 
     @Column(nullable = false)
     private LocalDateTime requestDate = LocalDateTime.now();
-
-    // Getters and Setters
 }

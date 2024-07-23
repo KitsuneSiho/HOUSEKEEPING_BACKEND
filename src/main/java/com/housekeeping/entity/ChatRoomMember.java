@@ -1,27 +1,26 @@
 package com.housekeeping.entity;
 
-import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "chat_room_member", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"chatRoomId", "userId"})
+})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Room {
+public class ChatRoomMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    private Long chatRoomMemberId;
+
+    @ManyToOne
+    @JoinColumn(name = "chatRoomId", nullable = false)
+    private ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoomType roomType;
-
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private int roomPollution = 0;
 }
