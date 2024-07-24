@@ -1,10 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
@@ -24,6 +21,4 @@ public class LevelEXPTable {
 
     @Column(nullable = false)
     private int levelRequireEXP;
-
-    // Getters and Setters
 }

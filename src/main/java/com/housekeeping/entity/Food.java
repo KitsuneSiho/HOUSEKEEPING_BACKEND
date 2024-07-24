@@ -1,11 +1,8 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.enums.FoodCategory;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,10 +22,13 @@ public class Food {
     @Column(nullable = false)
     private String foodName;
 
+    @Enumerated(EnumType.STRING)
+    private FoodCategory foodCategory;
+
     @Column(nullable = false)
     private int foodQuantity = 1;
 
-    private LocalDateTime foodExpirationDate;
+    private String foodMemo;
 
-    // Getters and Setters
+    private LocalDateTime foodExpirationDate;
 }
