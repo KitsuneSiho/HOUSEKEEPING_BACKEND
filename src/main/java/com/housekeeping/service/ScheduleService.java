@@ -15,11 +15,6 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    // 특정 날짜와 여러 roomId의 스케줄을 가져오는 메서드
-    public List<Schedule> getSchedulesByDateAndRooms(LocalDateTime date, List<Long> roomIds) {
-        return scheduleRepository.findByScheduleDateAndRoomIdIn(date, roomIds);
-    }
-
     // 특정 날짜의 스케줄 수정
     public Schedule updateSchedule(Long scheduleId, Schedule updatedSchedule) {
         if (scheduleRepository.existsById(scheduleId)) {
