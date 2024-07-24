@@ -1,6 +1,7 @@
 package com.housekeeping.service;
 
 import com.housekeeping.entity.ChatRoom;
+import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.entity.Message;
 import com.housekeeping.entity.Room;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +11,17 @@ import java.util.List;
 @Transactional
 public interface ChatService {
 
+    ChatRoom getChatRoomById(Long ChatRoomId);
+
     List<ChatRoom> getChatRoomsByUserId(Long userId);
 
-    Long saveChatRoom(ChatRoom chatRoom);
+    ChatRoom saveChatRoom(ChatRoom chatRoom);
 
-    Long inviteUser(Long chatRoomId, Long userId);
+    ChatRoomMember inviteUser(Long chatRoomId, Long userId);
 
-    String quitChatRoom(Long chatRoomId, Long userId);
+    void quitChatRoom(Long chatRoomId, Long userId);
 
-    List<Message> getMessagesByChatRoomId(Long charRoomId);
+    List<Message> getMessagesByChatRoomId(Long chatRoomId);
 
-    Long saveMessage(Message message);
+    Message saveMessage(Message message);
 }

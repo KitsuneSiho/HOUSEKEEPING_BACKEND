@@ -1,8 +1,6 @@
 package com.housekeeping.service.implement;
 
-import com.housekeeping.entity.ChatRoom;
-import com.housekeeping.entity.Message;
-import com.housekeeping.entity.Room;
+import com.housekeeping.entity.*;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.repository.MessageRepository;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -24,33 +21,46 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomMemberRepository chatRoomMemberRepository;
 
     @Override
+    public ChatRoom getChatRoomById(Long id) {
+        return chatRoomRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public List<ChatRoom> getChatRoomsByUserId(Long userId) {
 
         return chatRoomMemberRepository.findChatRoomsByUserId(userId);
     }
 
     @Override
-    public Long saveChatRoom(ChatRoom chatRoom) {
-        return 0L;
+    public ChatRoom saveChatRoom(ChatRoom chatRoom) {
+
+        return chatRoomRepository.save(chatRoom);
     }
 
     @Override
-    public Long inviteUser(Long chatRoomId, Long userId) {
-        return 0L;
+    public ChatRoomMember inviteUser(Long chatRoomId, Long userId) {
+
+        ChatRoomMember chatRoomMember = ChatRoomMember.builder().chatRoom(ChatRoom.builder().chatRoomId(chatRoomId).build())
+                .user(User.builder().userId(userId).build()).build();
+
+        return chatRoomMemberRepository.save(chatRoomMember);
     }
 
     @Override
-    public String quitChatRoom(Long chatRoomId, Long userId) {
-        return "";
+    public void quitChatRoom(Long chatRoomId, Long userId) {
+
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findChatRoomMemberByChatRoomIdAndUserId(chatRoomId, userId);
+
+        chatRoomMemberRepository.delete(chatRoomMember);
     }
 
     @Override
-    public List<Message> getMessagesByChatRoomId(Long charRoomId) {
-        return List.of();
+    public List<Message> getMessagesByChatRoomId(Long chatRoomId) {
+        return messageRepository.getMessagesByChatRoomId(chatRoomId);
     }
 
     @Override
-    public Long saveMessage(Message message) {
-        return 0L;
+    public Message saveMessage(Message message) {
+        return messageRepository.save(message);
     }
 }

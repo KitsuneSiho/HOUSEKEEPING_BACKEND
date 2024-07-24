@@ -1,6 +1,7 @@
 package com.housekeeping.repository.implement;
 
 import com.housekeeping.entity.ChatRoom;
+import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.repository.custom.ChatRoomMemberRepositoryCustom;
 import com.housekeeping.entity.QChatRoomMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,13 +16,23 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
 
     private final JPAQueryFactory queryFactory;
 
+    QChatRoomMember qChatRoomMember = QChatRoomMember.chatRoomMember;
+
     @Override
     public List<ChatRoom> findChatRoomsByUserId(Long userId) {
-        QChatRoomMember qChatRoomMember = QChatRoomMember.chatRoomMember;
 
         return queryFactory.select(qChatRoomMember.chatRoom)
                            .from(qChatRoomMember)
                            .where(qChatRoomMember.user.userId.eq(userId))
                            .fetch();
+    }
+
+    @Override
+    public ChatRoomMember findChatRoomMemberByChatRoomIdAndUserId(Long chatRoomId, Long userId) {
+
+        return queryFactory.selectFrom(qChatRoomMember)
+            .where(qChatRoomMember.chatRoom.chatRoomId.eq(chatRoomId)
+                    .and(qChatRoomMember.user.userId.eq(userId)))
+            .fetchOne();
     }
 }
