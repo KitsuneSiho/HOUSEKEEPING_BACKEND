@@ -18,6 +18,9 @@ public class Room {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @Column(nullable = false)
+    private String roomName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoomType roomType;
