@@ -25,15 +25,6 @@ public class GuestBookControllerTest {
     @MockBean
     private GuestBookService guestbookService;
 
-    @Test
-    public void testGetGuestbookList() throws Exception {
-        Mockito.when(guestbookService.findAll()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/guestbook/list"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray());
-    }
 
     @Test
     public void testPostGuestbookWrite() throws Exception {

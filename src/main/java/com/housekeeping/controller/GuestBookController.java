@@ -1,6 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.entity.Guestbook;
+import com.housekeeping.entity.User;
 import com.housekeeping.service.GuestBookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,12 @@ public class GuestBookController {
 
     private final GuestBookService guestbookService;
 
-    // 방명록 조회
-    @GetMapping("/list")
-    public List<Guestbook> guestbookList() {
-        return guestbookService.findAll();
+    // 방 주인의 방명록 조회
+    @GetMapping("/list/{ownerId}")
+    public List<Guestbook> guestbookListByOwner(@PathVariable Long ownerId) {
+        User guestbookOwner = new User();
+        guestbookOwner.setUserId(ownerId);
+        return guestbookService.findByGuestbookOwner(guestbookOwner);
     }
 
     // 방명록 등록
