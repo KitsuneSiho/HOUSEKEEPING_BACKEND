@@ -34,9 +34,23 @@ public class ChatController {
     }
 
     @GetMapping("/room/list")
-    public List<ChatRoom> getChatRooms(@RequestParam("userId") Long userId) {
+    public List<ChatRoomDTO> getChatRooms(@RequestParam("userId") Long userId) {
 
-        return chatService.getChatRoomsByUserId(userId);
+        List<ChatRoom> chatRooms = chatService.getChatRoomsByUserId(userId);
+        List<ChatRoomDTO> chatRoomDTOs = new ArrayList<>();
+
+        for (ChatRoom chatRoom : chatRooms) {
+
+            chatRoomDTOs.add(
+                    ChatRoomDTO.builder()
+                            .chatRoom(chatRoom)
+                            .nickNameList(chatService.findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
+                            .unreadMessageCount(chatService.getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
+                            .build()
+            );
+        }
+
+        return chatRoomDTOs;
     }
 
     @DeleteMapping("/room/quit")
@@ -80,5 +94,25 @@ public class ChatController {
         }
 
         return messageDTOList;
+    }
+
+    @PutMapping("/message/read")
+    public ResponseEntity<String> readMessage(@RequestParam("messageId") Long messageId, @RequestParam("userId") Long userId) {
+
+        chatService.markMessageAsRead(messageId, userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/message/read/all")
+    public ResponseEntity<String> readAllMessages(@RequestParam("roomId") Long roomId, @RequestParam("userId") Long userId) {
+
+        List<Long> readStatusIds = chatService.getUnreadMessageIds(roomId, userId);
+
+        for (Long readStatusId : readStatusIds) {
+            chatService.updateReadStatusTrue(readStatusId);
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

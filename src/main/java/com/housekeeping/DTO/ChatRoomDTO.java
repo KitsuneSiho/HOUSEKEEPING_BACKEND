@@ -13,6 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoomDTO {
+
     private ChatRoom chatRoom;
     private List<Long> userIdList;
+    private List<String> nickNameList;
+    private Long unreadMessageCount;
 }

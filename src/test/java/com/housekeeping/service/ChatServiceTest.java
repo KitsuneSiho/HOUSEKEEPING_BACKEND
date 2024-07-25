@@ -63,7 +63,6 @@ public class ChatServiceTest {
                 .messageSender(User.builder().userId(1L).build())
                 .messageContent("첫번째 메시지")
                 .messageTimestamp(LocalDateTime.now())
-                .messageIsRead(false)
                 .build();
 
         log.info(chatService.saveMessage(message));

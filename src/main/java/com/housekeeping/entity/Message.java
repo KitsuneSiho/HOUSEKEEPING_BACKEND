@@ -27,7 +27,4 @@ public class Message {
 
     @Column(nullable = false)
     private LocalDateTime messageTimestamp = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private boolean messageIsRead = false;
 }

@@ -3,7 +3,6 @@ package com.housekeeping.service;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.entity.Message;
-import com.housekeeping.entity.Room;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,6 +14,8 @@ public interface ChatService {
 
     List<ChatRoom> getChatRoomsByUserId(Long userId);
 
+    List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId);
+
     ChatRoom saveChatRoom(ChatRoom chatRoom);
 
     ChatRoomMember inviteUser(Long chatRoomId, Long userId);
@@ -24,4 +25,12 @@ public interface ChatService {
     List<Message> getMessagesByChatRoomId(Long chatRoomId);
 
     Message saveMessage(Message message);
+
+    void markMessageAsRead(Long messageId, Long userId);
+
+    Long getUnreadMessageCount(Long chatRoomId, Long userId);
+
+    List<Long> getUnreadMessageIds(Long chatRoomId, Long userId);
+
+    void updateReadStatusTrue(Long readStatusId);
 }
