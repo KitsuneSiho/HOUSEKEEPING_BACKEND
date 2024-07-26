@@ -1,12 +1,14 @@
 package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.ChatRoomDTO;
+import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.entity.*;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.repository.MessageReadStatusRepository;
 import com.housekeeping.repository.MessageRepository;
 import com.housekeeping.service.ChatService;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +81,22 @@ public class ChatServiceImpl implements ChatService {
     public List<Message> getMessagesByChatRoomId(Long chatRoomId) {
 
         return messageRepository.getMessagesByChatRoomId(chatRoomId);
+    }
+
+    @Override
+    public MessageDTO getRecentMessageByChatRoomId(Long chatRoomId) {
+
+        Tuple recentMessage = messageRepository.getRecentMessageByChatRoomId(chatRoomId);
+
+        if (recentMessage == null) {
+            return MessageDTO.builder().messageContent("최근 메시지가 없습니다").build();
+        }
+
+        return MessageDTO.builder()
+                .messageId(recentMessage.get(QMessage.message.messageId))
+                .messageContent(recentMessage.get(QMessage.message.messageContent))
+                .messageTimestamp(recentMessage.get(QMessage.message.messageTimestamp))
+                .build();
     }
 
     @Override

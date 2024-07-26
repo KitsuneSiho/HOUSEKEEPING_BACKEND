@@ -89,6 +89,13 @@ public class ChatController {
         return messageDTOList;
     }
 
+    @GetMapping("/message/recent")
+    public MessageDTO getRecentMessages(@RequestParam("chatRoomId") Long chatRoomId) {
+
+//        Message recentMessage = chatService.getRecentMessageByChatRoomId(chatRoomId);
+        return chatService.getRecentMessageByChatRoomId(chatRoomId);
+    }
+
     @PutMapping("/message/read")
     public ResponseEntity<String> readMessage(@RequestParam("messageId") Long messageId, @RequestParam("userId") Long userId) {
 

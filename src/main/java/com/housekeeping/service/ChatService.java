@@ -1,6 +1,7 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.ChatRoomDTO;
+import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.entity.Message;
@@ -24,6 +25,8 @@ public interface ChatService {
     void quitChatRoom(Long chatRoomId, Long userId);
 
     List<Message> getMessagesByChatRoomId(Long chatRoomId);
+
+    MessageDTO getRecentMessageByChatRoomId(Long chatRoomId);
 
     Message saveMessage(Message message);
 
