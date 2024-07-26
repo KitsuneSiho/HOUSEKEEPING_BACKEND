@@ -3,6 +3,8 @@ package com.housekeeping.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -22,4 +24,7 @@ public class Furniture {
 
     @Column(nullable = false)
     private String furnitureType;
+
+    @OneToMany(mappedBy = "furniture", cascade = CascadeType.ALL)
+    private List<FurniturePlacement> furniturePlacements;
 }

@@ -4,6 +4,7 @@ import com.housekeeping.entity.enums.ChatRoomType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -23,4 +24,10 @@ public class ChatRoom {
 
     @Column(nullable = false)
     private LocalDateTime chatRoomCreatedAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<Message> messages;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatRoomMember> chatRoomMembers;
 }

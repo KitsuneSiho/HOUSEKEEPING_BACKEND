@@ -1,5 +1,6 @@
 package com.housekeeping.service.implement;
 
+import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.entity.*;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -29,9 +31,20 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatRoom> getChatRoomsByUserId(Long userId) {
+    public List<ChatRoomDTO> getChatRoomsByUserId(Long userId) {
 
-        return chatRoomMemberRepository.findChatRoomsByUserId(userId);
+        List<ChatRoom> chatRooms = chatRoomMemberRepository.findChatRoomsByUserId(userId);
+
+        return chatRooms.stream()
+                .map(chatRoom -> ChatRoomDTO.builder()
+                        .chatRoomId(chatRoom.getChatRoomId())
+                        .chatRoomName(chatRoom.getChatRoomName())
+                        .chatRoomType(chatRoom.getChatRoomType())
+                        .chatRoomCreatedAt(chatRoom.getChatRoomCreatedAt())
+                        .nickNameList(findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
+                        .unreadMessageCount(getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -95,25 +108,23 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void markMessageAsRead(Long messageId, Long userId) {
 
-//        MessageReadStatus readStatus = messageReadStatusRepository.findByMessage_MessageIdAndUser_UserId(messageId, userId);
-//
-//        if (readStatus != null) {
-//            readStatus.setRead(true);
-//            readStatus.setReadTimestamp(LocalDateTime.now());
-//            messageReadStatusRepository.save(readStatus);
-//        }
+        MessageReadStatus readStatus = messageReadStatusRepository.findByMessageIdAndUserId(messageId, userId);
+
+        if (readStatus != null) {
+            readStatus.setRead(true);
+            readStatus.setReadTimestamp(LocalDateTime.now());
+            messageReadStatusRepository.save(readStatus);
+        }
     }
 
     @Override
     public Long getUnreadMessageCount(Long chatRoomId, Long userId) {
-//        return messageReadStatusRepository.findCountByChatRoomIdAndUserId(chatRoomId, userId);
-        return 0L;
+        return messageReadStatusRepository.countUnreadMessagesByChatRoomIdAndUserId(chatRoomId, userId);
     }
 
     @Override
     public List<Long> getUnreadMessageIds(Long chatRoomId, Long userId) {
-//        return messageReadStatusRepository.findIdsByChatRoomIdAndUserId(chatRoomId, userId);
-        return List.of();
+        return messageReadStatusRepository.findUnreadMessageIdsByChatRoomIdAndUserId(chatRoomId, userId);
     }
 
     @Override
@@ -121,6 +132,7 @@ public class ChatServiceImpl implements ChatService {
 
         MessageReadStatus readStatus = messageReadStatusRepository.findById(readStatusId).orElseThrow();
         readStatus.setRead(true);
+        readStatus.setReadTimestamp(LocalDateTime.now());
         messageReadStatusRepository.save(readStatus);
     }
 }

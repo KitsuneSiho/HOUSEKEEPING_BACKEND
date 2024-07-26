@@ -1,5 +1,6 @@
 package com.housekeeping.service;
 
+import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.entity.Message;
@@ -12,7 +13,7 @@ public interface ChatService {
 
     ChatRoom getChatRoomById(Long ChatRoomId);
 
-    List<ChatRoom> getChatRoomsByUserId(Long userId);
+    List<ChatRoomDTO> getChatRoomsByUserId(Long userId);
 
     List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId);
 

@@ -3,6 +3,7 @@ package com.housekeeping.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -27,4 +28,7 @@ public class Message {
 
     @Column(nullable = false)
     private LocalDateTime messageTimestamp = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
+    private List<MessageReadStatus> messageReadStatuses;
 }

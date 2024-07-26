@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,13 @@ public class ChatController {
     @PostMapping("/room/create")
     public ChatRoom createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
 
-        ChatRoom result = chatService.saveChatRoom(chatRoomDTO.getChatRoom());
+        ChatRoom chatRoom = ChatRoom.builder()
+                .chatRoomName(chatRoomDTO.getChatRoomName())
+                .chatRoomType(chatRoomDTO.getChatRoomType())
+                .chatRoomCreatedAt(LocalDateTime.now())
+                .build();
+
+        ChatRoom result = chatService.saveChatRoom(chatRoom);
 
         for (Long userId : chatRoomDTO.getUserIdList()) {
             chatService.inviteUser(result.getChatRoomId(), userId);
@@ -36,21 +43,7 @@ public class ChatController {
     @GetMapping("/room/list")
     public List<ChatRoomDTO> getChatRooms(@RequestParam("userId") Long userId) {
 
-        List<ChatRoom> chatRooms = chatService.getChatRoomsByUserId(userId);
-        List<ChatRoomDTO> chatRoomDTOs = new ArrayList<>();
-
-        for (ChatRoom chatRoom : chatRooms) {
-
-            chatRoomDTOs.add(
-                    ChatRoomDTO.builder()
-                            .chatRoom(chatRoom)
-                            .nickNameList(chatService.findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
-                            .unreadMessageCount(chatService.getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
-                            .build()
-            );
-        }
-
-        return chatRoomDTOs;
+        return chatService.getChatRoomsByUserId(userId);
     }
 
     @DeleteMapping("/room/quit")
