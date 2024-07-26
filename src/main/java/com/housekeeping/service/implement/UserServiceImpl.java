@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        Optional<User> resultUser = userRepository.findById(id);
-
-        return resultUser.orElseThrow();
+        return userRepository.findById(id).orElse(null);
     }
 }
