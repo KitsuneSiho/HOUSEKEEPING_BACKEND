@@ -4,6 +4,7 @@ import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.Message;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.ChatRoomType;
+import com.housekeeping.repository.ChatRoomMemberRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class ChatServiceTest {
 
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private ChatRoomMemberRepository chatRoomMemberRepository;
 
     @Test
     public void getChatRoomsTest() {
@@ -66,6 +70,14 @@ public class ChatServiceTest {
                 .build();
 
         log.info(chatService.saveMessage(message));
+    }
+
+    @Test
+    public void getChatRoomMembersTest() {
+
+        List<User> users = chatRoomMemberRepository.findUsersByChatRoomId(1L);
+
+        log.info(users);
     }
 
 }

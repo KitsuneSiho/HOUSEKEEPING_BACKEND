@@ -28,7 +28,7 @@ public class ChatController {
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(chatRoomDTO.getChatRoomName())
                 .chatRoomType(chatRoomDTO.getChatRoomType())
-                .chatRoomCreatedAt(LocalDateTime.now())
+                .chatRoomUpdatedAt(LocalDateTime.now())
                 .build();
 
         ChatRoom result = chatService.saveChatRoom(chatRoom);
@@ -62,6 +62,10 @@ public class ChatController {
         message.setMessageSender(userService.getUserById(messageDTO.getMessageSenderId()));
         message.setMessageContent(messageDTO.getMessageContent());
 
+        ChatRoom chatRoom = message.getChatRoom();
+        chatRoom.setChatRoomUpdatedAt(LocalDateTime.now());
+
+        chatService.saveChatRoom(chatRoom);
         chatService.saveMessage(message);
 
         return ResponseEntity.ok().build();
@@ -77,7 +81,7 @@ public class ChatController {
             messageDTOList.add(
                     MessageDTO.builder()
                             .messageId(message.getMessageId())
-                            .messageSenderId(message.getMessageId())
+                            .messageSenderId(message.getMessageSender().getUserId())
                             .messageSenderNickname(message.getMessageSender().getNickname())
                             .chatRoomId(message.getChatRoom().getChatRoomId())
                             .messageContent(message.getMessageContent())
@@ -87,13 +91,6 @@ public class ChatController {
         }
 
         return messageDTOList;
-    }
-
-    @GetMapping("/message/recent")
-    public MessageDTO getRecentMessages(@RequestParam("chatRoomId") Long chatRoomId) {
-
-//        Message recentMessage = chatService.getRecentMessageByChatRoomId(chatRoomId);
-        return chatService.getRecentMessageByChatRoomId(chatRoomId);
     }
 
     @PutMapping("/message/read")

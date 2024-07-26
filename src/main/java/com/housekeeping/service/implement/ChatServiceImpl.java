@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,17 +37,31 @@ public class ChatServiceImpl implements ChatService {
     public List<ChatRoomDTO> getChatRoomsByUserId(Long userId) {
 
         List<ChatRoom> chatRooms = chatRoomMemberRepository.findChatRoomsByUserId(userId);
+        List<ChatRoomDTO> chatRoomDTOS = new ArrayList<>();
 
-        return chatRooms.stream()
-                .map(chatRoom -> ChatRoomDTO.builder()
-                        .chatRoomId(chatRoom.getChatRoomId())
-                        .chatRoomName(chatRoom.getChatRoomName())
-                        .chatRoomType(chatRoom.getChatRoomType())
-                        .chatRoomCreatedAt(chatRoom.getChatRoomCreatedAt())
-                        .nickNameList(findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
-                        .unreadMessageCount(getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
-                        .build())
-                .collect(Collectors.toList());
+        for (ChatRoom chatRoom : chatRooms) {
+
+            Tuple recentMessage = messageRepository.getRecentMessageByChatRoomId(chatRoom.getChatRoomId());
+
+            ChatRoomDTO chatRoomDTO = ChatRoomDTO.builder()
+                    .chatRoomId(chatRoom.getChatRoomId())
+                    .chatRoomName(chatRoom.getChatRoomName())
+                    .chatRoomType(chatRoom.getChatRoomType())
+                    .chatRoomUpdatedAt(chatRoom.getChatRoomUpdatedAt())
+                    .nickNameList(findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
+                    .unreadMessageCount(getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
+                    .build();
+
+            if (recentMessage == null) {
+                chatRoomDTO.setRecentMessage("최근 메시지가 없습니다.");
+            } else {
+                chatRoomDTO.setRecentMessage(recentMessage.get(QMessage.message.messageContent));
+            }
+
+            chatRoomDTOS.add(chatRoomDTO);
+        }
+
+        return chatRoomDTOS;
     }
 
     @Override
