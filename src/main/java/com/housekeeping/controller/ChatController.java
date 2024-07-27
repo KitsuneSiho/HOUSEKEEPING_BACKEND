@@ -23,7 +23,7 @@ public class ChatController {
     private final UserService userService;
 
     @PostMapping("/room/create")
-    public ChatRoom createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(chatRoomDTO.getChatRoomName())
@@ -37,7 +37,9 @@ public class ChatController {
             chatService.inviteUser(result.getChatRoomId(), userId);
         }
 
-        return result;
+        return ChatRoomDTO.builder()
+                .chatRoomId(result.getChatRoomId())
+                .build();
     }
 
     @GetMapping("/room/list")
