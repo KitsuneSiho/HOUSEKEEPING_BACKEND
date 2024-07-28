@@ -9,4 +9,5 @@ import java.util.List;
 public interface FriendService {
 
     List<UserDTO> getFriends(Long userId);
+    List<UserDTO> getOnlineFriends(Long userId);
 }

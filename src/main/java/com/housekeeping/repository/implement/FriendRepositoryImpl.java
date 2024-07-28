@@ -39,4 +39,26 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                 .where(qFriend.friendUser1.userId.eq(userId))
                 .fetch();
     }
+
+    @Override
+    public List<Tuple> fineOnlineFriends1(Long userId) {
+
+        QFriend qFriend = QFriend.friend;
+
+        return jpaQueryFactory.select(qFriend.friendUser1.userId, qFriend.friendUser1.nickname)
+                .from(qFriend)
+                .where(qFriend.friendUser2.userId.eq(userId).and(qFriend.friendUser1.userIsOnline.eq(true)))
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> fineOnlineFriends2(Long userId) {
+
+        QFriend qFriend = QFriend.friend;
+
+        return jpaQueryFactory.select(qFriend.friendUser2.userId, qFriend.friendUser2.nickname)
+                .from(qFriend)
+                .where(qFriend.friendUser1.userId.eq(userId).and(qFriend.friendUser2.userIsOnline.eq(true)))
+                .fetch();
+    }
 }

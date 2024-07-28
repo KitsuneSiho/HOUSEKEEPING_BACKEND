@@ -43,4 +43,28 @@ public class FriendServiceImpl implements FriendService {
         return friendDTOs;
     }
 
+    @Override
+    public List<UserDTO> getOnlineFriends(Long userId) {
+
+        List<Tuple> friendIds1 = friendRepository.fineOnlineFriends1(userId);
+        List<Tuple> friendIds2 = friendRepository.fineOnlineFriends2(userId);
+        List<UserDTO> friendDTOs = new ArrayList<>();
+
+        for (Tuple friend : friendIds1) {
+            friendDTOs.add(UserDTO.builder()
+                    .userId(friend.get(QFriend.friend.friendUser1.userId))
+                    .nickname(friend.get(QFriend.friend.friendUser1.nickname))
+                    .build());
+        }
+
+        for (Tuple friend : friendIds2) {
+            friendDTOs.add(UserDTO.builder()
+                    .userId(friend.get(QFriend.friend.friendUser2.userId))
+                    .nickname(friend.get(QFriend.friend.friendUser2.nickname))
+                    .build());
+        }
+
+        return friendDTOs;
+    }
+
 }

@@ -8,5 +8,7 @@ public interface FriendRepositoryCustom {
 
     List<Tuple> findFriendsByUserId1(Long userId);
     List<Tuple> findFriendsByUserId2(Long userId);
+    List<Tuple> fineOnlineFriends1(Long userId);
+    List<Tuple> fineOnlineFriends2(Long userId);
 
 }
