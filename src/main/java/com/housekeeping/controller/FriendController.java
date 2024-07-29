@@ -1,36 +1,32 @@
 package com.housekeeping.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/friend")
+@RequiredArgsConstructor
 public class FriendController {
 
-    // 친구 목록 확인
+    private final FriendService friendService;
+    private final UserService userService;
+
     @GetMapping("/list")
-    public void friendList() {
+    public List<UserDTO> getFriends(@RequestParam("userId") Long userId) {
 
+        return friendService.getFriends(userId);
     }
 
-    // 닉네임 검색
-    @GetMapping("/search")
-    public void friendSearch() {
+    @GetMapping("/list/online")
+    public List<UserDTO> getFriendsOnline(@RequestParam("userId") Long userId) {
 
+        return friendService.getOnlineFriends(userId);
     }
 
-    // 친구 추가
-    @PostMapping("/add")
-    public void friendAdd() {
+    @GetMapping("/list/online2")
+    public List<UserDTO> getFriendsOnline2(@RequestParam("nickname") String nickname) {
 
+        User user = userService.getUserByNickname(nickname);
+
+        return friendService.getOnlineFriends(user.getUserId());
     }
-
-    // 친구 삭제
-    @DeleteMapping("/delete")
-    public void friendDelete() {
-
-    }
-
-
 }

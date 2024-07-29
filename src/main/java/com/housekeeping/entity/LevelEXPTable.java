@@ -3,6 +3,8 @@ package com.housekeeping.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -21,4 +23,10 @@ public class LevelEXPTable {
 
     @Column(nullable = false)
     private int levelRequireEXP;
+
+    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
+    private List<User> users;
+
+    @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
+    private List<Furniture> furniture;
 }
