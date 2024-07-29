@@ -22,6 +22,7 @@ public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
 
+    // 채팅 방 생성
     @PostMapping("/room/create")
     public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
 
@@ -42,12 +43,14 @@ public class ChatController {
                 .build();
     }
 
+    // 채팅 방 리스트 반환
     @GetMapping("/room/list")
     public List<ChatRoomDTO> getChatRooms(@RequestParam("userId") Long userId) {
 
         return chatService.getChatRoomsByUserId(userId);
     }
 
+    // 채팅 방 나감
     @DeleteMapping("/room/quit")
     public ResponseEntity<String> quitChatRoom(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("userId") Long userId) {
 
@@ -55,6 +58,7 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    // 메시지를 DB에 저장
     @PostMapping("/message/send")
     public ResponseEntity<String> sendMessage(@RequestBody MessageDTO messageDTO) {
 
@@ -73,6 +77,7 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    // 채팅 방의 메시지 목록을 받아옴
     @GetMapping("/message/list")
     public List<MessageDTO> getMessages(@RequestParam("chatRoomId") Long chatRoomId) {
 
@@ -95,6 +100,7 @@ public class ChatController {
         return messageDTOList;
     }
 
+    // 특정 메시지를 특정 유저가 읽음으로 처리
     @PutMapping("/message/read")
     public ResponseEntity<String> readMessage(@RequestParam("messageId") Long messageId, @RequestParam("userId") Long userId) {
 
@@ -103,6 +109,7 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    // 특정 방의 모든 메시지를 특정 유저가 읽음으로 처리
     @PutMapping("/message/read/all")
     public ResponseEntity<String> readAllMessages(@RequestParam("roomId") Long roomId, @RequestParam("userId") Long userId) {
 
