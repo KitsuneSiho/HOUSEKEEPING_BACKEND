@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class MessageReadStatus {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false)
     private boolean isRead = false;

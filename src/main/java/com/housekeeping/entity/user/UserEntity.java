@@ -1,6 +1,6 @@
-package com.housekeeping.entity;
+package com.housekeeping.entity.user;
 
-import com.housekeeping.entity.enums.Role;
+import com.housekeeping.entity.*;
 import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -62,7 +62,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private String role;
 
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
     private List<Message> messages;

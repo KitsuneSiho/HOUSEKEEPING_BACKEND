@@ -1,7 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.UserDTO;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.user.UserEntity;
 import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class FriendController {
     @GetMapping("/list/online2")
     public List<UserDTO> getFriendsOnline2(@RequestParam("nickname") String nickname) {
 
-        User user = userService.getUserByNickname(nickname);
+        UserEntity user = userService.getUserByNickname(nickname);
 
         return friendService.getOnlineFriends(user.getUserId());
     }

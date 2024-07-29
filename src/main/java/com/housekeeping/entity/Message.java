@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "messageSenderId", nullable = false)
-    private User messageSender;
+    private UserEntity messageSender;
 
     @Column(nullable = false)
     private String messageContent;

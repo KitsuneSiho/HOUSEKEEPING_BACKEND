@@ -2,7 +2,7 @@ package com.housekeeping.service;
 
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.Message;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.user.UserEntity;
 import com.housekeeping.entity.enums.ChatRoomType;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import lombok.extern.log4j.Log4j2;
@@ -64,7 +64,7 @@ public class ChatServiceTest {
     public void saveMessageTest() {
         Message message = Message.builder()
                 .chatRoom(ChatRoom.builder().chatRoomId(1L).build())
-                .messageSender(User.builder().userId(1L).build())
+                .messageSender(UserEntity.builder().userId(1L).build())
                 .messageContent("첫번째 메시지")
                 .messageTimestamp(LocalDateTime.now())
                 .build();
@@ -75,7 +75,7 @@ public class ChatServiceTest {
     @Test
     public void getChatRoomMembersTest() {
 
-        List<User> users = chatRoomMemberRepository.findUsersByChatRoomId(1L);
+        List<UserEntity> users = chatRoomMemberRepository.findUsersByChatRoomId(1L);
 
         log.info(users);
     }

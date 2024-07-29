@@ -1,6 +1,7 @@
 package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.ClothSeason;
+import com.housekeeping.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class Cloth {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false)
     private String clothName;

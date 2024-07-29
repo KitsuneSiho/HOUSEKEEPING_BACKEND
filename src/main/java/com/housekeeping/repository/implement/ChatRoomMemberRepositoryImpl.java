@@ -1,6 +1,7 @@
 package com.housekeeping.repository.implement;
 
 import com.housekeeping.entity.*;
+import com.housekeeping.entity.user.UserEntity;
 import com.housekeeping.repository.custom.ChatRoomMemberRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
     }
 
     @Override
-    public List<User> findUsersByChatRoomId(Long chatRoomId) {
+    public List<UserEntity> findUsersByChatRoomId(Long chatRoomId) {
 
         return queryFactory
                 .select(qUser)

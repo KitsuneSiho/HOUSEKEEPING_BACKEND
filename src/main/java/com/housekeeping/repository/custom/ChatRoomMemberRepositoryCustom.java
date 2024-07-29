@@ -2,7 +2,7 @@ package com.housekeeping.repository.custom;
 
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.user.UserEntity;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface ChatRoomMemberRepositoryCustom {
 
     List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId);
 
-    List<User> findUsersByChatRoomId(Long chatRoomId);
+    List<UserEntity> findUsersByChatRoomId(Long chatRoomId);
 }

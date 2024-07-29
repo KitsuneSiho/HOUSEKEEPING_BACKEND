@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,7 @@ public class LevelEXPTable {
     private int levelRequireEXP;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
-    private List<User> users;
+    private List<UserEntity> users;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
     private List<Furniture> furniture;

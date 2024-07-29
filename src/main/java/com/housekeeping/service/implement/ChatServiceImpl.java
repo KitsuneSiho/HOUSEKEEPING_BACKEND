@@ -3,6 +3,7 @@ package com.housekeeping.service.implement;
 import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.entity.*;
+import com.housekeeping.entity.user.UserEntity;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.repository.MessageReadStatusRepository;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -79,7 +79,7 @@ public class ChatServiceImpl implements ChatService {
     public ChatRoomMember inviteUser(Long chatRoomId, Long userId) {
 
         ChatRoomMember chatRoomMember = ChatRoomMember.builder().chatRoom(ChatRoom.builder().chatRoomId(chatRoomId).build())
-                .user(User.builder().userId(userId).build()).build();
+                .user(UserEntity.builder().userId(userId).build()).build();
 
         return chatRoomMemberRepository.save(chatRoomMember);
     }
@@ -119,9 +119,9 @@ public class ChatServiceImpl implements ChatService {
 
         Message savedMessage = messageRepository.save(message);
 
-        List<User> users = chatRoomMemberRepository.findUsersByChatRoomId(message.getChatRoom().getChatRoomId());
+        List<UserEntity> users = chatRoomMemberRepository.findUsersByChatRoomId(message.getChatRoom().getChatRoomId());
 
-        for (User user : users) {
+        for (UserEntity user : users) {
             MessageReadStatus readStatus = MessageReadStatus.builder()
                     .message(savedMessage)
                     .user(user)
