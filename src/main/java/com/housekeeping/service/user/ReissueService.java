@@ -1,6 +1,5 @@
 package com.housekeeping.service.user;
 
-
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.repository.user.RefreshRepository;
 import com.housekeeping.service.util.CookieUtil;
@@ -47,7 +46,8 @@ public class ReissueService {
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
-        String username = jwtUtil.getUsername(refresh);
+        String email = jwtUtil.getEmail(refresh);
+        String provider = jwtUtil.getProvider(refresh);
         String role = jwtUtil.getRole(refresh);
 
         // refresh DB 조회
@@ -59,13 +59,13 @@ public class ReissueService {
         }
 
         // new tokens
-        String newAccess = jwtUtil.createJwt("access", username, role, 60 * 10 * 1000L);
+        String newAccess = jwtUtil.createJwt("access", email, provider, role, 60 * 10 * 1000L);
         Integer expiredS = 60 * 60 * 24;
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, expiredS * 1000L);
+        String newRefresh = jwtUtil.createJwt("refresh", email, provider, role, expiredS * 1000L);
 
         // 기존 refresh DB 삭제, 새로운 refresh 저장
         refreshRepository.deleteByRefresh(refresh);
-        refreshTokenService.saveRefresh(username, expiredS, newRefresh);
+        refreshTokenService.saveRefresh(email, expiredS, newRefresh);
 
         response.setHeader("access", newAccess);
         response.addCookie(CookieUtil.createCookie("refresh", newRefresh, expiredS));

@@ -7,10 +7,13 @@ import lombok.*;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@ToString(exclude = {"users", "furniture"})
+@EqualsAndHashCode(exclude = {"users", "furniture"})
 public class LevelEXPTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

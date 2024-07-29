@@ -1,33 +1,28 @@
 package com.housekeeping.entity.user;
 
 import com.housekeeping.entity.*;
-import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"email", "userPlatform"}),
+                @UniqueConstraint(columnNames = {"email", "provider"}),
                 @UniqueConstraint(columnNames = {"nickname"})
         })
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
+@EqualsAndHashCode(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
-    @Column(nullable = false)
-    private String username;
 
     @Column(nullable = false)
     private String name;
@@ -35,34 +30,23 @@ public class UserEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String nickname;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserPlatform userPlatform;
-
-    @Column(nullable = false)
-    private LocalDateTime userEnrollment = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "levelId", nullable = false)
-    private LevelEXPTable level;
-
-    @Column(nullable = false)
-    private int userEXP = 0;
-
-    @Lob
-    private byte[] userImage;
-
-    @Column(nullable = false)
-    private boolean userIsOnline = false;
 
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private String provider;
+
+    @Column(nullable = false)
+    private String providerId;
+
     @Column(nullable = false)
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "level_id")
+    private LevelEXPTable level;
 
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
     private List<Message> messages;
@@ -102,4 +86,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Room> rooms;
+
+    @Column(nullable = false)
+    private boolean userIsOnline = false;
 }

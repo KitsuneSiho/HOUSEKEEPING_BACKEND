@@ -14,9 +14,9 @@ import java.util.Date;
 public class RefreshTokenService {
     private final RefreshRepository refreshRepository;
     @Transactional
-    public void saveRefresh(String username, Integer expireS, String refresh) {
+    public void saveRefresh(String email, Integer expireS, String refresh) {
         RefreshEntity refreshEntity = RefreshEntity.builder()
-                .username(username)
+                .username(email) // 여기서 username 필드를 email로 사용
                 .refresh(refresh)
                 .expiration(new Date(System.currentTimeMillis() + expireS * 1000L).toString())
                 .build();
