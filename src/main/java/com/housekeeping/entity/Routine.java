@@ -2,10 +2,7 @@ package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.RoutineFrequency;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
@@ -22,13 +19,10 @@ public class Routine {
     private Room room;
 
     @Column(nullable = false)
-    private String routineGroup;
+    private String routineGroupName;
 
     @Column(nullable = false)
     private String routineName;
-
-    @Column(nullable = false)
-    private String routineDetail;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -39,5 +33,6 @@ public class Routine {
     @Column(nullable = false)
     private boolean routineIsChecked = false;
 
-    // Getters and Setters
+    @Column(nullable = false)
+    private boolean routineIsAlarm = true;
 }

@@ -1,10 +1,9 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Builder
@@ -26,5 +25,6 @@ public class Furniture {
     @Column(nullable = false)
     private String furnitureType;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "furniture", cascade = CascadeType.ALL)
+    private List<FurniturePlacement> furniturePlacements;
 }

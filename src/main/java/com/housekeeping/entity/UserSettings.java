@@ -1,10 +1,7 @@
 package com.housekeeping.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
@@ -21,7 +18,10 @@ public class UserSettings {
     private User user;
 
     @Column(nullable = false)
-    private boolean settingCleaningNotice = true;
+    private boolean settingCheckNotice = true;
+
+    @Column(nullable = false)
+    private boolean settingWarnNotice = true;
 
     @Column(nullable = false)
     private boolean settingFoodNotice = true;

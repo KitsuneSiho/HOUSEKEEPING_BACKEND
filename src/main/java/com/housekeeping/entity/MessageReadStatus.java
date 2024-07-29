@@ -9,22 +9,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Comment {
+public class MessageReadStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long readStatusId;
 
     @ManyToOne
-    @JoinColumn(name = "tipId", nullable = false)
-    private Tip tip;
+    @JoinColumn(name = "messageId", nullable = false)
+    private Message message;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private String commentContent;
+    private boolean isRead = false;
 
-    @Column(nullable = false)
-    private LocalDateTime commentCreatedDate = LocalDateTime.now();
+    @Column
+    private LocalDateTime readTimestamp;
 }

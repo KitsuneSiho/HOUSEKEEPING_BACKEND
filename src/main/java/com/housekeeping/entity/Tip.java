@@ -2,12 +2,9 @@ package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.TipCategory;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -34,4 +31,7 @@ public class Tip {
 
     @Column(nullable = false)
     private LocalDateTime tipCreatedDate = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "tip", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }
