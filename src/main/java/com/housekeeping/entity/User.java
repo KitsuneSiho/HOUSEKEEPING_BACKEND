@@ -1,5 +1,7 @@
 package com.housekeeping.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.housekeeping.entity.enums.Role;
 import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
@@ -101,5 +103,6 @@ public class User {
     private List<Guestbook> guestbookEntriesWritten;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference // 순환 참조 방지
     private List<Room> rooms;
 }
