@@ -1,7 +1,7 @@
 package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.RequestStatus;
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,11 +18,11 @@ public class FriendRequest {
 
     @ManyToOne
     @JoinColumn(name = "requestSenderId", nullable = false)
-    private UserEntity requestSender;
+    private User requestSender;
 
     @ManyToOne
     @JoinColumn(name = "requestReceiverId", nullable = false)
-    private UserEntity requestReceiver;
+    private User requestReceiver;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

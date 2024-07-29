@@ -26,9 +26,9 @@ public class QFriend extends EntityPathBase<Friend> {
 
     public final NumberPath<Long> friendId = createNumber("friendId", Long.class);
 
-    public final com.housekeeping.entity.user.QUserEntity friendUser1;
+    public final com.housekeeping.entity.user.QUser friendUser1;
 
-    public final com.housekeeping.entity.user.QUserEntity friendUser2;
+    public final com.housekeeping.entity.user.QUser friendUser2;
 
     public QFriend(String variable) {
         this(Friend.class, forVariable(variable), INITS);
@@ -48,8 +48,8 @@ public class QFriend extends EntityPathBase<Friend> {
 
     public QFriend(Class<? extends Friend> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.friendUser1 = inits.isInitialized("friendUser1") ? new com.housekeeping.entity.user.QUserEntity(forProperty("friendUser1")) : null;
-        this.friendUser2 = inits.isInitialized("friendUser2") ? new com.housekeeping.entity.user.QUserEntity(forProperty("friendUser2")) : null;
+        this.friendUser1 = inits.isInitialized("friendUser1") ? new com.housekeeping.entity.user.QUser(forProperty("friendUser1"), inits.get("friendUser1")) : null;
+        this.friendUser2 = inits.isInitialized("friendUser2") ? new com.housekeeping.entity.user.QUser(forProperty("friendUser2"), inits.get("friendUser2")) : null;
     }
 
 }

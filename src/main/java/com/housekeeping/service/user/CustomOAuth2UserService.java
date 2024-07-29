@@ -2,7 +2,7 @@ package com.housekeeping.service.user;
 
 import com.housekeeping.DTO.oauth2.CustomOAuth2User;
 import com.housekeeping.DTO.oauth2.OAuth2UserDto;
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import com.housekeeping.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,12 +27,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = extractEmail(oAuth2User, provider);
         String name = extractName(oAuth2User, provider);
 
-        UserEntity user = userRepository.findByEmailAndProvider(email, provider)
+        User user = userRepository.findByEmailAndProvider(email, provider)
                 .orElse(null);
 
         if (user == null) {
             // 새 사용자 생성, 하지만 닉네임은 아직 설정하지 않음
-            user = UserEntity.builder()
+            user = User.builder()
                     .email(email)
                     .name(name)
                     .provider(provider)

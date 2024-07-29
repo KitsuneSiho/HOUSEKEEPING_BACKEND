@@ -26,9 +26,9 @@ public class QFriendRequest extends EntityPathBase<FriendRequest> {
 
     public final NumberPath<Long> requestId = createNumber("requestId", Long.class);
 
-    public final com.housekeeping.entity.user.QUserEntity requestReceiver;
+    public final com.housekeeping.entity.user.QUser requestReceiver;
 
-    public final com.housekeeping.entity.user.QUserEntity requestSender;
+    public final com.housekeeping.entity.user.QUser requestSender;
 
     public final EnumPath<com.housekeeping.entity.enums.RequestStatus> requestStatus = createEnum("requestStatus", com.housekeeping.entity.enums.RequestStatus.class);
 
@@ -50,8 +50,8 @@ public class QFriendRequest extends EntityPathBase<FriendRequest> {
 
     public QFriendRequest(Class<? extends FriendRequest> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.requestReceiver = inits.isInitialized("requestReceiver") ? new com.housekeeping.entity.user.QUserEntity(forProperty("requestReceiver")) : null;
-        this.requestSender = inits.isInitialized("requestSender") ? new com.housekeeping.entity.user.QUserEntity(forProperty("requestSender")) : null;
+        this.requestReceiver = inits.isInitialized("requestReceiver") ? new com.housekeeping.entity.user.QUser(forProperty("requestReceiver"), inits.get("requestReceiver")) : null;
+        this.requestSender = inits.isInitialized("requestSender") ? new com.housekeeping.entity.user.QUser(forProperty("requestSender"), inits.get("requestSender")) : null;
     }
 
 }

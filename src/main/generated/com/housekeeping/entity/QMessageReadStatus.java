@@ -30,7 +30,7 @@ public class QMessageReadStatus extends EntityPathBase<MessageReadStatus> {
 
     public final DateTimePath<java.time.LocalDateTime> readTimestamp = createDateTime("readTimestamp", java.time.LocalDateTime.class);
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public QMessageReadStatus(String variable) {
         this(MessageReadStatus.class, forVariable(variable), INITS);
@@ -51,7 +51,7 @@ public class QMessageReadStatus extends EntityPathBase<MessageReadStatus> {
     public QMessageReadStatus(Class<? extends MessageReadStatus> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.message = inits.isInitialized("message") ? new QMessage(forProperty("message"), inits.get("message")) : null;
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

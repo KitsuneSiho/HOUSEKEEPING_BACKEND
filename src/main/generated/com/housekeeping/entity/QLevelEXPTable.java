@@ -30,7 +30,7 @@ public class QLevelEXPTable extends EntityPathBase<LevelEXPTable> {
 
     public final NumberPath<Integer> levelRequireEXP = createNumber("levelRequireEXP", Integer.class);
 
-    public final ListPath<com.housekeeping.entity.user.UserEntity, com.housekeeping.entity.user.QUserEntity> users = this.<com.housekeeping.entity.user.UserEntity, com.housekeeping.entity.user.QUserEntity>createList("users", com.housekeeping.entity.user.UserEntity.class, com.housekeeping.entity.user.QUserEntity.class, PathInits.DIRECT2);
+    public final ListPath<com.housekeeping.entity.user.User, com.housekeeping.entity.user.QUser> users = this.<com.housekeeping.entity.user.User, com.housekeeping.entity.user.QUser>createList("users", com.housekeeping.entity.user.User.class, com.housekeeping.entity.user.QUser.class, PathInits.DIRECT2);
 
     public QLevelEXPTable(String variable) {
         super(LevelEXPTable.class, forVariable(variable));

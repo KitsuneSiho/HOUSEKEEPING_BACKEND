@@ -34,7 +34,7 @@ public class QCloth extends EntityPathBase<Cloth> {
 
     public final StringPath clothType = createString("clothType");
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public QCloth(String variable) {
         this(Cloth.class, forVariable(variable), INITS);
@@ -54,7 +54,7 @@ public class QCloth extends EntityPathBase<Cloth> {
 
     public QCloth(Class<? extends Cloth> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

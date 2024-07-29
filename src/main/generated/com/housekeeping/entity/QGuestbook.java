@@ -30,11 +30,11 @@ public class QGuestbook extends EntityPathBase<Guestbook> {
 
     public final BooleanPath guestbookIsSecret = createBoolean("guestbookIsSecret");
 
-    public final com.housekeeping.entity.user.QUserEntity guestbookOwner;
+    public final com.housekeeping.entity.user.QUser guestbookOwner;
 
     public final DateTimePath<java.time.LocalDateTime> guestbookTimestamp = createDateTime("guestbookTimestamp", java.time.LocalDateTime.class);
 
-    public final com.housekeeping.entity.user.QUserEntity guestbookWriter;
+    public final com.housekeeping.entity.user.QUser guestbookWriter;
 
     public QGuestbook(String variable) {
         this(Guestbook.class, forVariable(variable), INITS);
@@ -54,8 +54,8 @@ public class QGuestbook extends EntityPathBase<Guestbook> {
 
     public QGuestbook(Class<? extends Guestbook> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.guestbookOwner = inits.isInitialized("guestbookOwner") ? new com.housekeeping.entity.user.QUserEntity(forProperty("guestbookOwner")) : null;
-        this.guestbookWriter = inits.isInitialized("guestbookWriter") ? new com.housekeeping.entity.user.QUserEntity(forProperty("guestbookWriter")) : null;
+        this.guestbookOwner = inits.isInitialized("guestbookOwner") ? new com.housekeeping.entity.user.QUser(forProperty("guestbookOwner"), inits.get("guestbookOwner")) : null;
+        this.guestbookWriter = inits.isInitialized("guestbookWriter") ? new com.housekeeping.entity.user.QUser(forProperty("guestbookWriter"), inits.get("guestbookWriter")) : null;
     }
 
 }

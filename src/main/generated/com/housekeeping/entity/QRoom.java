@@ -36,7 +36,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final ListPath<Schedule, QSchedule> schedules = this.<Schedule, QSchedule>createList("schedules", Schedule.class, QSchedule.class, PathInits.DIRECT2);
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public QRoom(String variable) {
         this(Room.class, forVariable(variable), INITS);
@@ -56,7 +56,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     public QRoom(Class<? extends Room> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

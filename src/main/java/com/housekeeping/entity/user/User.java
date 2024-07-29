@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
 @EqualsAndHashCode(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;

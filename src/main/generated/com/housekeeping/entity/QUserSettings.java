@@ -32,7 +32,7 @@ public class QUserSettings extends EntityPathBase<UserSettings> {
 
     public final BooleanPath settingWarnNotice = createBoolean("settingWarnNotice");
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
@@ -54,7 +54,7 @@ public class QUserSettings extends EntityPathBase<UserSettings> {
 
     public QUserSettings(Class<? extends UserSettings> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

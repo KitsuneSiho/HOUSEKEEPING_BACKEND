@@ -1,7 +1,7 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.oauth2.UserRegistrationDTO;
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import com.housekeeping.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserEntity completeRegistration(UserRegistrationDTO registrationDTO) {
-        UserEntity user = userRepository.findByEmailAndProvider(registrationDTO.getEmail(), registrationDTO.getProvider())
+    public User completeRegistration(UserRegistrationDTO registrationDTO) {
+        User user = userRepository.findByEmailAndProvider(registrationDTO.getEmail(), registrationDTO.getProvider())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (userRepository.existsByNickname(registrationDTO.getNickname())) {
@@ -28,15 +28,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserEntity getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public UserEntity saveUser(UserEntity user) {
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public UserEntity getUserByNickname(String nickname) {
+    public User getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
     }
 }

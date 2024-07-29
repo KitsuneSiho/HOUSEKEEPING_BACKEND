@@ -1,6 +1,6 @@
 package com.housekeeping.entity;
 
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +23,5 @@ public class ChatRoomMember {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private User user;
 }

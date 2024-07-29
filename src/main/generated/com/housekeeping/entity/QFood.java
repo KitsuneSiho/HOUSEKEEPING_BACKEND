@@ -34,7 +34,7 @@ public class QFood extends EntityPathBase<Food> {
 
     public final NumberPath<Integer> foodQuantity = createNumber("foodQuantity", Integer.class);
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public QFood(String variable) {
         this(Food.class, forVariable(variable), INITS);
@@ -54,7 +54,7 @@ public class QFood extends EntityPathBase<Food> {
 
     public QFood(Class<? extends Food> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

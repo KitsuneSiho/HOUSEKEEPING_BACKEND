@@ -2,7 +2,7 @@ package com.housekeeping.repository.custom;
 
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.user.User;
 
 import java.util.List;
 

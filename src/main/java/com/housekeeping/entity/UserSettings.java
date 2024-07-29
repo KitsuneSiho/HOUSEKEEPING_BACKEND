@@ -1,6 +1,6 @@
 package com.housekeeping.entity;
 
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +16,7 @@ public class UserSettings {
     @OneToOne
     @MapsId
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private boolean settingCheckNotice = true;

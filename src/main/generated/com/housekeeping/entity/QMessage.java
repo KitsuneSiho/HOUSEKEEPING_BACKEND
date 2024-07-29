@@ -30,7 +30,7 @@ public class QMessage extends EntityPathBase<Message> {
 
     public final ListPath<MessageReadStatus, QMessageReadStatus> messageReadStatuses = this.<MessageReadStatus, QMessageReadStatus>createList("messageReadStatuses", MessageReadStatus.class, QMessageReadStatus.class, PathInits.DIRECT2);
 
-    public final com.housekeeping.entity.user.QUserEntity messageSender;
+    public final com.housekeeping.entity.user.QUser messageSender;
 
     public final DateTimePath<java.time.LocalDateTime> messageTimestamp = createDateTime("messageTimestamp", java.time.LocalDateTime.class);
 
@@ -53,7 +53,7 @@ public class QMessage extends EntityPathBase<Message> {
     public QMessage(Class<? extends Message> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.messageSender = inits.isInitialized("messageSender") ? new com.housekeeping.entity.user.QUserEntity(forProperty("messageSender")) : null;
+        this.messageSender = inits.isInitialized("messageSender") ? new com.housekeeping.entity.user.QUser(forProperty("messageSender"), inits.get("messageSender")) : null;
     }
 
 }

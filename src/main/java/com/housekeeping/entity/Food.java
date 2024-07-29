@@ -1,7 +1,7 @@
 package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.FoodCategory;
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class Food {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private String foodName;

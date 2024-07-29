@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QUserEntity is a Querydsl query type for UserEntity
+ * QUser is a Querydsl query type for User
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUserEntity extends EntityPathBase<UserEntity> {
+public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = 1906179498L;
+    private static final long serialVersionUID = -564381977L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QUserEntity userEntity = new QUserEntity("userEntity");
+    public static final QUser user = new QUser("user");
 
     public final ListPath<com.housekeeping.entity.ChatRoomMember, com.housekeeping.entity.QChatRoomMember> chatRoomMembers = this.<com.housekeeping.entity.ChatRoomMember, com.housekeeping.entity.QChatRoomMember>createList("chatRoomMembers", com.housekeeping.entity.ChatRoomMember.class, com.housekeeping.entity.QChatRoomMember.class, PathInits.DIRECT2);
 
@@ -68,23 +68,23 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final BooleanPath userIsOnline = createBoolean("userIsOnline");
 
-    public QUserEntity(String variable) {
-        this(UserEntity.class, forVariable(variable), INITS);
+    public QUser(String variable) {
+        this(User.class, forVariable(variable), INITS);
     }
 
-    public QUserEntity(Path<? extends UserEntity> path) {
+    public QUser(Path<? extends User> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QUserEntity(PathMetadata metadata) {
+    public QUser(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QUserEntity(PathMetadata metadata, PathInits inits) {
-        this(UserEntity.class, metadata, inits);
+    public QUser(PathMetadata metadata, PathInits inits) {
+        this(User.class, metadata, inits);
     }
 
-    public QUserEntity(Class<? extends UserEntity> type, PathMetadata metadata, PathInits inits) {
+    public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.level = inits.isInitialized("level") ? new com.housekeeping.entity.QLevelEXPTable(forProperty("level")) : null;
     }

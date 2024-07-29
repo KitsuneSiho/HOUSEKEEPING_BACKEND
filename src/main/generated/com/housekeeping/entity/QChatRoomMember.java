@@ -26,7 +26,7 @@ public class QChatRoomMember extends EntityPathBase<ChatRoomMember> {
 
     public final NumberPath<Long> chatRoomMemberId = createNumber("chatRoomMemberId", Long.class);
 
-    public final com.housekeeping.entity.user.QUserEntity user;
+    public final com.housekeeping.entity.user.QUser user;
 
     public QChatRoomMember(String variable) {
         this(ChatRoomMember.class, forVariable(variable), INITS);
@@ -47,7 +47,7 @@ public class QChatRoomMember extends EntityPathBase<ChatRoomMember> {
     public QChatRoomMember(Class<? extends ChatRoomMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.housekeeping.entity.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

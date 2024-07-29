@@ -1,6 +1,6 @@
 package com.housekeeping.entity;
 
-import com.housekeeping.entity.user.UserEntity;
+import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -17,11 +17,11 @@ public class Guestbook {
 
     @ManyToOne
     @JoinColumn(name = "guestbookOwnerId", nullable = false)
-    private UserEntity guestbookOwner;
+    private User guestbookOwner;
 
     @ManyToOne
     @JoinColumn(name = "guestbookWriterId", nullable = false)
-    private UserEntity guestbookWriter;
+    private User guestbookWriter;
 
     @Column(nullable = false)
     private String guestbookContent;
