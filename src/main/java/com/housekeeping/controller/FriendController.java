@@ -20,18 +20,21 @@ public class FriendController {
     private final FriendService friendService;
     private final UserService userService;
 
+    // 전체 친구 리스트를 반환
     @GetMapping("/list")
     public List<UserDTO> getFriends(@RequestParam("userId") Long userId) {
 
         return friendService.getFriends(userId);
     }
 
+    // 유저의 번호를 기준으로 현재 접속중인 친구 리스트를 반환
     @GetMapping("/list/online")
     public List<UserDTO> getFriendsOnline(@RequestParam("userId") Long userId) {
 
         return friendService.getOnlineFriends(userId);
     }
 
+    // 유저의 닉네임을 기준으로 현재 접속중인 친구 리스트를 반환
     @GetMapping("/list/online2")
     public List<UserDTO> getFriendsOnline2(@RequestParam("nickname") String nickname) {
 
