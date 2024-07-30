@@ -1,5 +1,6 @@
 package com.housekeeping.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,8 @@ public class UserDTO {
     private String email;
     private String role;
     private String nickname;
+    @JsonProperty("phone")
     private String phoneNumber;
     private String provider;
-    private boolean isNewUser;  // 새로운 필드 추가
+    private boolean isNewUser;
 }

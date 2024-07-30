@@ -46,6 +46,14 @@ public class KakaoResponse implements OAuth2Response {
                 .map(account -> (Map<String, Object>) account)
                 .map(account -> account.get("phone_number"))
                 .map(Object::toString)
+                .map(this::normalizePhoneNumber)
                 .orElse(null);
+    }
+
+    private String normalizePhoneNumber(String phoneNumber) {
+        if (phoneNumber.startsWith("+82")) {
+            return phoneNumber.replace("+82 ", "0");
+        }
+        return phoneNumber;
     }
 }

@@ -69,7 +69,6 @@ public class User {
     @Column
     private String providerId;
 
-
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
     private List<Message> messages;
 

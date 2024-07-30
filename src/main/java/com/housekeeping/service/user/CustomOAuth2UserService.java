@@ -34,6 +34,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String name = oAuth2Response.getName();
         String phoneNumber = oAuth2Response.getPhoneNumber();
 
+        System.out.println("Provider: " + provider);
+        System.out.println("Provider ID: " + providerId);
+        System.out.println("Email: " + email);
+        System.out.println("Name: " + name);
         System.out.println("Phone number from OAuth2 response: " + phoneNumber);  // 디버깅용 로그
 
 
@@ -99,11 +103,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private String generateTemporaryNickname(String name) {
         return name.replaceAll("\\s+", "") + "_" + System.currentTimeMillis() % 10000;
     }
-
-    private String generateUsername(String provider, String providerId) {
-        return provider + "_" + providerId;
-    }
-
 
     private OAuth2Response getOAuth2Response(OAuth2UserRequest userRequest, Map<String, Object> attributes) {
         String provider = userRequest.getClientRegistration().getRegistrationId();

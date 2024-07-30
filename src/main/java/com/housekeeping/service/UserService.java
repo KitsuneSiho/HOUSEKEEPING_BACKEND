@@ -24,7 +24,9 @@ public class UserService {
 
         user.setNickname(userDTO.getNickname());
         user.setPhoneNumber(userDTO.getPhoneNumber());
-        // 기타 필요한 정보 설정
+
+        System.out.println("User DTO: " + userDTO);
+        System.out.println("User before save: " + user);
 
         return userRepository.save(user);
     }

@@ -15,6 +15,11 @@ public class UserController {
 
     @PostMapping("/complete-registration")
     public ResponseEntity<?> completeRegistration(@RequestBody UserDTO userDTO) {
+
+        // 디버깅용 로그 추가
+        System.out.println("Received UserDTO: " + userDTO);
+
+
         try {
             User user = userService.completeRegistration(userDTO);
             return ResponseEntity.ok(user);
