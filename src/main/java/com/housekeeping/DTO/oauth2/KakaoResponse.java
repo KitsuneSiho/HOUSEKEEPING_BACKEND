@@ -1,6 +1,7 @@
 package com.housekeeping.DTO.oauth2;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
@@ -16,24 +17,35 @@ public class KakaoResponse implements OAuth2Response {
 
     @Override
     public String getProviderId() {
-        return attribute.get("id").toString();
+        return Optional.ofNullable(attribute.get("id"))
+                .map(Object::toString)
+                .orElse(null);
     }
 
     @Override
     public String getName() {
-        Map<String, Object> properties = (Map<String, Object>) attribute.get("properties");
-        return properties != null ? properties.get("nickname").toString() : null;
+        return Optional.ofNullable(attribute.get("properties"))
+                .map(props -> (Map<String, Object>) props)
+                .map(props -> props.get("nickname"))
+                .map(Object::toString)
+                .orElse(null);
     }
 
     @Override
     public String getEmail() {
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
-        return kakaoAccount != null ? kakaoAccount.get("email").toString() : null;
+        return Optional.ofNullable(attribute.get("kakao_account"))
+                .map(account -> (Map<String, Object>) account)
+                .map(account -> account.get("email"))
+                .map(Object::toString)
+                .orElse(null);
     }
 
     @Override
     public String getPhoneNumber() {
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
-        return kakaoAccount != null ? kakaoAccount.get("phone_number").toString() : null;
+        return Optional.ofNullable(attribute.get("kakao_account"))
+                .map(account -> (Map<String, Object>) account)
+                .map(account -> account.get("phone_number"))
+                .map(Object::toString)
+                .orElse(null);
     }
 }

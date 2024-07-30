@@ -26,7 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
         OAuth2Response oAuth2Response = getOAuth2Response(userRequest, oAuth2User.getAttributes());
 
         String provider = oAuth2Response.getProvider();
@@ -34,6 +33,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2Response.getEmail();
         String name = oAuth2Response.getName();
         String phoneNumber = oAuth2Response.getPhoneNumber();
+
+        System.out.println("Phone number from OAuth2 response: " + phoneNumber);  // 디버깅용 로그
+
 
         if (email == null || name == null) {
             throw new OAuth2AuthenticationException("Missing essential user information");
@@ -77,6 +79,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .username(username)
                     .build();
             userRepository.save(user);
+            System.out.println("Saved user with phone number: " + user.getPhoneNumber());  // 디버깅용 로그
             isNewUser = true;
         }
 

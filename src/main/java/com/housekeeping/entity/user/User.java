@@ -59,6 +59,7 @@ public class User {
     @Column(nullable = false)
     private boolean userIsOnline = false;
 
+    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
