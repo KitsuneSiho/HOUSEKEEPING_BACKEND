@@ -23,7 +23,6 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
 
     @Override
     public List<ChatRoom> findChatRoomsByUserId(Long userId) {
-
         return queryFactory.select(qChatRoomMember.chatRoom)
                 .from(qChatRoomMember)
                 .where(qChatRoomMember.user.userId.eq(userId))
@@ -33,7 +32,6 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
 
     @Override
     public ChatRoomMember findChatRoomMemberByChatRoomIdAndUserId(Long chatRoomId, Long userId) {
-
         return queryFactory.selectFrom(qChatRoomMember)
                 .where(qChatRoomMember.chatRoom.chatRoomId.eq(chatRoomId)
                         .and(qChatRoomMember.user.userId.eq(userId)))
@@ -42,7 +40,6 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
 
     @Override
     public List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId) {
-
         return queryFactory
                 .select(qUser.nickname)
                 .from(qChatRoomMember)
@@ -53,11 +50,9 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
 
     @Override
     public List<User> findUsersByChatRoomId(Long chatRoomId) {
-
         return queryFactory
-                .select(qUser)
+                .select(qChatRoomMember.user)
                 .from(qChatRoomMember)
-                .join(qChatRoomMember.user, qUser)
                 .where(qChatRoomMember.chatRoom.chatRoomId.eq(chatRoomId))
                 .fetch();
     }

@@ -2,7 +2,7 @@ package com.housekeeping.DTO.oauth2;
 
 import java.util.Map;
 
-public class NaverResponse implements OAuth2Response{
+public class NaverResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
 
     public NaverResponse(Map<String, Object> attribute) {
@@ -29,4 +29,8 @@ public class NaverResponse implements OAuth2Response{
         return attribute.get("email").toString();
     }
 
+    @Override
+    public String getPhoneNumber() {
+        return attribute.get("mobile").toString();
+    }
 }

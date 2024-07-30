@@ -1,6 +1,5 @@
 package com.housekeeping.service.user;
 
-
 import com.housekeeping.entity.user.RefreshEntity;
 import com.housekeeping.repository.user.RefreshRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +12,11 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class RefreshTokenService {
     private final RefreshRepository refreshRepository;
+
     @Transactional
     public void saveRefresh(String email, Integer expireS, String refresh) {
         RefreshEntity refreshEntity = RefreshEntity.builder()
-                .username(email) // 여기서 username 필드를 email로 사용
+                .username(email)
                 .refresh(refresh)
                 .expiration(new Date(System.currentTimeMillis() + expireS * 1000L).toString())
                 .build();

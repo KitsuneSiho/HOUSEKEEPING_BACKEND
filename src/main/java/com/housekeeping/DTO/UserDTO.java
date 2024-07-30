@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-
     private Long userId;
+    private String username;
+    private String name;
+    private String email;
+    private String role;
     private String nickname;
+    private String phoneNumber;
+    private String provider;
+    private boolean isNewUser;  // 새로운 필드 추가
 }

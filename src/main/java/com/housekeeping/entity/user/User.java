@@ -1,9 +1,15 @@
 package com.housekeeping.entity.user;
 
 import com.housekeeping.entity.*;
+import com.housekeeping.entity.enums.Role;
+import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -12,17 +18,17 @@ import java.util.List;
                 @UniqueConstraint(columnNames = {"email", "provider"}),
                 @UniqueConstraint(columnNames = {"nickname"})
         })
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
-@EqualsAndHashCode(exclude = {"level", "messages", "chatRoomMembers", "messageReadStatuses", "cloths", "comments", "foods", "friends1", "friends2", "sentFriendRequests", "receivedFriendRequests", "guestbookEntriesOwned", "guestbookEntriesWritten", "rooms"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false)
     private String name;
@@ -30,23 +36,38 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false)
+    private UserPlatform userPlatform;
+
+    @Column(nullable = false)
+    private LocalDateTime userEnrollment;
+
+    @ManyToOne
+    @JoinColumn(name = "levelId", nullable = false)
+    private LevelEXPTable level;
+
+    @Column(nullable = false)
+    private int userEXP = 0;
+
+    @Lob
+    private byte[] userImage;
+
+    @Column(nullable = false)
+    private boolean userIsOnline = false;
 
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String provider;
+    private Role role;
 
-    @Column(nullable = false)
+    @Column
     private String providerId;
 
-    @Column(nullable = false)
-    private String role;
-
-    @ManyToOne
-    @JoinColumn(name = "level_id")
-    private LevelEXPTable level;
 
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
     private List<Message> messages;
@@ -87,6 +108,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
-    @Column(nullable = false)
-    private boolean userIsOnline = false;
+    @PrePersist
+    protected void onCreate() {
+        userEnrollment = LocalDateTime.now();
+    }
 }

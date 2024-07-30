@@ -1,6 +1,5 @@
 package com.housekeeping.config;
 
-
 import com.housekeeping.customhandler.CustomLogoutFilter;
 import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
@@ -82,7 +81,7 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/", "/login", "/join", "/logout", "/oauth2-jwt-header").permitAll()
+                .requestMatchers("/", "/login", "/join", "/logout", "/oauth2-jwt-header", "/firstlogin").permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
 

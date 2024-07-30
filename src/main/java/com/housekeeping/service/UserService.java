@@ -1,6 +1,7 @@
 package com.housekeeping.service;
 
-import com.housekeeping.DTO.oauth2.UserRegistrationDTO;
+import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.entity.enums.UserPlatform;
 import com.housekeeping.entity.user.User;
 import com.housekeeping.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +14,16 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User completeRegistration(UserRegistrationDTO registrationDTO) {
-        User user = userRepository.findByEmailAndProvider(registrationDTO.getEmail(), registrationDTO.getProvider())
+    public User completeRegistration(UserDTO userDTO) {
+        User user = userRepository.findByEmailAndUserPlatform(userDTO.getEmail(), UserPlatform.valueOf(userDTO.getProvider().toUpperCase()))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (userRepository.existsByNickname(registrationDTO.getNickname())) {
+        if (userRepository.existsByNickname(userDTO.getNickname())) {
             throw new RuntimeException("Nickname already exists");
         }
 
-        user.setNickname(registrationDTO.getNickname());
-        user.setPhoneNumber(registrationDTO.getPhoneNumber());
+        user.setNickname(userDTO.getNickname());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
         // 기타 필요한 정보 설정
 
         return userRepository.save(user);

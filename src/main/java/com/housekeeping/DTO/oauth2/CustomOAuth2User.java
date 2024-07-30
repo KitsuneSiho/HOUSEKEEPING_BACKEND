@@ -1,5 +1,6 @@
 package com.housekeeping.DTO.oauth2;
 
+import com.housekeeping.DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,9 +11,8 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
-    private final OAuth2UserDto oAuth2UserDto;
+    private final UserDTO userDTO;
 
-    // 통일 x -> return null
     @Override
     public Map<String, Object> getAttributes() {
         return null;
@@ -21,24 +21,28 @@ public class CustomOAuth2User implements OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return oAuth2UserDto.getRole();
-            }
-        });
+        collection.add((GrantedAuthority) () -> userDTO.getRole());
         return collection;
     }
 
     @Override
     public String getName() {
-        return oAuth2UserDto.getName();
+        return userDTO.getName();
     }
 
-    public String getUsername(){
-        return oAuth2UserDto.getUsername();
+    public String getUsername() {
+        return userDTO.getUsername();
     }
-    public String getEmail(){
-        return oAuth2UserDto.getEmail();
+
+    public String getEmail() {
+        return userDTO.getEmail();
+    }
+
+    public String getPhoneNumber() {
+        return userDTO.getPhoneNumber();
+    }
+
+    public boolean isNewUser() {  // 새로운 메서드 추가
+        return userDTO.isNewUser();
     }
 }

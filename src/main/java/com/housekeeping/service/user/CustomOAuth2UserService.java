@@ -1,8 +1,12 @@
 package com.housekeeping.service.user;
 
-import com.housekeeping.DTO.oauth2.CustomOAuth2User;
-import com.housekeeping.DTO.oauth2.OAuth2UserDto;
+import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.DTO.oauth2.*;
+import com.housekeeping.entity.LevelEXPTable;
+import com.housekeeping.entity.enums.Role;
+import com.housekeeping.entity.enums.UserPlatform;
 import com.housekeeping.entity.user.User;
+import com.housekeeping.repository.LevelEXPTableRepository;
 import com.housekeeping.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,74 +21,97 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
+    private final LevelEXPTableRepository levelEXPTableRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String provider = userRequest.getClientRegistration().getRegistrationId();
-        String providerId = extractProviderId(oAuth2User, provider);
-        String email = extractEmail(oAuth2User, provider);
-        String name = extractName(oAuth2User, provider);
+        OAuth2Response oAuth2Response = getOAuth2Response(userRequest, oAuth2User.getAttributes());
 
-        User user = userRepository.findByEmailAndProvider(email, provider)
+        String provider = oAuth2Response.getProvider();
+        String providerId = oAuth2Response.getProviderId();
+        String email = oAuth2Response.getEmail();
+        String name = oAuth2Response.getName();
+        String phoneNumber = oAuth2Response.getPhoneNumber();
+
+        if (email == null || name == null) {
+            throw new OAuth2AuthenticationException("Missing essential user information");
+        }
+
+        UserPlatform userPlatform;
+        try {
+            userPlatform = UserPlatform.valueOf(provider.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
+        }
+
+        User user = userRepository.findByEmailAndUserPlatform(email, userPlatform)
                 .orElse(null);
 
+        boolean isNewUser = false;
+
         if (user == null) {
-            // 새 사용자 생성, 하지만 닉네임은 아직 설정하지 않음
+            LevelEXPTable defaultLevel = levelEXPTableRepository.findById(1L)
+                    .orElseGet(() -> {
+                        LevelEXPTable newLevel = new LevelEXPTable();
+                        newLevel.setLevelId(1L);
+                        newLevel.setLevelName("Beginner");
+                        newLevel.setLevelLevel(1);
+                        newLevel.setLevelRequireEXP(0);
+                        return levelEXPTableRepository.save(newLevel);
+                    });
+
+            String tempNickname = generateTemporaryNickname(name);
+            String username = provider + "_" + providerId;
+
             user = User.builder()
                     .email(email)
                     .name(name)
-                    .provider(provider)
+                    .nickname(tempNickname)
+                    .phoneNumber(phoneNumber)
+                    .userPlatform(userPlatform)
                     .providerId(providerId)
-                    .role("ROLE_USER")
+                    .role(Role.USER)
+                    .level(defaultLevel)
+                    .username(username)
                     .build();
             userRepository.save(user);
+            isNewUser = true;
         }
 
-        OAuth2UserDto oAuth2UserDto = OAuth2UserDto.builder()
-                .username(provider + "_" + providerId)
-                .name(name)
-                .email(email)
-                .role(user.getRole())
+        UserDTO userDTO = UserDTO.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().toString())
+                .phoneNumber(user.getPhoneNumber())
+                .provider(userPlatform.name())
+                .isNewUser(isNewUser)
                 .build();
 
-        return new CustomOAuth2User(oAuth2UserDto);
+        return new CustomOAuth2User(userDTO);
     }
 
-    private String extractProviderId(OAuth2User oAuth2User, String provider) {
-        switch (provider) {
-            case "google":
-                return oAuth2User.getAttribute("sub");
-            case "naver":
-                return ((Map<String, Object>) oAuth2User.getAttribute("response")).get("id").toString();
-            case "kakao":
-                return oAuth2User.getAttribute("id").toString();
-            default:
-                throw new IllegalArgumentException("Unsupported provider: " + provider);
-        }
+    private String generateTemporaryNickname(String name) {
+        return name.replaceAll("\\s+", "") + "_" + System.currentTimeMillis() % 10000;
     }
 
-    private String extractEmail(OAuth2User oAuth2User, String provider) {
-        switch (provider) {
-            case "google":
-            case "naver":
-                return oAuth2User.getAttribute("email");
-            case "kakao":
-                return ((Map<String, Object>) oAuth2User.getAttribute("kakao_account")).get("email").toString();
-            default:
-                throw new IllegalArgumentException("Unsupported provider: " + provider);
-        }
+    private String generateUsername(String provider, String providerId) {
+        return provider + "_" + providerId;
     }
 
-    private String extractName(OAuth2User oAuth2User, String provider) {
+
+    private OAuth2Response getOAuth2Response(OAuth2UserRequest userRequest, Map<String, Object> attributes) {
+        String provider = userRequest.getClientRegistration().getRegistrationId();
+
         switch (provider) {
             case "google":
-                return oAuth2User.getAttribute("name");
+                return new GoogleResponse(attributes);
             case "naver":
-                return ((Map<String, Object>) oAuth2User.getAttribute("response")).get("name").toString();
+                return new NaverResponse(attributes);
             case "kakao":
-                return ((Map<String, Object>) oAuth2User.getAttribute("properties")).get("nickname").toString();
+                return new KakaoResponse(attributes);
             default:
                 throw new IllegalArgumentException("Unsupported provider: " + provider);
         }

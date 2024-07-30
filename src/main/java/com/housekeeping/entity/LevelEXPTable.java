@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+
 import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;

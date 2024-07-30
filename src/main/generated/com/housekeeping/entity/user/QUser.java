@@ -52,21 +52,29 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath phoneNumber = createString("phoneNumber");
 
-    public final StringPath provider = createString("provider");
-
     public final StringPath providerId = createString("providerId");
 
     public final ListPath<com.housekeeping.entity.FriendRequest, com.housekeeping.entity.QFriendRequest> receivedFriendRequests = this.<com.housekeeping.entity.FriendRequest, com.housekeeping.entity.QFriendRequest>createList("receivedFriendRequests", com.housekeeping.entity.FriendRequest.class, com.housekeeping.entity.QFriendRequest.class, PathInits.DIRECT2);
 
-    public final StringPath role = createString("role");
+    public final EnumPath<com.housekeeping.entity.enums.Role> role = createEnum("role", com.housekeeping.entity.enums.Role.class);
 
     public final ListPath<com.housekeeping.entity.Room, com.housekeeping.entity.QRoom> rooms = this.<com.housekeeping.entity.Room, com.housekeeping.entity.QRoom>createList("rooms", com.housekeeping.entity.Room.class, com.housekeeping.entity.QRoom.class, PathInits.DIRECT2);
 
     public final ListPath<com.housekeeping.entity.FriendRequest, com.housekeeping.entity.QFriendRequest> sentFriendRequests = this.<com.housekeeping.entity.FriendRequest, com.housekeeping.entity.QFriendRequest>createList("sentFriendRequests", com.housekeeping.entity.FriendRequest.class, com.housekeeping.entity.QFriendRequest.class, PathInits.DIRECT2);
 
+    public final DateTimePath<java.time.LocalDateTime> userEnrollment = createDateTime("userEnrollment", java.time.LocalDateTime.class);
+
+    public final NumberPath<Integer> userEXP = createNumber("userEXP", Integer.class);
+
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
+    public final ArrayPath<byte[], Byte> userImage = createArray("userImage", byte[].class);
+
     public final BooleanPath userIsOnline = createBoolean("userIsOnline");
+
+    public final StringPath username = createString("username");
+
+    public final EnumPath<com.housekeeping.entity.enums.UserPlatform> userPlatform = createEnum("userPlatform", com.housekeeping.entity.enums.UserPlatform.class);
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

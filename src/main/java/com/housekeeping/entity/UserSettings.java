@@ -1,8 +1,12 @@
 package com.housekeeping.entity;
 
+
 import com.housekeeping.entity.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder

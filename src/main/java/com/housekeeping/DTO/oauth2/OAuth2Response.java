@@ -5,4 +5,5 @@ public interface OAuth2Response {
     public String getProviderId();
     public String getName();
     public String getEmail();
+    public String getPhoneNumber();
 }
