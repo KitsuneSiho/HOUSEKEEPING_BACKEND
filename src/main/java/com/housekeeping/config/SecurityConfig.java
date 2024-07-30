@@ -53,6 +53,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // CORS 설정은 WebConfig에서 관리되므로 여기서는 기본 설정만 활성화
+        http
+                .cors(cors -> cors.configure(http));
+
         // disable
         http
                 .httpBasic((basic) -> basic.disable())
@@ -81,8 +85,7 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/", "/login", "/join", "/logout", "/oauth2-jwt-header", "/firstlogin").permitAll()
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/", "/login", "/join", "/logout", "/oauth2-jwt-header", "/firstlogin", "/api/user/complete-registration","/**").permitAll()                .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
         // 인가되지 않은 사용자에 대한 exception -> 프론트엔드로 코드 응답

@@ -14,9 +14,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/complete-registration")
-    public ResponseEntity<?> completeRegistration(@RequestBody UserDTO registrationDTO) {
+    public ResponseEntity<?> completeRegistration(@RequestBody UserDTO userDTO) {
         try {
-            User user = userService.completeRegistration(registrationDTO);
+            User user = userService.completeRegistration(userDTO);
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
