@@ -46,4 +46,26 @@ public class UserService {
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    @Transactional
+    public User updateUser(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setUsername(userDTO.getUsername());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setNickname(userDTO.getNickname());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userRepository.delete(user);
+    }
 }
