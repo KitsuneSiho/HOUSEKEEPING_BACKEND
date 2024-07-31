@@ -45,4 +45,6 @@ public class CustomOAuth2User implements OAuth2User {
     public boolean isNewUser() {  // 새로운 메서드 추가
         return userDTO.isNewUser();
     }
+
+    public Long getUserId() { return userDTO.getUserId(); }
 }

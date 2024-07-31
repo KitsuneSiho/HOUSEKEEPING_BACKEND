@@ -28,6 +28,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String provider = customOAuth2User.getUsername().split("_")[0];
         String role = authentication.getAuthorities().iterator().next().getAuthority();
         boolean isNewUser = customOAuth2User.isNewUser();
+        Long userId = customOAuth2User.getUserId();
 
         Integer expireS = 24 * 60 * 60;
         String access = jwtUtil.createJwt("access", email, provider, role, 60 * 10 * 1000L);
@@ -45,9 +46,9 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String encodedPhoneNumber = phoneNumber != null ? URLEncoder.encode(phoneNumber, "UTF-8") : "";
 
         String redirectUrl = isNewUser
-                ? String.format("http://localhost:5173/firstlogin?name=%s&email=%s&provider=%s&phoneNumber=%s",
-                encodedName, encodedEmail, encodedProvider, encodedPhoneNumber)
-                : "http://localhost:5173/mainpage";
+                ? String.format("http://localhost:5173/firstlogin?name=%s&email=%s&provider=%s&phoneNumber=%s&userId=%d",
+                encodedName, encodedEmail, encodedProvider, encodedPhoneNumber, userId)
+                : String.format("http://localhost:5173/mainpage?userId=%d", userId);
 
         response.sendRedirect(redirectUrl);
     }

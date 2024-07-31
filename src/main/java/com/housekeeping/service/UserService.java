@@ -42,4 +42,8 @@ public class UserService {
     public User getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }
