@@ -1,25 +1,30 @@
 package com.housekeeping.controller;
-
 import com.housekeeping.DTO.FoodDTO;
 import com.housekeeping.entity.enums.FoodCategory;
 import com.housekeeping.service.FoodService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 @RestController
-@RequestMapping("/api/food")
+@RequestMapping("/api/foods")
 public class FoodController {
-
     private final FoodService foodService;
+    @Autowired
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
     }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<FoodDTO>> getFoodsByCategory(@PathVariable FoodCategory category) {
-        List<FoodDTO> foods = foodService.getFoodsByCategory(category);
-        return ResponseEntity.ok(foods); // 조회된 음식 목록을 HTTP 200 OK 상태와 함께 반환
+    @GetMapping("/categories")
+    public List<FoodCategory> getUserFoodCategories(@RequestParam Long userId) {
+        return foodService.getUserFoodCategories(userId);
+    }
+    @GetMapping("/all")
+    public List<FoodDTO> getAllUserFoods(@RequestParam Long userId) {
+        return foodService.getAllUserFoods(userId);
+    }
+    @GetMapping("/category")
+    public List<FoodDTO> getUserFoodsByCategory(
+            @RequestParam Long userId,
+            @RequestParam FoodCategory category) {
+        return foodService.getUserFoodsByCategory(userId, category);
     }
 }
