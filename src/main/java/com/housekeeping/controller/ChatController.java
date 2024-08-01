@@ -1,10 +1,13 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.ChatRoomDTO;
+import com.housekeeping.DTO.InviteDTO;
 import com.housekeeping.DTO.MessageDTO;
+import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.Message;
 import com.housekeeping.service.ChatService;
+import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +27,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final UserService userService;
+    private final FriendService friendService;
 
     // 채팅 방 생성
     @PostMapping("/room/create")
@@ -43,11 +50,72 @@ public class ChatController {
                 .build();
     }
 
+    // 채팅 방 정보 반환
+    @GetMapping("/room/{chatRoomId}")
+    public ChatRoomDTO getChatRoom(@PathVariable Long chatRoomId) {
+
+        ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
+
+        return ChatRoomDTO.builder()
+                .chatRoomName(chatRoom.getChatRoomName())
+                .chatRoomType(chatRoom.getChatRoomType())
+                .chatRoomId(chatRoom.getChatRoomId())
+                .build();
+    }
+
     // 채팅 방 리스트 반환
     @GetMapping("/room/list")
     public List<ChatRoomDTO> getChatRooms(@RequestParam("userId") Long userId) {
 
         return chatService.getChatRoomsByUserId(userId);
+    }
+
+    // 채팅 방에 있는 사람들의 목록과 채팅 방에 없는 내 친구들을 반환
+    @GetMapping("/room/invite/list")
+    public Map<String, List<UserDTO>> getChatRoomInviteList(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("userId") Long userId) {
+
+        Map<String, List<UserDTO>> responseMap = new HashMap<>();
+
+        List<String> chatRoomUserList = chatService.chatRoomUserList(chatRoomId, userId);
+
+        List<UserDTO> chatRoomUser = new ArrayList<>();
+
+        for (String user : chatRoomUserList) {
+            chatRoomUser.add(UserDTO.builder().nickname(user).build());
+        }
+        List<UserDTO> friends = friendService.getFriends(userId).stream()
+                .filter(friend -> !chatRoomUserList.contains(friend.getNickname()))
+                .collect(Collectors.toList());
+
+        responseMap.put("roomMembers", chatRoomUser);
+        responseMap.put("friends", friends);
+
+        return responseMap;
+    }
+
+    // 채팅 방에 유저를 초대
+    @PostMapping("/room/invite")
+    public ResponseEntity<String> inviteUser(@RequestBody InviteDTO inviteDTO) {
+
+        List<UserDTO> friends = inviteDTO.getUsers();
+        Long chatRoomId = inviteDTO.getChatRoomId();
+
+        for (UserDTO friend : friends) {
+            chatService.inviteUser(chatRoomId, friend.getUserId());
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    // 채팅 방 이름 변경
+    @PutMapping("/room/rename")
+    public ResponseEntity<String> renameChatRoom(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("chatRoomName") String chatRoomName) {
+
+        ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
+        chatRoom.setChatRoomName(chatRoomName);
+        chatService.saveChatRoom(chatRoom);
+
+        return ResponseEntity.ok().build();
     }
 
     // 채팅 방 나감

@@ -2,12 +2,15 @@ package com.housekeeping.service;
 
 import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.DTO.MessageDTO;
+import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
 import com.housekeeping.entity.Message;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 public interface ChatService {
@@ -38,4 +41,6 @@ public interface ChatService {
     List<Long> getUnreadMessageIds(Long chatRoomId, Long userId);
     // 메시지 읽음 상태 번호를 기준으로 읽음 상태로 업데이트
     void updateReadStatusTrue(Long readStatusId);
+    // 채팅 방에 있는 사람들의 목록과 채팅 방에 없는 내 친구들을 반환
+    List<String> chatRoomUserList(Long chatRoomId, Long userId);
 }

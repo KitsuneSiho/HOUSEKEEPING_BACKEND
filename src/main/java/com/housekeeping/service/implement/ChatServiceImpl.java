@@ -1,8 +1,8 @@
 package com.housekeeping.service.implement;
 
-
 import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.DTO.MessageDTO;
+import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.*;
 import com.housekeeping.entity.user.User;
 import com.housekeeping.repository.ChatRoomMemberRepository;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+//import java.util.Map;
 
 @Transactional
 @Service
@@ -168,5 +169,11 @@ public class ChatServiceImpl implements ChatService {
         readStatus.setRead(true);
         readStatus.setReadTimestamp(LocalDateTime.now());
         messageReadStatusRepository.save(readStatus);
+    }
+
+    @Override
+    public List<String> chatRoomUserList(Long chatRoomId, Long userId) {
+
+        return chatRoomMemberRepository.findUserNicknamesByChatRoomId(chatRoomId, userId);
     }
 }
