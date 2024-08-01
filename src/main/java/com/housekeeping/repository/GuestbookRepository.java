@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface GuestBookRepository extends JpaRepository<Guestbook, Long> {
+public interface GuestbookRepository extends JpaRepository<Guestbook, Long> {
+
     List<Guestbook> findByGuestbookOwner(User guestbookOwner);
+
+    // 방 주인과 보관된 방명록을 조회하는 메서드
+    List<Guestbook> findByGuestbookOwnerAndGuestbookIsArchived(User guestbookOwner, boolean guestbookIsArchived);
 }

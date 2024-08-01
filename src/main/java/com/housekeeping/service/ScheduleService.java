@@ -2,6 +2,8 @@ package com.housekeeping.service;
 
 import com.housekeeping.DTO.ScheduleDTO;
 import com.housekeeping.entity.Schedule;
+import com.housekeeping.entity.Room;
+import com.housekeeping.repository.RoomRepository;
 import com.housekeeping.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final RoomRepository roomRepository;
 
     // 스케줄 리스트를 DTO로 변환하여 반환
     public Map<Long, List<ScheduleDTO>> getSchedulesByRoomIds(List<Long> roomIds) {
@@ -76,15 +79,19 @@ public class ScheduleService {
 
     // DTO를 엔티티로 변환
     private Schedule convertToEntity(ScheduleDTO dto) {
+
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+
         Schedule schedule = new Schedule();
         schedule.setScheduleId(dto.getScheduleId());
+
         schedule.setScheduleName(dto.getScheduleName());
         schedule.setScheduleDetail(dto.getScheduleDetail());
         schedule.setScheduleDate(dto.getScheduleDate());
         schedule.setScheduleIsChecked(dto.isScheduleIsChecked());
         schedule.setScheduleIsAlarm(dto.isScheduleIsAlarm());
-        // Room 엔티티를 설정하려면 추가 작업이 필요합니다.
-        // 예를 들어 Room 엔티티를 조회하여 설정할 수 있습니다.
+        schedule.setRoom(room);
         return schedule;
     }
 

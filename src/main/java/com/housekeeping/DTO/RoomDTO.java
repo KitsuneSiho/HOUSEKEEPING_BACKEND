@@ -15,4 +15,8 @@ import java.util.List;
 public class RoomDTO {
     private Long roomId;
     private String roomName;
+    private RoomType roomType;
+    private int roomPollution;
+    private List<ScheduleDTO> schedules;
+
 }
