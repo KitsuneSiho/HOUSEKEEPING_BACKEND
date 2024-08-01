@@ -1,39 +1,79 @@
 package com.housekeeping.controller;
 
-import com.housekeeping.entity.User;
+import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.entity.user.User;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
 
-    // 유저 번호를 이용해서 해당 유저의 로그인 상태를 업데이트
-    @PutMapping("/status/update")
-    public ResponseEntity<String> updateStatus(@RequestParam("userId") Long userId , @RequestParam("isOnline") boolean isOnline) {
+    @PostMapping("/complete-registration")
+    public ResponseEntity<?> completeRegistration(@RequestBody UserDTO userDTO) {
+        // 디버깅용 로그 추가
+        System.out.println("Received UserDTO: " + userDTO);
 
+        try {
+            User user = userService.completeRegistration(userDTO);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<UserDTO> getUserInfo(@RequestParam("userId") Long userId) {
+        User user = userService.getUserById(userId);
+        UserDTO userDTO = UserDTO.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .phoneNumber(user.getPhoneNumber())
+                .provider(user.getUserPlatform().toString())
+                .build();
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @PutMapping("/status/update")
+    public ResponseEntity<String> updateStatus(@RequestParam("userId") Long userId, @RequestParam("isOnline") boolean isOnline) {
         User user = userService.getUserById(userId);
         user.setUserIsOnline(isOnline);
-
         userService.saveUser(user);
-
         return ResponseEntity.ok().build();
     }
 
-    // 유저 닉네임을 이용해서 해당 유저의 로그인 상태를 업데이트
     @PutMapping("/status/update2")
-    public ResponseEntity<String> updateStatus(@RequestParam("nickname") String nickname , @RequestParam("isOnline") boolean isOnline) {
-
+    public ResponseEntity<String> updateStatus(@RequestParam("nickname") String nickname, @RequestParam("isOnline") boolean isOnline) {
         User user = userService.getUserByNickname(nickname);
         user.setUserIsOnline(isOnline);
-
         userService.saveUser(user);
-
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
+        try {
+            User updatedUser = userService.updateUser(userDTO);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestParam("userId") Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

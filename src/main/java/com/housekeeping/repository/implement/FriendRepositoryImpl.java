@@ -1,8 +1,6 @@
 package com.housekeeping.repository.implement;
 
-import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.QFriend;
-import com.housekeeping.entity.QUser;
 import com.housekeeping.repository.custom.FriendRepositoryCustom;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
