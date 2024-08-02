@@ -3,23 +3,48 @@ package com.housekeeping.controller;
 import com.housekeeping.DTO.FoodDTO;
 import com.housekeeping.entity.enums.FoodCategory;
 import com.housekeeping.service.FoodService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/food")
+@RequestMapping("/food")
 public class FoodController {
 
     private final FoodService foodService;
+
+    @Autowired
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<FoodDTO>> getFoodsByCategory(@PathVariable FoodCategory category) {
-        List<FoodDTO> foods = foodService.getFoodsByCategory(category);
-        return ResponseEntity.ok(foods); // 조회된 음식 목록을 HTTP 200 OK 상태와 함께 반환
+    @GetMapping("/livingroom") //냉장고 초기 페이지
+    public List<FoodCategory> getLivingRoom(@RequestParam("userId") Long userId) {
+        return foodService.getUserCategories(userId);
     }
+
+    @GetMapping("/foodlist/{category}") //카테고리별 식재료 보기
+    public List<FoodDTO> getFoodList(@PathVariable("category") String category, @RequestParam("userId") Long userId) {
+        FoodCategory foodCategory = FoodCategory.valueOf(category.toUpperCase());
+        return foodService.getUserFoodsByCategory(userId, foodCategory);
+    }
+
+    @GetMapping("/foodlist/all") //전체보기
+    public List<FoodDTO> getAllFoods(@RequestParam("userId") Long userId, @RequestParam("foodCategory") FoodCategory foodCategory) {
+        return foodService.getAllUserFoods(userId, foodCategory);
+
+    }
+
+    @PostMapping("/foodlist/add") //식재료 수동 추가
+    public FoodDTO addFood(@RequestBody FoodDTO foodDTO){
+        return foodService.addUserFood(foodDTO);
+    }
+
+    @PutMapping("/foodlist/update") //식재료 수정
+    public FoodDTO updateFood(@RequestBody FoodDTO foodDTO){
+        return foodService.addUserFood(foodDTO);
+    }
+
+
 }
