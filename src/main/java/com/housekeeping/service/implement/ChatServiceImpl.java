@@ -1,23 +1,25 @@
 package com.housekeeping.service.implement;
 
+
 import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.*;
+import com.housekeeping.entity.user.User;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.repository.MessageReadStatusRepository;
 import com.housekeeping.repository.MessageRepository;
 import com.housekeeping.service.ChatService;
 import com.querydsl.core.Tuple;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 
 @Transactional
 @Service

@@ -1,5 +1,6 @@
-package com.housekeeping.entity;
+package com.housekeeping.entity.user;
 
+import com.housekeeping.entity.*;
 import com.housekeeping.entity.enums.Role;
 import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"email", "userPlatform"}),
+                @UniqueConstraint(columnNames = {"email", "provider"}),
                 @UniqueConstraint(columnNames = {"nickname"})
         })
 @Data
@@ -39,11 +40,11 @@ public class User {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "provider", nullable = false)
     private UserPlatform userPlatform;
 
     @Column(nullable = false)
-    private LocalDateTime userEnrollment = LocalDateTime.now();
+    private LocalDateTime userEnrollment;
 
     @ManyToOne
     @JoinColumn(name = "levelId", nullable = false)
@@ -58,11 +59,15 @@ public class User {
     @Column(nullable = false)
     private boolean userIsOnline = false;
 
+    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Column
+    private String providerId;
 
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
     private List<Message> messages;
@@ -102,4 +107,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Room> rooms;
+
+    @PrePersist
+    protected void onCreate() {
+        userEnrollment = LocalDateTime.now();
+    }
 }

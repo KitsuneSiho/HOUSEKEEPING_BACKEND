@@ -1,6 +1,5 @@
 package com.housekeeping.repository.implement;
 
-import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.entity.Message;
 import com.housekeeping.entity.QMessage;
 import com.housekeeping.repository.custom.MessageRepositoryCustom;

@@ -1,7 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.UserDTO;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.user.User;
 import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
