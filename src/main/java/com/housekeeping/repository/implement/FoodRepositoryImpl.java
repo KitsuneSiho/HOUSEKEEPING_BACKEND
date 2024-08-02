@@ -55,5 +55,17 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public boolean deleteUserFood(Long foodId, Long userId) {
+        QFood food = QFood.food;
+        long deletedCount = queryFactory
+                .delete(food)
+                .where(food.foodId.eq(foodId)
+                        .and(food.user.userId.eq(userId)))
+                .execute();
+
+        return deletedCount > 0;
+    }
+
 
 }

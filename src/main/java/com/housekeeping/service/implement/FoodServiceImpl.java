@@ -60,4 +60,19 @@ public class FoodServiceImpl implements FoodService {
                 .foodExpirationDate(food.getFoodExpirationDate())
                 .build();
     }
+
+    @Override
+    public boolean deleteUserFood(Long foodId, Long userId) {
+        if (foodId == null || userId == null) {
+            throw new IllegalArgumentException("식재료 ID와 사용자 ID는 null일 수 없습니다.");
+        }
+
+        boolean isDeleted = foodRepository.deleteUserFood(foodId, userId);
+
+        if (!isDeleted) {
+            throw new IllegalArgumentException("해당 ID의 식재료를 찾을 수 없거나 사용자에게 권한이 없습니다.");
+        }
+
+        return true;
+    }
 }

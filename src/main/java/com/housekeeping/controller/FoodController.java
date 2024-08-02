@@ -3,11 +3,14 @@ package com.housekeeping.controller;
 import com.housekeeping.DTO.FoodDTO;
 import com.housekeeping.entity.enums.FoodCategory;
 import com.housekeeping.service.FoodService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/food")
 public class FoodController {
@@ -44,6 +47,23 @@ public class FoodController {
     @PutMapping("/foodlist/update") //식재료 수정
     public FoodDTO updateFood(@RequestBody FoodDTO foodDTO){
         return foodService.addUserFood(foodDTO);
+    }
+
+    @DeleteMapping("/foodlist/delete/{foodId}")
+    public ResponseEntity<?> deleteFood(@PathVariable("foodId") Long foodId, @RequestParam("userId") Long userId){
+        try {
+            boolean isDeleted = foodService.deleteUserFood(foodId, userId);
+            if (isDeleted) {
+                return ResponseEntity.ok().body("식재료를 삭제했습니다.");
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            log.error("식재료 삭제 중 오류 발생: ", e);
+            return ResponseEntity.internalServerError().body("식재료 삭제 중 오류가 발생했습니다.");
+        }
     }
 
 

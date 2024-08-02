@@ -8,4 +8,5 @@ import java.util.List;
 public interface FoodRepositoryCustom {
     List<FoodCategory> findUserCategories(Long userId);
     List<FoodDTO> findUserFoods(Long userId, FoodCategory foodCategory);
+    boolean deleteUserFood (Long foodId,Long userId);
 }

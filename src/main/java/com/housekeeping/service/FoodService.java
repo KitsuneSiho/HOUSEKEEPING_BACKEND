@@ -10,4 +10,5 @@ public interface FoodService {
     List<FoodDTO> getAllUserFoods(Long userId, FoodCategory foodCategory);
     List<FoodDTO> getUserFoodsByCategory(Long userId, FoodCategory category);
     FoodDTO addUserFood(FoodDTO foodDTO);
+    boolean deleteUserFood(Long foodId, Long userId);
 }
