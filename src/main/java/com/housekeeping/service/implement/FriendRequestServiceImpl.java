@@ -50,20 +50,18 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     }
 
     public Map<Long, RequestStatus> getFriendRequestStatus(Long senderId, List<Long> receiverIds) {
-        // 요청 상태를 조회합니다.
-        List<FriendRequest> requests = friendRequestRepository.findByRequestSender_UserIdAndRequestReceiver_UserIdIn(senderId, receiverIds);
+        List<FriendRequest> friendRequests = friendRequestRepository.findByRequestSender_UserIdAndRequestReceiver_UserIdIn(senderId, receiverIds);
 
-        // 상태 맵을 초기화합니다.
         Map<Long, RequestStatus> statusMap = new HashMap<>();
 
-        // 요청 상태를 상태 맵에 추가합니다.
-        for (FriendRequest request : requests) {
-            statusMap.put(request.getRequestReceiver().getUserId(), request.getRequestStatus());
+        // 각 요청 상태를 맵에 저장
+        for (FriendRequest friendRequest : friendRequests) {
+            statusMap.put(friendRequest.getRequestReceiver().getUserId(), friendRequest.getRequestStatus());
         }
 
-        // 요청이 없는 경우에도 처리
+        // 요청이 없는 경우에도 맵에 추가
         for (Long receiverId : receiverIds) {
-            statusMap.putIfAbsent(receiverId, null); // 요청 상태가 없을 때는 null로 설정
+            statusMap.putIfAbsent(receiverId, null);
         }
 
         return statusMap;
