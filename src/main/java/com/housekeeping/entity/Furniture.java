@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.enums.FurnitureType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -24,7 +25,7 @@ public class Furniture {
     private String furnitureName;
 
     @Column(nullable = false)
-    private String furnitureType;
+    private FurnitureType furnitureType;
 
     @OneToMany(mappedBy = "furniture", cascade = CascadeType.ALL)
     private List<FurniturePlacement> furniturePlacements;

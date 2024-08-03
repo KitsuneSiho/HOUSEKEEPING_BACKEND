@@ -32,6 +32,9 @@ public class Room {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int roomPollution = 0;
 
+    @Column(columnDefinition = "json", nullable = false)
+    private String roomWallsColor;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Schedule> schedules;
 

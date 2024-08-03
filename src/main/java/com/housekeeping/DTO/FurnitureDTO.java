@@ -1,5 +1,6 @@
 package com.housekeeping.DTO;
 
+import com.housekeeping.entity.enums.FurnitureType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class FurnitureDTO {
     private Long furnitureId;
     private int level;
     private String furnitureName;
-    private String furnitureType;
+    private FurnitureType furnitureType;
 }

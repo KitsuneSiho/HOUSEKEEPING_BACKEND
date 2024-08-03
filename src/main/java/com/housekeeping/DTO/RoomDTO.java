@@ -18,5 +18,6 @@ public class RoomDTO {
     private RoomType roomType;
     private int roomPollution;
     private List<ScheduleDTO> schedules;
+    private String roomWallsColor;
 
 }
