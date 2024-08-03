@@ -1,16 +1,21 @@
 package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.entity.Friend;
 import com.housekeeping.entity.QFriend;
+import com.housekeeping.entity.User;
 import com.housekeeping.repository.FriendRepository;
+import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.FriendService;
 import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -18,6 +23,7 @@ import java.util.List;
 public class FriendServiceImpl implements FriendService {
 
     private final FriendRepository friendRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<UserDTO> getFriends(Long userId) {
@@ -65,6 +71,34 @@ public class FriendServiceImpl implements FriendService {
         }
 
         return friendDTOs;
+    }
+
+    @Override
+    public List<UserDTO> searchUsersByNickname(String nickname) {
+        List<User> users = userRepository.findByNicknameContainingIgnoreCase(nickname);
+        return users.stream()
+                .map(user -> UserDTO.builder()
+                        .userId(user.getUserId())
+                        .nickname(user.getNickname())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createFriendRelationship(Long userId1, Long userId2) {
+        User user1 = userRepository.findById(userId1)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user2 = userRepository.findById(userId2)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 친구 관계 생성
+        Friend friend = Friend.builder()
+                .friendUser1(user1)
+                .friendUser2(user2)
+                .friendDate(LocalDateTime.now())
+                .build();
+
+        friendRepository.save(friend);
     }
 
 }

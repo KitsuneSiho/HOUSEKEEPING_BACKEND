@@ -1,5 +1,7 @@
 package com.housekeeping.entity;
 
+import com.housekeeping.entity.enums.GuestbookColor;
+import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -33,4 +35,11 @@ public class Guestbook {
 
     @Column(nullable = false)
     private LocalDateTime guestbookTimestamp = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private boolean guestbookIsArchived = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private GuestbookColor guestbookColor;
 }
