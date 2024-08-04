@@ -8,6 +8,9 @@ build/
 # yml
 src/main/resources/application.yml
 
+# properties
+src/main/resources/application.properties
+
 ### STS ###
 .apt_generated
 .classpath
