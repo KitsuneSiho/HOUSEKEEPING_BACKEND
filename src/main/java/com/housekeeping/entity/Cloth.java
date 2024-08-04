@@ -32,4 +32,7 @@ public class Cloth {
     private ClothSeason clothSeason;
 
     private String clothCustomTag;
+
+    @Column(nullable = false)
+    private String imageUrl; // 이미지 URL
 }
