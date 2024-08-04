@@ -10,14 +10,8 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class FurniturePlacementDTO {
+public class FurnitureTypeDTO {
 
-    private Long placementId;
-    private Long roomId;
-    private Long furnitureId;
-    private String furnitureName;
     private FurnitureType furnitureType;
-    private String placementLocation;
-    private int placementAngle;
-    private int placementSize;
+    private String furnitureTypeName;
 }

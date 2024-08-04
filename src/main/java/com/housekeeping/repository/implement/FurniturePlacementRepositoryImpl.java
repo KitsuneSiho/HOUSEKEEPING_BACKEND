@@ -21,8 +21,9 @@ public class FurniturePlacementRepositoryImpl implements FurniturePlacementRepos
     @Override
     public List<FurniturePlacementDTO> getFurniturePlacementDTOsByRoomId(Long roomId) {
         return jpaQueryFactory.select(Projections.constructor(FurniturePlacementDTO.class,
-                qFurniturePlacement.placementId, qFurniturePlacement.room.roomId, qFurniturePlacement.furniture.furnitureId,
-                qFurniturePlacement.placementLocation, qFurniturePlacement.placementAngle, qFurniturePlacement.placementSize))
+                        qFurniturePlacement.placementId, qFurniturePlacement.room.roomId, qFurniturePlacement.furniture.furnitureId,
+                        qFurniturePlacement.furniture.furnitureName, qFurniturePlacement.furniture.furnitureType, qFurniturePlacement.placementLocation,
+                        qFurniturePlacement.placementAngle, qFurniturePlacement.placementSize))
                 .from(qFurniturePlacement)
                 .where(qFurniturePlacement.room.roomId.eq(roomId))
                 .fetch();

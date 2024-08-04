@@ -1,8 +1,10 @@
 package com.housekeeping.repository.implement;
 
 import com.housekeeping.DTO.FurnitureDTO;
+import com.housekeeping.DTO.FurnitureTypeDTO;
 import com.housekeeping.entity.Furniture;
 import com.housekeeping.entity.QFurniture;
+import com.housekeeping.entity.enums.FurnitureType;
 import com.housekeeping.repository.custom.FurnitureRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -27,5 +29,16 @@ public class FurnitureRepositoryImpl implements FurnitureRepositoryCustom {
                 .from(qFurniture)
                 .where(qFurniture.level.levelLevel.loe(level))
                 .fetch();
+    }
+
+    @Override
+    public List<FurnitureTypeDTO> getFurnitureTypeList(int level) {
+
+        return jpaQueryFactory.select(Projections.constructor(FurnitureTypeDTO.class,
+                        qFurniture.furnitureType, qFurniture.furnitureTypeName))
+                .from(qFurniture)
+                .where(qFurniture.level.levelLevel.loe(level))
+                .groupBy(qFurniture.furnitureType, qFurniture.furnitureTypeName)
+            .fetch();
     }
 }

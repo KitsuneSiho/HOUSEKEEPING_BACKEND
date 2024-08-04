@@ -27,6 +27,9 @@ public class Furniture {
     @Column(nullable = false)
     private FurnitureType furnitureType;
 
+    @Column(nullable = false)
+    private String furnitureTypeName;
+
     @OneToMany(mappedBy = "furniture", cascade = CascadeType.ALL)
     private List<FurniturePlacement> furniturePlacements;
 }
