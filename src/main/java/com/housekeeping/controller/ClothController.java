@@ -36,4 +36,28 @@ public class ClothController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    // 옷 아이템 수정
+    @PutMapping("/items/{id}")
+    public ResponseEntity<ClothDTO> updateCloth(@PathVariable Long id, @RequestBody ClothDTO clothDTO) {
+        try {
+            ClothDTO updatedCloth = clothService.updateCloth(id, clothDTO);
+            return ResponseEntity.ok(updatedCloth);
+        } catch (Exception e) {
+            System.err.println("옷 수정 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 옷 아이템 삭제
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Void> deleteCloth(@PathVariable Long id) {
+        try {
+            clothService.deleteClothAndImage(id); // 변경된 부분
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            System.err.println("옷 삭제 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

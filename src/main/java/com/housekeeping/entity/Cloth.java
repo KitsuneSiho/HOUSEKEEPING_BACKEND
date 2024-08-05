@@ -27,6 +27,9 @@ public class Cloth {
     @Column(nullable = false)
     private String clothColor; //옷 색깔
 
+    @Column(nullable = false)
+    private String clothMaterial; //옷 소재
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClothSeason clothSeason;

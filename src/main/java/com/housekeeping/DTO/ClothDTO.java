@@ -14,6 +14,7 @@ public class ClothDTO {
     private String clothName;
     private String clothType;
     private String clothColor;
+    private String clothMaterial;
     private ClothSeason clothSeason;
     private String clothCustomTag;
     private String imageUrl; // 이미지 URL

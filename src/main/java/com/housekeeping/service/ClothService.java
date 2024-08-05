@@ -1,13 +1,17 @@
 package com.housekeeping.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.housekeeping.DTO.ClothDTO;
 import com.housekeeping.entity.Cloth;
 import com.housekeeping.entity.User;
 import com.housekeeping.repository.ClothRepository;
 import com.housekeeping.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +23,12 @@ public class ClothService {
 
     @Autowired
     private UserRepository userRepository; // UserRepository 주입
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Value("${ncp.bucket.name}")
+    private String bucketName;
 
     @Autowired
     private UserService userService; // UserRepository 주입
@@ -69,6 +79,7 @@ public ClothDTO saveCloth(ClothDTO clothDTO) {
         dto.setClothName(cloth.getClothName());
         dto.setClothType(cloth.getClothType());
         dto.setClothColor(cloth.getClothColor());
+        dto.setClothMaterial(cloth.getClothMaterial());
         dto.setClothSeason(cloth.getClothSeason());
         dto.setClothCustomTag(cloth.getClothCustomTag());
         dto.setImageUrl(cloth.getImageUrl()); // 추가된 부분
@@ -82,9 +93,50 @@ public ClothDTO saveCloth(ClothDTO clothDTO) {
         cloth.setClothName(clothDTO.getClothName());
         cloth.setClothType(clothDTO.getClothType());
         cloth.setClothColor(clothDTO.getClothColor());
+        cloth.setClothMaterial(clothDTO.getClothMaterial());
         cloth.setClothSeason(clothDTO.getClothSeason());
         cloth.setClothCustomTag(clothDTO.getClothCustomTag());
         cloth.setImageUrl(clothDTO.getImageUrl()); // 추가된 부분
         return cloth;
     }
-}
+
+    // 옷 아이템 수정
+
+    public ClothDTO updateCloth(Long id, ClothDTO clothDTO) {
+        Cloth cloth = clothRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid clothId: " + id));
+
+        cloth.setClothName(clothDTO.getClothName());
+        cloth.setClothType(clothDTO.getClothType());
+        cloth.setClothColor(clothDTO.getClothColor());
+        cloth.setClothMaterial(clothDTO.getClothMaterial());
+        cloth.setClothSeason(clothDTO.getClothSeason());
+        cloth.setClothCustomTag(clothDTO.getClothCustomTag());
+        cloth.setImageUrl(clothDTO.getImageUrl());
+
+        Cloth updatedCloth = clothRepository.save(cloth);
+        return toDTO(updatedCloth);
+    }
+
+    // 옷 아이템 삭제
+    public void deleteClothAndImage(Long id) {
+        try {
+            Cloth cloth = clothRepository.findById(id).orElse(null);
+
+            if (cloth != null) {
+                // S3에서 이미지 파일 삭제
+                String imageUrl = cloth.getImageUrl();
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+                    // 파일 이름을 URL 인코딩하지 않음
+                    amazonS3.deleteObject(bucketName, fileName);
+                }
+
+                // DB에서 옷 정보 삭제
+                clothRepository.deleteById(id);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("옷 삭제 중 오류 발생: " + e.getMessage(), e);
+        }
+    }
+    }
