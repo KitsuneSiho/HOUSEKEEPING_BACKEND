@@ -25,8 +25,8 @@ public class FurniturePlacement {
     private String placementLocation;
 
     @Column(nullable = false)
-    private int placementAngle;
+    private double placementAngle;
 
     @Column(nullable = false)
-    private int placementSize;
+    private double placementSize;
 }

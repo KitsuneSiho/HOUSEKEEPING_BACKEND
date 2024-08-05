@@ -18,6 +18,6 @@ public class FurniturePlacementDTO {
     private String furnitureName;
     private FurnitureType furnitureType;
     private String placementLocation;
-    private int placementAngle;
-    private int placementSize;
+    private double placementAngle;
+    private double placementSize;
 }
