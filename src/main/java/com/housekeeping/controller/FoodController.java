@@ -34,8 +34,8 @@ public class FoodController {
     }
 
     @GetMapping("/foodlist/all") //전체보기
-    public List<FoodDTO> getAllFoods(@RequestParam("userId") Long userId, @RequestParam("foodCategory") FoodCategory foodCategory) {
-        return foodService.getAllUserFoods(userId, foodCategory);
+    public List<FoodDTO> getAllFoods(@RequestParam("userId") Long userId) {
+        return foodService.getAllUserFoods(userId);
 
     }
 
@@ -49,7 +49,7 @@ public class FoodController {
         return foodService.addUserFood(foodDTO);
     }
 
-    @DeleteMapping("/foodlist/delete/{foodId}")
+    @DeleteMapping("/foodlist/delete/{foodId}") //식재료 삭제
     public ResponseEntity<?> deleteFood(@PathVariable("foodId") Long foodId, @RequestParam("userId") Long userId){
         try {
             boolean isDeleted = foodService.deleteUserFood(foodId, userId);

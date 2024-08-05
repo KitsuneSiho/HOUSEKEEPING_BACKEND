@@ -56,6 +56,24 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
     }
 
     @Override
+    public List<FoodDTO> findAllUserFoods(Long userId) {
+        QFood food = QFood.food;
+
+        return queryFactory
+                .select(Projections.bean(FoodDTO.class,
+                        food.foodId,
+                        food.user.userId.as("userId"),
+                        food.foodName,
+                        food.foodCategory,
+                        food.foodQuantity,
+                        food.foodMemo,
+                        food.foodExpirationDate))
+                .from(food)
+                .where(food.user.userId.eq(userId))
+                .fetch();
+    }
+
+    @Override
     public boolean deleteUserFood(Long foodId, Long userId) {
         QFood food = QFood.food;
         long deletedCount = queryFactory

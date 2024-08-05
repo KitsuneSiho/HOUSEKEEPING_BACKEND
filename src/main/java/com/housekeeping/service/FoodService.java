@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FoodService {
     List<FoodCategory> getUserCategories(Long userId);
-    List<FoodDTO> getAllUserFoods(Long userId, FoodCategory foodCategory);
+    List<FoodDTO> getAllUserFoods(Long userId);
     List<FoodDTO> getUserFoodsByCategory(Long userId, FoodCategory category);
     FoodDTO addUserFood(FoodDTO foodDTO);
     boolean deleteUserFood(Long foodId, Long userId);

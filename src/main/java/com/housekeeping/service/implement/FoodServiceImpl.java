@@ -29,8 +29,8 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<FoodDTO> getAllUserFoods(Long userId, FoodCategory foodCategory) {
-        return foodRepository.findUserFoods(userId, foodCategory);
+    public List<FoodDTO> getAllUserFoods(Long userId) {
+        return foodRepository.findAllUserFoods(userId);
     }
 
     @Override
