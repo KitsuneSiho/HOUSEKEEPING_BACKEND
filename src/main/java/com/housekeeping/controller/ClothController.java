@@ -18,9 +18,9 @@ public class ClothController {
 
     //옷장 아이템 조회
     @GetMapping("/items")
-    public List<ClothDTO> getClothes(@RequestParam String name,
-                                     @RequestParam String category,
-                                     @RequestParam String details) {
+    public List<ClothDTO> getClothes(@RequestParam(required = false) String name,
+                                     @RequestParam(required = false) String category,
+                                     @RequestParam(required = false) String details) {
         return clothService.getClothes(name, category, details);
     }
 
