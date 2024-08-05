@@ -24,6 +24,7 @@ public class Furniture {
     @Column(nullable = false)
     private String furnitureName;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FurnitureType furnitureType;
 
