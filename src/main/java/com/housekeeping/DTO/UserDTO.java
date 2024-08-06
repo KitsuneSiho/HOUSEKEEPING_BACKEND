@@ -1,5 +1,6 @@
 package com.housekeeping.DTO;
 
+import com.housekeeping.entity.enums.UserPlatform;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-
     private Long userId;
     private String nickname;
     private String username;
@@ -18,4 +18,6 @@ public class UserDTO {
     private String email;
     private String phoneNumber;
     private String role;
+    private UserPlatform userPlatform;
+    private boolean isNewUser;
 }

@@ -2,13 +2,11 @@ package com.housekeeping.service.oauth2;
 
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.DTO.oauth2.*;
-import com.housekeeping.entity.LevelEXPTable;
-import com.housekeeping.entity.User;
-import com.housekeeping.entity.enums.Role;
 import com.housekeeping.entity.enums.UserPlatform;
-import com.housekeeping.repository.LevelEXPTableRepository;
 import com.housekeeping.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,14 +14,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+    private static final Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+
     private final UserRepository userRepository;
-    private final LevelEXPTableRepository levelEXPTableRepository;
 
     @Transactional
     @Override
@@ -31,9 +29,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String clientName = userRequest.getClientRegistration().getClientName();
 
-        OAuth2Response response = null;
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        logger.debug("OAuth2 attributes: {}", attributes);
 
+        OAuth2Response response = null;
         if (clientName.equalsIgnoreCase("naver")) {
             response = new NaverResponse(attributes);
         } else if (clientName.equalsIgnoreCase("google")) {
@@ -46,57 +45,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String providerId = response.getProviderId();
         String provider = response.getProvider();
-        String nickname = provider + "_" + providerId;
-        User userEntity = saveOrUpdateUser(response, nickname, provider);
+        String tempNickname = provider + "_" + providerId;
+
+        // 사용자가 이미 존재하는지 확인
+        boolean isNewUser = !userRepository.existsByNickname(tempNickname);
 
         UserDTO oAuth2UserDto = UserDTO.builder()
-                .userId(userEntity.getUserId())
-                .username(nickname)
+                .username(tempNickname)
                 .name(response.getName())
                 .email(response.getEmail())
                 .phoneNumber(response.getPhoneNumber())
-                .role(userEntity.getRole().name())
+                .userPlatform(UserPlatform.valueOf(provider.toUpperCase()))
+                .isNewUser(isNewUser)
                 .build();
 
         return new CustomOAuth2User(oAuth2UserDto);
-    }
-
-    private User saveOrUpdateUser(OAuth2Response response, String nickname, String provider) {
-        User userEntity = userRepository.findByNickname(nickname);
-
-        if (userEntity != null) {
-            userEntity.setName(response.getName());
-            userEntity.setEmail(response.getEmail());
-            userEntity.setPhoneNumber(response.getPhoneNumber());
-        } else {
-            LevelEXPTable defaultLevel = getOrCreateDefaultLevel();
-
-            userEntity = User.builder()
-                    .username(nickname)
-                    .name(response.getName())
-                    .email(response.getEmail())
-                    .phoneNumber(response.getPhoneNumber())
-                    .nickname(nickname)
-                    .userPlatform(UserPlatform.valueOf(provider.toUpperCase()))
-                    .role(Role.USER)
-                    .userEnrollment(LocalDateTime.now())
-                    .level(defaultLevel)
-                    .userEXP(0)
-                    .build();
-        }
-
-        return userRepository.save(userEntity);
-    }
-
-    private LevelEXPTable getOrCreateDefaultLevel() {
-        LevelEXPTable defaultLevel = levelEXPTableRepository.findByLevelLevel(1);
-        if (defaultLevel == null) {
-            defaultLevel = new LevelEXPTable();
-            defaultLevel.setLevelLevel(1);
-            defaultLevel.setLevelName("Beginner");
-            defaultLevel.setLevelRequireEXP(0);
-            defaultLevel = levelEXPTableRepository.save(defaultLevel);
-        }
-        return defaultLevel;
     }
 }
