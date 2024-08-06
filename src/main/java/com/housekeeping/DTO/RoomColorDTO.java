@@ -12,12 +12,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomDTO {
+public class RoomColorDTO {
     private Long roomId;
     private Long userId;
     private String roomName;
     private RoomType roomType;
     private int roomPollution;
-    private List<ScheduleDTO> schedules;
+    private String roomWallsColor;
 
 }
