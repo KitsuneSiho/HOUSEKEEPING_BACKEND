@@ -22,5 +22,5 @@ public class ChatRoomMember {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private User user;
+    private UserEntity user;
 }

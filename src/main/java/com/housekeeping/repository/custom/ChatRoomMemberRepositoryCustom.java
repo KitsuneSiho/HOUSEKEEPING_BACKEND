@@ -2,7 +2,7 @@ package com.housekeeping.repository.custom;
 
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.ChatRoomMember;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.UserEntity;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface ChatRoomMemberRepositoryCustom {
     // 특정 채팅 방에 들어있는 자신을 제외한 모든 유저들의 닉네임을 반환
     List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId);
     // 특정 채팅 방에 들어있는 모든 유저들을 반환
-    List<User> findUsersByChatRoomId(Long chatRoomId);
+    List<UserEntity> findUsersByChatRoomId(Long chatRoomId);
 }

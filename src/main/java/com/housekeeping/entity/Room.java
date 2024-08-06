@@ -1,8 +1,5 @@
 package com.housekeeping.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +17,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false)
     private String roomName;

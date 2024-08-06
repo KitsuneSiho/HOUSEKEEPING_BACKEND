@@ -17,11 +17,11 @@ public class FriendRequest {
 
     @ManyToOne
     @JoinColumn(name = "requestSenderId", nullable = false)
-    private User requestSender;
+    private UserEntity requestSender;
 
     @ManyToOne
     @JoinColumn(name = "requestReceiverId", nullable = false)
-    private User requestReceiver;
+    private UserEntity requestReceiver;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

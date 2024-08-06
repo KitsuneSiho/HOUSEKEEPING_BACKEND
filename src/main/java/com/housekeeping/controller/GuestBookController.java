@@ -1,7 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.GuestbookDTO;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.UserEntity;
 import com.housekeeping.service.GuestbookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class GuestBookController {
     // 방 주인의 방명록 조회
     @GetMapping("/list/{ownerId}")
     public List<GuestbookDTO> guestbookListByOwner(@PathVariable Long ownerId) {
-        User guestbookOwner = new User();
+        UserEntity guestbookOwner = new UserEntity();
         guestbookOwner.setUserId(ownerId);
         return guestbookService.findByGuestbookOwner(guestbookOwner);
     }
@@ -44,7 +44,7 @@ public class GuestBookController {
     // 특정 방 주인의 보관된 방명록 조회
     @GetMapping("/archived/{ownerId}")
     public List<GuestbookDTO> getArchivedGuestbooksByOwner(@PathVariable Long ownerId) {
-        User guestbookOwner = new User();
+        UserEntity guestbookOwner = new UserEntity();
         guestbookOwner.setUserId(ownerId);
         return guestbookService.findArchivedGuestbooksByOwner(guestbookOwner);
     }

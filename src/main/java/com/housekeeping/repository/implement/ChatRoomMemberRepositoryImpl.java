@@ -48,7 +48,7 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
     }
 
     @Override
-    public List<User> findUsersByChatRoomId(Long chatRoomId) {
+    public List<UserEntity> findUsersByChatRoomId(Long chatRoomId) {
 
         return queryFactory
                 .select(qUser)

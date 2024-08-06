@@ -33,8 +33,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             response = new NaverResponse(attributes);
         } else if (clientName.equals("google")) {
             response = new GoogleResponse(attributes);
-        } else if (clientName.equals("github")) {
-            response = new GithubResponse(attributes);
+        } else if (clientName.equals("kakao")) {
+            response = new KakaoResponse(attributes);
         } else {
             return null;
         }

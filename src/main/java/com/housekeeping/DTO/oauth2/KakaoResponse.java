@@ -2,16 +2,16 @@ package com.housekeeping.DTO.oauth2;
 
 import java.util.Map;
 
-public class NaverResponse implements OAuth2Response {
+public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
 
-    public NaverResponse(Map<String, Object> attribute) {
-        this.attribute = (Map<String, Object>) attribute.get("response");
+    public KakaoResponse(Map<String, Object> attribute) {
+        this.attribute = (Map<String, Object>) attribute.get("kakao_account");
     }
 
     @Override
     public String getProvider() {
-        return "naver";
+        return "kakao";
     }
 
     @Override
@@ -21,7 +21,8 @@ public class NaverResponse implements OAuth2Response {
 
     @Override
     public String getName() {
-        return attribute.get("name").toString();
+        Map<String, Object> profile = (Map<String, Object>) attribute.get("profile");
+        return profile.get("nickname").toString();
     }
 
     @Override
@@ -31,6 +32,6 @@ public class NaverResponse implements OAuth2Response {
 
     @Override
     public String getPhoneNumber() {
-        return attribute.get("mobile").toString();
+        return attribute.get("phone_number").toString();
     }
 }

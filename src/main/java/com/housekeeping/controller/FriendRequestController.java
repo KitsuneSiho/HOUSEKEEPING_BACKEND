@@ -1,8 +1,6 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.FriendRequestDTO;
-import com.housekeeping.entity.FriendRequest;
-import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.RequestStatus;
 import com.housekeeping.service.FriendRequestService;
 import com.housekeeping.service.UserService;

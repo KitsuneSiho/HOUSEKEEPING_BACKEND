@@ -3,7 +3,7 @@ package com.housekeeping.service.implement;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.Friend;
 import com.housekeeping.entity.QFriend;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.UserEntity;
 import com.housekeeping.repository.FriendRepository;
 import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.FriendService;
@@ -75,7 +75,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<UserDTO> searchUsersByNickname(String nickname) {
-        List<User> users = userRepository.findByNicknameContainingIgnoreCase(nickname);
+        List<UserEntity> users = userRepository.findByNicknameContainingIgnoreCase(nickname);
         return users.stream()
                 .map(user -> UserDTO.builder()
                         .userId(user.getUserId())
@@ -86,9 +86,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void createFriendRelationship(Long userId1, Long userId2) {
-        User user1 = userRepository.findById(userId1)
+        UserEntity user1 = userRepository.findById(userId1)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        User user2 = userRepository.findById(userId2)
+        UserEntity user2 = userRepository.findById(userId2)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 친구 관계 생성

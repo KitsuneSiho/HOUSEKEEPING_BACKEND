@@ -25,7 +25,7 @@ public class LevelEXPTable {
     private int levelRequireEXP;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
-    private List<User> users;
+    private List<UserEntity> users;
 
     @OneToMany(mappedBy = "level", cascade = CascadeType.ALL)
     private List<Furniture> furniture;

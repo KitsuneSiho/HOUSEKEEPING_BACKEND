@@ -1,9 +1,8 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.GuestbookDTO;
-import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.Guestbook;
-import com.housekeeping.entity.User;
+import com.housekeeping.entity.UserEntity;
 import com.housekeeping.mapper.GuestbookMapper;
 import com.housekeeping.repository.GuestbookRepository;
 import com.housekeeping.repository.UserRepository;
@@ -21,7 +20,7 @@ public class GuestbookService {
     private final GuestbookRepository guestbookRepository;
     private final UserRepository userRepository;
 
-    public List<GuestbookDTO> findByGuestbookOwner(User guestbookOwner) {
+    public List<GuestbookDTO> findByGuestbookOwner(UserEntity guestbookOwner) {
         return guestbookRepository.findByGuestbookOwner(guestbookOwner)
                 .stream()
                 .map(GuestbookMapper::toDTO)
@@ -30,9 +29,9 @@ public class GuestbookService {
 
     public GuestbookDTO save(GuestbookDTO guestDTO) {
         // Find or create User objects for the owner and writer
-        User guestbookOwner = userRepository.findById(guestDTO.getGuestbookOwnerId())
+        UserEntity guestbookOwner = userRepository.findById(guestDTO.getGuestbookOwnerId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        User guestbookWriter = userRepository.findById(guestDTO.getGuestbookWriterId())
+        UserEntity guestbookWriter = userRepository.findById(guestDTO.getGuestbookWriterId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Convert DTO to Entity
@@ -58,7 +57,7 @@ public class GuestbookService {
     }
 
     // 방 주인의 보관된 방명록 조회
-    public List<GuestbookDTO> findArchivedGuestbooksByOwner(User guestbookOwner) {
+    public List<GuestbookDTO> findArchivedGuestbooksByOwner(UserEntity guestbookOwner) {
         return guestbookRepository.findByGuestbookOwnerAndGuestbookIsArchived(guestbookOwner, true)
                 .stream()
                 .map(GuestbookMapper::toDTO)
