@@ -45,6 +45,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         // redirect query param 인코딩 후 전달
         String encodedName = URLEncoder.encode(name, "UTF-8");
+        response.addHeader("Access-Token", access);  // Add the access token to the header
         response.sendRedirect("http://localhost:5173/oauth2-jwt-header?name=" + encodedName);
     }
 }

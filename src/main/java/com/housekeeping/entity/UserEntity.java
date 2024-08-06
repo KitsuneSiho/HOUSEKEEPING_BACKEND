@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.housekeeping.entity.enums.Role;
 import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,10 +15,11 @@ import java.util.List;
                 @UniqueConstraint(columnNames = {"email", "userPlatform"}),
                 @UniqueConstraint(columnNames = {"nickname"})
         })
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +44,7 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDateTime userEnrollment = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "levelId", nullable = false)
     private LevelEXPTable level;
 
@@ -65,43 +63,43 @@ public class UserEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ChatRoomMember> chatRoomMembers;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MessageReadStatus> messageReadStatuses;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cloth> cloths;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Food> foods;
 
-    @OneToMany(mappedBy = "friendUser1", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "friendUser1", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Friend> friends1;
 
-    @OneToMany(mappedBy = "friendUser2", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "friendUser2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Friend> friends2;
 
-    @OneToMany(mappedBy = "requestSender", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "requestSender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FriendRequest> sentFriendRequests;
 
-    @OneToMany(mappedBy = "requestReceiver", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "requestReceiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FriendRequest> receivedFriendRequests;
 
-    @OneToMany(mappedBy = "guestbookOwner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "guestbookOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Guestbook> guestbookEntriesOwned;
 
-    @OneToMany(mappedBy = "guestbookWriter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "guestbookWriter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Guestbook> guestbookEntriesWritten;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // 순환 참조 방지
     private List<Room> rooms;
 }
