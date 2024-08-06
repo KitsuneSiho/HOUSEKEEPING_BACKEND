@@ -2,8 +2,10 @@ package com.housekeeping.controller;
 
 import com.housekeeping.DTO.RoomColorDTO;
 import com.housekeeping.DTO.RoomDTO;
+import com.housekeeping.DTO.RoomNameUpdateDTO;
 import com.housekeeping.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,4 +34,12 @@ public class RoomController {
     public List<RoomColorDTO> getAllRooms(@RequestParam("userId") Long userId) {
         return roomService.getRoomColorDTOsByUserId(userId);
     }
+
+    // 방 이름 수정
+    @PostMapping("/rename")
+    public ResponseEntity<String> renameRoom(@RequestParam("roomId") Long roomId, @RequestParam("newName") String newName) {
+        roomService.renameRoom(roomId, newName);
+        return ResponseEntity.ok("Room name updated successfully");
+    }
+
 }
