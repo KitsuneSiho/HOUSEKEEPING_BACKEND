@@ -6,7 +6,7 @@ public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
 
     public KakaoResponse(Map<String, Object> attribute) {
-        this.attribute = (Map<String, Object>) attribute.get("kakao_account");
+        this.attribute = attribute;
     }
 
     @Override
@@ -16,22 +16,24 @@ public class KakaoResponse implements OAuth2Response {
 
     @Override
     public String getProviderId() {
-        return attribute.get("id").toString();
+        return String.valueOf(attribute.get("id"));
     }
 
     @Override
     public String getName() {
-        Map<String, Object> profile = (Map<String, Object>) attribute.get("profile");
-        return profile.get("nickname").toString();
+        Map<String, Object> properties = (Map<String, Object>) attribute.get("properties");
+        return properties != null ? (String) properties.get("nickname") : null;
     }
 
     @Override
     public String getEmail() {
-        return attribute.get("email").toString();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
+        return kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
     }
 
     @Override
     public String getPhoneNumber() {
-        return attribute.get("phone_number").toString();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
+        return kakaoAccount != null ? (String) kakaoAccount.get("phone_number") : null;
     }
 }

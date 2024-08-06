@@ -18,7 +18,7 @@ public class RefreshEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String nickname;  // 이 줄을 추가합니다.
+    private String nickname;
 
     @Column(nullable = false, unique = true)
     private String refresh;
