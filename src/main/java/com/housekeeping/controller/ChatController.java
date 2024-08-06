@@ -52,7 +52,7 @@ public class ChatController {
 
     // 채팅 방 정보 반환
     @GetMapping("/room/{chatRoomId}")
-    public ChatRoomDTO getChatRoom(@PathVariable Long chatRoomId) {
+    public ChatRoomDTO getChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
 
         ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
 

@@ -18,9 +18,9 @@ public class ClothController {
 
     //옷장 아이템 조회
     @GetMapping("/items")
-    public List<ClothDTO> getClothes(@RequestParam(required = false) String name,
-                                     @RequestParam(required = false) String category,
-                                     @RequestParam(required = false) String details) {
+    public List<ClothDTO> getClothes(@RequestParam(value = "name", required = false) String name,
+                                     @RequestParam(value = "category", required = false) String category,
+                                     @RequestParam(value = "details", required = false) String details) {
         return clothService.getClothes(name, category, details);
     }
 
@@ -38,7 +38,7 @@ public class ClothController {
     }
     // 옷 아이템 수정
     @PutMapping("/items/{id}")
-    public ResponseEntity<ClothDTO> updateCloth(@PathVariable Long id, @RequestBody ClothDTO clothDTO) {
+    public ResponseEntity<ClothDTO> updateCloth(@PathVariable("id") Long id, @RequestBody ClothDTO clothDTO) {
         try {
             ClothDTO updatedCloth = clothService.updateCloth(id, clothDTO);
             return ResponseEntity.ok(updatedCloth);
@@ -50,7 +50,7 @@ public class ClothController {
 
     // 옷 아이템 삭제
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<Void> deleteCloth(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCloth(@PathVariable("id") Long id) {
         try {
             clothService.deleteClothAndImage(id); // 변경된 부분
             return ResponseEntity.noContent().build();
