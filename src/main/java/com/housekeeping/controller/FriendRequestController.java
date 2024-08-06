@@ -36,8 +36,8 @@ public class FriendRequestController {
     // 친구 검색 시 내가 요청 보낸 현황 확인
     @GetMapping("/status")
     public ResponseEntity<Map<Long, RequestStatus>> getRequestStatus(
-            @RequestParam Long senderId,
-            @RequestParam String receiverIds) {
+            @RequestParam("senderId") Long senderId,
+            @RequestParam("receiverIds") String receiverIds) {
         List<Long> receiverIdList = Arrays.stream(receiverIds.split(","))
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
@@ -47,20 +47,20 @@ public class FriendRequestController {
 
     // 내가 받은 요청 확인
     @GetMapping("/received")
-    public ResponseEntity<List<FriendRequestDTO>> getReceivedFriendRequests(@RequestParam Long userId) {
+    public ResponseEntity<List<FriendRequestDTO>> getReceivedFriendRequests(@RequestParam("userId") Long userId) {
         List<FriendRequestDTO> requests = friendRequestService.getReceivedFriendRequests(userId);
         return ResponseEntity.ok(requests);
     }
     // 친구 요청 수락
     @PostMapping("/accept")
-    public ResponseEntity<Void> acceptFriendRequest(@RequestParam Long requestId) {
+    public ResponseEntity<Void> acceptFriendRequest(@RequestParam("requestId") Long requestId) {
         friendRequestService.acceptFriendRequest(requestId);
         return ResponseEntity.ok().build();
     }
 
     // 친구 요청 및 친구 관계 모두 취소
     @PostMapping("/cancel")
-    public ResponseEntity<Void> cancelFriendRequestAndFriendship(@RequestParam Long senderId, @RequestParam Long receiverId) {
+    public ResponseEntity<Void> cancelFriendRequestAndFriendship(@RequestParam("senderId") Long senderId, @RequestParam("receiverId") Long receiverId) {
         try {
 
             // 친구 요청 내역 삭제
@@ -75,7 +75,7 @@ public class FriendRequestController {
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<Void> rejectFriendRequest(@RequestParam Long senderId, @RequestParam Long receiverId) {
+    public ResponseEntity<Void> rejectFriendRequest(@RequestParam("senderId") Long senderId, @RequestParam("receiverId") Long receiverId) {
         try {
             friendRequestService.cancelFriendRequest(senderId, receiverId);
             return ResponseEntity.ok().build();

@@ -17,7 +17,7 @@ public class GuestBookController {
 
     // 방 주인의 방명록 조회
     @GetMapping("/list/{ownerId}")
-    public List<GuestbookDTO> guestbookListByOwner(@PathVariable Long ownerId) {
+    public List<GuestbookDTO> guestbookListByOwner(@PathVariable("ownerId") Long ownerId) {
         User guestbookOwner = new User();
         guestbookOwner.setUserId(ownerId);
         return guestbookService.findByGuestbookOwner(guestbookOwner);
@@ -31,19 +31,19 @@ public class GuestBookController {
 
     // 방명록 삭제
     @DeleteMapping("/delete/{id}")
-    public void guestbookDelete(@PathVariable Long id) {
+    public void guestbookDelete(@PathVariable("id") Long id) {
         guestbookService.deleteById(id);
     }
 
     // 방명록 보관
     @PatchMapping("/archive/{id}")
-    public void guestbookArchive(@PathVariable Long id) {
+    public void guestbookArchive(@PathVariable("id") Long id) {
         guestbookService.archiveById(id);
     }
 
     // 특정 방 주인의 보관된 방명록 조회
     @GetMapping("/archived/{ownerId}")
-    public List<GuestbookDTO> getArchivedGuestbooksByOwner(@PathVariable Long ownerId) {
+    public List<GuestbookDTO> getArchivedGuestbooksByOwner(@PathVariable("ownerId") Long ownerId) {
         User guestbookOwner = new User();
         guestbookOwner.setUserId(ownerId);
         return guestbookService.findArchivedGuestbooksByOwner(guestbookOwner);
