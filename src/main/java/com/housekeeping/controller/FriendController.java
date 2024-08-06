@@ -47,7 +47,7 @@ public class FriendController {
 
     // 친구 추가를 위해 닉네임으로 사용자 검색
     @GetMapping("/search")
-    public List<UserDTO> searchUsersByNickname(@RequestParam String nickname) {
+    public List<UserDTO> searchUsersByNickname(@RequestParam("nickname") String nickname) {
         return friendService.searchUsersByNickname(nickname);
     }
 
