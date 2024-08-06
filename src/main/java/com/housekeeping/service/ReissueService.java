@@ -1,6 +1,5 @@
 package com.housekeeping.service;
 
-
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.repository.RefreshRepository;
 import com.housekeeping.util.CookieUtil;
@@ -26,8 +25,11 @@ public class ReissueService {
         String refresh = null;
         Cookie[] cookies = request.getCookies();
 
-        refresh = Arrays.stream(cookies).filter((cookie) -> cookie.getName().equals("refresh"))
-                .findFirst().get().getValue();
+        refresh = Arrays.stream(cookies)
+                .filter((cookie) -> cookie.getName().equals("refresh"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
 
         // 쿠키에 refresh 토큰 x
         if (refresh == null) {
@@ -37,13 +39,13 @@ public class ReissueService {
         // 만료된 토큰은 payload 읽을 수 없음 -> ExpiredJwtException 발생
         try {
             jwtUtil.isExpired(refresh);
-        } catch(ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
 
         // refresh 토큰이 아님
         String category = jwtUtil.getCategory(refresh);
-        if(!category.equals("refresh")) {
+        if (!category.equals("refresh")) {
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
@@ -54,7 +56,7 @@ public class ReissueService {
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
 
         // DB 에 없는 리프레시 토큰 (혹은 블랙리스트 처리된 리프레시 토큰)
-        if(!isExist) {
+        if (!isExist) {
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
