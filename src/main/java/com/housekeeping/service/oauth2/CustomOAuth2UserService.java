@@ -47,7 +47,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String provider = response.getProvider();
         String tempNickname = provider + "_" + providerId;
 
-        // 사용자가 이미 존재하는지 확인
         boolean isNewUser = !userRepository.existsByNickname(tempNickname);
 
         UserDTO oAuth2UserDto = UserDTO.builder()
