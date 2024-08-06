@@ -50,13 +50,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         boolean isNewUser = !userRepository.existsByNickname(tempNickname);
 
         UserDTO oAuth2UserDto = UserDTO.builder()
+                .userId(null)  // 새 사용자의 경우 아직 userId가 없습니다.
                 .username(tempNickname)
-                .name(response.getName())
-                .email(response.getEmail())
-                .phoneNumber(response.getPhoneNumber())
+                .name(response.getName() != null ? response.getName() : "")
+                .email(response.getEmail() != null ? response.getEmail() : "")
+                .phoneNumber(response.getPhoneNumber() != null ? response.getPhoneNumber() : "")
+                .role("ROLE_USER")  // 기본 역할 설정
                 .userPlatform(UserPlatform.valueOf(provider.toUpperCase()))
-                .isNewUser(isNewUser)
+                .isNewUser(true)  // 항상 true로 설정하여 FirstLogin 페이지로 이동
                 .build();
+        logger.debug("UserDTO: {}", oAuth2UserDto);
 
         return new CustomOAuth2User(oAuth2UserDto);
     }

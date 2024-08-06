@@ -1,6 +1,7 @@
 package com.housekeeping.DTO.oauth2;
 
 import com.housekeeping.DTO.UserDTO;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+@Getter
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
     private final UserDTO oAuth2UserDto;
@@ -48,5 +50,10 @@ public class CustomOAuth2User implements OAuth2User {
 
     public String getPhoneNumber() {
         return oAuth2UserDto.getPhoneNumber();
+    }
+
+    // 추가된 메서드
+    public UserDTO getUserDTO() {
+        return oAuth2UserDto;
     }
 }
