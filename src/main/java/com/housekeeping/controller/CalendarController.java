@@ -38,7 +38,7 @@ public class CalendarController {
 
     // 스케줄 이름 변경
     @PatchMapping("/updateName/{id}")
-    public ResponseEntity<ScheduleDTO> updateScheduleName(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<ScheduleDTO> updateScheduleName(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
         String scheduleName = payload.get("scheduleName");
         ScheduleDTO updatedSchedule = scheduleService.updateScheduleName(id, scheduleName);
         return ResponseEntity.ok(updatedSchedule);
@@ -46,7 +46,7 @@ public class CalendarController {
 
     // 스케줄 체크, 미체크 반영
     @PatchMapping("/updateChecked/{scheduleId}")
-    public ResponseEntity<ScheduleDTO> updateChecked(@PathVariable Long scheduleId, @RequestBody Map<String, Boolean> body) {
+    public ResponseEntity<ScheduleDTO> updateChecked(@PathVariable("scheduleId") Long scheduleId, @RequestBody Map<String, Boolean> body) {
         Boolean checked = body.get("checked");
         if (checked == null) {
             return ResponseEntity.badRequest().build();
@@ -57,7 +57,7 @@ public class CalendarController {
 
     // 스케줄 알람 켜기, 끄기 반영
     @PatchMapping("/alarm/{scheduleId}")
-    public ResponseEntity<ScheduleDTO> toggleScheduleAlarm(@PathVariable Long scheduleId, @RequestBody Map<String, Boolean> body) {
+    public ResponseEntity<ScheduleDTO> toggleScheduleAlarm(@PathVariable("scheduleId") Long scheduleId, @RequestBody Map<String, Boolean> body) {
         Boolean checked = body.get("alarm");
         if (checked == null) {
             return ResponseEntity.badRequest().build();
@@ -69,7 +69,7 @@ public class CalendarController {
 
     // 스케줄 삭제
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable("id") Long id) {
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
     }
