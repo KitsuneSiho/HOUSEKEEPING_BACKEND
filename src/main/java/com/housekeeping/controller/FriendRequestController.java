@@ -5,8 +5,10 @@ import com.housekeeping.entity.FriendRequest;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.RequestStatus;
 import com.housekeeping.service.FriendRequestService;
+import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ public class FriendRequestController {
 
     private final FriendRequestService friendRequestService;
     private final UserService userService;
+    private final FriendService friendService;
 
     // 친구 요청 보내기
     @PostMapping("/send")
@@ -53,6 +56,32 @@ public class FriendRequestController {
     public ResponseEntity<Void> acceptFriendRequest(@RequestParam Long requestId) {
         friendRequestService.acceptFriendRequest(requestId);
         return ResponseEntity.ok().build();
+    }
+
+    // 친구 요청 및 친구 관계 모두 취소
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> cancelFriendRequestAndFriendship(@RequestParam Long senderId, @RequestParam Long receiverId) {
+        try {
+
+            // 친구 요청 내역 삭제
+            friendRequestService.cancelFriendRequest(senderId, receiverId);
+            // 친구 관계 삭제
+            friendService.deleteFriendship(senderId, receiverId);
+
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build(); // 에러 처리
+        }
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity<Void> rejectFriendRequest(@RequestParam Long senderId, @RequestParam Long receiverId) {
+        try {
+            friendRequestService.cancelFriendRequest(senderId, receiverId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).build(); // 서버 에러 처리
+        }
     }
 
 }

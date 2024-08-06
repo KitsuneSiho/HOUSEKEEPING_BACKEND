@@ -16,6 +16,8 @@ public class CalendarController {
 
     private final ScheduleService scheduleService;
 
+
+
     // 사용자의 방에 해당하는 스케줄 조회
     @PostMapping("/view")
     public ResponseEntity<?> getUserSchedules(@RequestBody List<Long> roomIds) {

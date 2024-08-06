@@ -16,4 +16,6 @@ public interface FriendService {
     List<UserDTO> searchUsersByNickname(String nickname);
     // 친구 목록에 친구 넣기
     void createFriendRelationship(Long userId1, Long userId2);
+    // 친구 삭제
+    void deleteFriendship(Long userId1, Long userId2);
 }

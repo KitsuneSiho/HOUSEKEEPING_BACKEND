@@ -16,4 +16,6 @@ public interface FriendRequestService {
     List<FriendRequestDTO> getReceivedFriendRequests(Long userId);
     // 친구 요청 수락
     void acceptFriendRequest(Long requestId);
+    // 팔로우 취소하면서 request에 있는 accepted 기록도 삭제
+    void cancelFriendRequest(Long senderId, Long receiverId);
 }

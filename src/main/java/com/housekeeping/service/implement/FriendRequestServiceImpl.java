@@ -5,6 +5,7 @@ import com.housekeeping.entity.FriendRequest;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.RequestStatus;
 import com.housekeeping.repository.FriendRequestRepository;
+import com.housekeeping.repository.custom.FriendRequestRepositoryCustom;
 import com.housekeeping.service.FriendRequestService;
 import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
@@ -25,7 +26,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserService userService; // Assuming you have a UserService to fetch users
     private final FriendService friendService;
-
+    private final FriendRequestRepositoryCustom friendRequestRepositoryCustom;
     @Override
     public FriendRequestDTO sendFriendRequest(FriendRequestDTO requestDTO) {
         User sender = userService.getUserById(requestDTO.getRequestSenderId());
@@ -88,6 +89,16 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                         .requestDate(request.getRequestDate())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void cancelFriendRequest(Long senderId, Long receiverId) {
+        // QueryDSL로 작성한 메서드를 사용하여 친구 요청을 찾음
+        FriendRequest friendRequest = friendRequestRepositoryCustom
+                .findByUsers(senderId, receiverId)
+                .orElseThrow(() -> new RuntimeException("Friend request not found"));
+
+        // 요청 삭제
+        friendRequestRepository.delete(friendRequest);
     }
 
     private FriendRequestDTO convertToDTO(FriendRequest friendRequest) {
