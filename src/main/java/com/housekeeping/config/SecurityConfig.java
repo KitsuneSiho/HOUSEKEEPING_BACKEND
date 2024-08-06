@@ -1,7 +1,6 @@
 package com.housekeeping.config;
 
 
-import com.housekeeping.customhandler.CustomFormSuccessHandler;
 import com.housekeeping.customhandler.CustomLogoutFilter;
 import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
@@ -65,11 +64,7 @@ public class SecurityConfig {
 
         // form
         http
-                .formLogin((form) -> form.loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .successHandler(new CustomFormSuccessHandler(jwtUtil, refreshTokenService))
-                        .failureHandler(authenticationFailureHandler())
-                        .permitAll());
+                .formLogin((form) -> form.disable());
 
         // oauth2
         http
@@ -93,7 +88,7 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000/"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000/, http://localhost:5173"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
