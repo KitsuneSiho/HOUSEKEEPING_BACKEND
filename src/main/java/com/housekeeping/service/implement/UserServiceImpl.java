@@ -1,6 +1,5 @@
 package com.housekeeping.service.implement;
 
-import com.housekeeping.entity.QUser;
 import com.housekeeping.entity.UserEntity;
 import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.UserService;
