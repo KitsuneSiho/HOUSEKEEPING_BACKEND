@@ -3,6 +3,7 @@ package com.housekeeping.controller;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.User;
 import com.housekeeping.service.FriendService;
+import com.housekeeping.service.GuestbookService;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class FriendController {
 
     private final FriendService friendService;
     private final UserService userService;
+    private final GuestbookService guestbookService;
 
     // 전체 친구 리스트를 반환
     @GetMapping("/list")
@@ -42,4 +44,13 @@ public class FriendController {
 
         return friendService.getOnlineFriends(user.getUserId());
     }
+
+    // 친구 추가를 위해 닉네임으로 사용자 검색
+    @GetMapping("/search")
+    public List<UserDTO> searchUsersByNickname(@RequestParam String nickname) {
+        return friendService.searchUsersByNickname(nickname);
+    }
+
+
+
 }
