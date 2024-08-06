@@ -1,5 +1,6 @@
 package com.housekeeping.entity.enums;
 
 public enum FoodCategory {
-    MEAT, VEGETABLE, NUTS, FRUIT
+    MILK, MEAT, SEAFOOD, VEGETABLE, FRUIT, NUTS, SEASONING, OIL, FLOUR, BEVERAGE, ETC
 }
+
