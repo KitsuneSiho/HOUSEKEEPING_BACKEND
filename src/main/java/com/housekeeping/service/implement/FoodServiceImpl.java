@@ -75,4 +75,9 @@ public class FoodServiceImpl implements FoodService {
 
         return true;
     }
+
+    @Override
+    public List<String> getAllIngredientNames() {
+        return foodRepository.findAllIngredientNames();
+    }
 }

@@ -66,5 +66,13 @@ public class FoodController {
         }
     }
 
+    @GetMapping("/ingredients") //레시피 식재료
+    public ResponseEntity<List<String>> getAllIngredients() {
+        List<String> ingredients = foodService.getAllIngredientNames();
+        return ResponseEntity.ok(ingredients);
+    }
+
+
+
 
 }

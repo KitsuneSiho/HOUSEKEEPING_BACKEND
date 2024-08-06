@@ -11,4 +11,5 @@ public interface FoodService {
     List<FoodDTO> getUserFoodsByCategory(Long userId, FoodCategory category);
     FoodDTO addUserFood(FoodDTO foodDTO);
     boolean deleteUserFood(Long foodId, Long userId);
+    List<String> getAllIngredientNames(); //레시피 식재료
 }
