@@ -14,11 +14,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import java.io.IOException;
 import java.net.URLEncoder;
 
-/**
- * OAuth2 로그인 성공 후 JWT 발급
- * access, refresh -> httpOnly 쿠키
- * 리다이렉트 되기 때문에 헤더로 전달 불가능
- */
 @RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
@@ -26,26 +21,22 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // create JWT
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-        String name = customOAuth2User.getName(); // 실제 이름
-        String username = customOAuth2User.getUsername(); // DB 저장용 식별자
+        String name = customOAuth2User.getName();
+        String username = customOAuth2User.getUsername();
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         Integer expireS = 24 * 60 * 60;
         String access = jwtUtil.createJwt("access", username, role, 60 * 10 * 1000L);
         String refresh = jwtUtil.createJwt("refresh", username, role, expireS * 1000L);
 
-        // refresh 토큰 DB 저장
         refreshTokenService.saveRefresh(username, expireS, refresh);
 
         response.addCookie(CookieUtil.createCookie("access", access, 60 * 10));
         response.addCookie(CookieUtil.createCookie("refresh", refresh, expireS));
 
-        // redirect query param 인코딩 후 전달
         String encodedName = URLEncoder.encode(name, "UTF-8");
-        response.addHeader("Access-Token", access);  // Add the access token to the header
         response.sendRedirect("http://localhost:5173/oauth2-jwt-header?name=" + encodedName);
     }
 }
