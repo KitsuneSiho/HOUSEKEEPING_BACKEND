@@ -23,7 +23,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-        String nickname = customOAuth2User.getNickname();
+        String name = customOAuth2User.getName();
+        String nickname = customOAuth2User.getNickname();  // nickname 필드 추가
         String role = authentication.getAuthorities().iterator().next().getAuthority();
         Long userId = customOAuth2User.getUserId();
 
@@ -36,7 +37,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         response.addCookie(CookieUtil.createCookie("access", access, 60 * 10));
         response.addCookie(CookieUtil.createCookie("refresh", refresh, expireS));
 
-        String encodedNickname = URLEncoder.encode(nickname, "UTF-8");
-        response.sendRedirect("http://localhost:5173/oauth2-jwt-header?nickname=" + encodedNickname);
+        String encodedName = URLEncoder.encode(name, "UTF-8");
+        response.sendRedirect("http://localhost:5173/oauth2-jwt-header?name=" + encodedName);
     }
 }

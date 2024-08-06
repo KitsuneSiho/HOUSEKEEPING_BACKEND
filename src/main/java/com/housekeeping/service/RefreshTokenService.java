@@ -2,9 +2,9 @@ package com.housekeeping.service;
 
 import com.housekeeping.entity.RefreshEntity;
 import com.housekeeping.repository.RefreshRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 

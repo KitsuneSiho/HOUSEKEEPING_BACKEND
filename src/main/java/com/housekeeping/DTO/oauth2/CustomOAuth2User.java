@@ -30,6 +30,14 @@ public class CustomOAuth2User implements OAuth2User {
         return oAuth2UserDto.getName();
     }
 
+    public String getNickname() {
+        return oAuth2UserDto.getNickname();
+    }
+
+    public Long getUserId() {
+        return oAuth2UserDto.getUserId();
+    }
+
     public String getUsername() {
         return oAuth2UserDto.getUsername();
     }
@@ -41,8 +49,4 @@ public class CustomOAuth2User implements OAuth2User {
     public String getPhoneNumber() {
         return oAuth2UserDto.getPhoneNumber();
     }
-
-    public Long getUserId() { return oAuth2UserDto.getUserId(); }
-
-    public String getNickname() { return oAuth2UserDto.getNickname(); }
 }
