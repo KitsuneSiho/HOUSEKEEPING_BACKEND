@@ -1,8 +1,10 @@
 package com.housekeeping.service;
 
+import com.housekeeping.DTO.RoomColorDTO;
 import com.housekeeping.DTO.RoomDTO;
 import com.housekeeping.DTO.ScheduleDTO;
 import com.housekeeping.entity.Room;
+import com.housekeeping.entity.User;
 import com.housekeeping.repository.RoomRepository;
 import com.housekeeping.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,4 +62,30 @@ public class RoomService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    // 유저 번호를 기준으로 방DTO를 반환
+    public List<RoomColorDTO> getRoomColorDTOsByUserId(Long userId) {
+
+        return roomRepository.getRoomColorDTOsByUserId(userId);
+    }
+
+    // 방 정보를 업데이트 / 등록함
+    public RoomColorDTO saveRoom(RoomColorDTO roomColorDTO) {
+
+        Room room = Room.builder()
+                .roomId(roomColorDTO.getRoomId())
+                .user(User.builder().userId(roomColorDTO.getUserId()).build())
+                .roomName(roomColorDTO.getRoomName())
+                .roomType(roomColorDTO.getRoomType())
+                .roomPollution(roomColorDTO.getRoomPollution())
+                .roomWallsColor(roomColorDTO.getRoomWallsColor())
+                .build();
+
+        Room result = roomRepository.save(room);
+
+        roomColorDTO.setRoomId(result.getRoomId());
+
+        return roomColorDTO;
+    }
+
 }
