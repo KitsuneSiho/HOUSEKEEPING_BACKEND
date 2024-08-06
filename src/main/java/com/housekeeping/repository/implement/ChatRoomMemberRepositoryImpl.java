@@ -1,6 +1,10 @@
 package com.housekeeping.repository.implement;
 
-import com.housekeeping.entity.*;
+
+import com.housekeeping.entity.ChatRoom;
+import com.housekeeping.entity.ChatRoomMember;
+import com.housekeeping.entity.QChatRoomMember;
+import com.housekeeping.entity.UserEntity;
 import com.housekeeping.repository.custom.ChatRoomMemberRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

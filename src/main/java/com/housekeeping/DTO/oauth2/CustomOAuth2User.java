@@ -1,5 +1,6 @@
 package com.housekeeping.DTO.oauth2;
 
+import com.housekeeping.DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
-    private final OAuth2UserDto oAuth2UserDto;
+    private final UserDTO oAuth2UserDto;
 
     @Override
     public Map<String, Object> getAttributes() {

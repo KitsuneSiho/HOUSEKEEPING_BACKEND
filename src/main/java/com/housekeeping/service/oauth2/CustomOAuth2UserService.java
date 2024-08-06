@@ -1,5 +1,6 @@
 package com.housekeeping.service.oauth2;
 
+import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.DTO.oauth2.*;
 import com.housekeeping.entity.UserEntity;
 import com.housekeeping.entity.enums.Role;
@@ -45,7 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String nickname = provider + "_" + providerId;  // 예: "google_123456789"
         UserEntity userEntity = saveOrUpdateUser(response, nickname, provider);
 
-        OAuth2UserDto oAuth2UserDto = OAuth2UserDto.builder()
+        UserDTO oAuth2UserDto = UserDTO.builder()
                 .username(nickname)
                 .name(response.getName())
                 .email(response.getEmail())
