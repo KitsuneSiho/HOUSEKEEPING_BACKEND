@@ -20,7 +20,7 @@ public class MessageReadStatus {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private boolean isRead = false;

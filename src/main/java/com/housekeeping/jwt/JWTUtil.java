@@ -15,39 +15,48 @@ public class JWTUtil {
     private final SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
-        String algorithm = Jwts.SIG.HS256.key().build().getAlgorithm();
-        System.out.println("algorithm = " + algorithm);
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    private Claims getPayload(String token){
+    private Claims getPayload(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
 
-    public String getUsername(String token){
+    public String getUsername(String token) {
         return getPayload(token).get("username", String.class);
     }
 
-    public String getRole(String token){
+    public String getRole(String token) {
         return getPayload(token).get("role", String.class);
     }
 
-    public String getCategory(String token){
+    public String getCategory(String token) {
         return getPayload(token).get("category", String.class);
     }
 
-    public Boolean isExpired(String token){
+    public Long getUserId(String token) {
+        return getPayload(token).get("userId", Long.class);
+    }
+
+    public Boolean isExpired(String token) {
         return getPayload(token).getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String username, String role, Long expiredMs){
+    public String getNickname(String token) {
+        return getPayload(token).get("nickname", String.class);
+    }
+
+    public String createJwt(String category, String nickname, String role, Long userId, Long expiredMs) {
         return Jwts.builder()
                 .claim("category", category)
-                .claim("username", username)
+                .claim("nickname", nickname)
                 .claim("role", role)
+                .claim("userId", userId)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }
+
+
 }

@@ -15,7 +15,7 @@ public class UserSettings {
     @OneToOne
     @MapsId
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private boolean settingCheckNotice = true;

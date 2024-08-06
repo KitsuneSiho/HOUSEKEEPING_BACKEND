@@ -2,13 +2,12 @@ package com.housekeeping.repository;
 
 import com.housekeeping.entity.RefreshEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface RefreshRepository extends JpaRepository<RefreshEntity, Long> {
-    List<RefreshEntity> findByUsername(String username);
+    void deleteByNickname(String nickname);
     Boolean existsByRefresh(String refresh);
-    @Transactional
     void deleteByRefresh(String refresh);
+    Optional<RefreshEntity> findByNickname(String nickname);
 }

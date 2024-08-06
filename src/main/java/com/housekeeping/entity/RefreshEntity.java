@@ -1,30 +1,28 @@
 package com.housekeeping.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "refresh_tokens")
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RefreshEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String refresh;
-    private String expiration;
 
-    @Builder
-    public RefreshEntity(String username, String refresh, String expiration) {
-        this.username = username;
-        this.refresh = refresh;
-        this.expiration = expiration;
-    }
+    @Column(nullable = false, unique = true)
+    private String nickname;  // 이 줄을 추가합니다.
+
+    @Column(nullable = false, unique = true)
+    private String refresh;
+
+    @Column(nullable = false)
+    private LocalDateTime expiration;
 }

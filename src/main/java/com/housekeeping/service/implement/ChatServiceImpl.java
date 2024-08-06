@@ -78,7 +78,7 @@ public class ChatServiceImpl implements ChatService {
     public ChatRoomMember inviteUser(Long chatRoomId, Long userId) {
 
         ChatRoomMember chatRoomMember = ChatRoomMember.builder().chatRoom(ChatRoom.builder().chatRoomId(chatRoomId).build())
-                .user(UserEntity.builder().userId(userId).build()).build();
+                .user(User.builder().userId(userId).build()).build();
 
         return chatRoomMemberRepository.save(chatRoomMember);
     }
@@ -118,9 +118,9 @@ public class ChatServiceImpl implements ChatService {
 
         Message savedMessage = messageRepository.save(message);
 
-        List<UserEntity> users = chatRoomMemberRepository.findUsersByChatRoomId(message.getChatRoom().getChatRoomId());
+        List<User> users = chatRoomMemberRepository.findUsersByChatRoomId(message.getChatRoom().getChatRoomId());
 
-        for (UserEntity user : users) {
+        for (User user : users) {
             MessageReadStatus readStatus = MessageReadStatus.builder()
                     .message(savedMessage)
                     .user(user)

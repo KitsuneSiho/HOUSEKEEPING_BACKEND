@@ -19,11 +19,11 @@ public class Friend {
 
     @ManyToOne
     @JoinColumn(name = "friendUserId1", nullable = false)
-    private UserEntity friendUser1;
+    private User friendUser1;
 
     @ManyToOne
     @JoinColumn(name = "friendUserId2", nullable = false)
-    private UserEntity friendUser2;
+    private User friendUser2;
 
     @Column(nullable = false)
     private LocalDateTime friendDate = LocalDateTime.now();

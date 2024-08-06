@@ -16,7 +16,7 @@ public class Cloth {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private String clothName;

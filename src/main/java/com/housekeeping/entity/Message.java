@@ -21,7 +21,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "messageSenderId", nullable = false)
-    private UserEntity messageSender;
+    private User messageSender;
 
     @Column(nullable = false)
     private String messageContent;

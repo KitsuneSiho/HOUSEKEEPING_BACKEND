@@ -2,7 +2,7 @@ package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.FriendRequestDTO;
 import com.housekeeping.entity.FriendRequest;
-import com.housekeeping.entity.UserEntity;
+import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.RequestStatus;
 import com.housekeeping.repository.FriendRequestRepository;
 import com.housekeeping.service.FriendRequestService;
@@ -28,8 +28,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     @Override
     public FriendRequestDTO sendFriendRequest(FriendRequestDTO requestDTO) {
-        UserEntity sender = userService.getUserById(requestDTO.getRequestSenderId());
-        UserEntity receiver = userService.getUserById(requestDTO.getRequestReceiverId());
+        User sender = userService.getUserById(requestDTO.getRequestSenderId());
+        User receiver = userService.getUserById(requestDTO.getRequestReceiverId());
 
         Optional<FriendRequest> existingRequest = friendRequestRepository.findByRequestSenderAndRequestReceiver(sender, receiver);
 
@@ -102,8 +102,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     private FriendRequest convertToEntity(FriendRequestDTO dto) {
         // Method to convert DTO to entity if needed
-        UserEntity sender = userService.getUserById(dto.getRequestSenderId());
-        UserEntity receiver = userService.getUserById(dto.getRequestReceiverId());
+        User sender = userService.getUserById(dto.getRequestSenderId());
+        User receiver = userService.getUserById(dto.getRequestReceiverId());
 
         return FriendRequest.builder()
                 .requestId(dto.getRequestId())

@@ -3,7 +3,7 @@ package com.housekeeping.service;
 import com.housekeeping.DTO.RoomColorDTO;
 import com.housekeeping.DTO.RoomDTO;
 import com.housekeeping.entity.Room;
-import com.housekeeping.entity.UserEntity;
+import com.housekeeping.entity.User;
 import com.housekeeping.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class RoomService {
 
         Room room = Room.builder()
                 .roomId(roomColorDTO.getRoomId())
-                .user(UserEntity.builder().userId(roomColorDTO.getUserId()).build())
+                .user(User.builder().userId(roomColorDTO.getUserId()).build())
                 .roomName(roomColorDTO.getRoomName())
                 .roomType(roomColorDTO.getRoomType())
                 .roomPollution(roomColorDTO.getRoomPollution())

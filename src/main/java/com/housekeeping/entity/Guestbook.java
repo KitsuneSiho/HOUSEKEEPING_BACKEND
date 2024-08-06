@@ -17,11 +17,11 @@ public class Guestbook {
 
     @ManyToOne
     @JoinColumn(name = "guestbookOwnerId", nullable = false)
-    private UserEntity guestbookOwner;
+    private User guestbookOwner;
 
     @ManyToOne
     @JoinColumn(name = "guestbookWriterId", nullable = false)
-    private UserEntity guestbookWriter;
+    private User guestbookWriter;
 
     @Column(nullable = false)
     private String guestbookContent;

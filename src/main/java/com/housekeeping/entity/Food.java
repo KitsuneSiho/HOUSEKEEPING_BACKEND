@@ -17,7 +17,7 @@ public class Food {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private String foodName;

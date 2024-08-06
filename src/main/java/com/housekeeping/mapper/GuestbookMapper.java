@@ -2,7 +2,7 @@ package com.housekeeping.mapper;
 
 import com.housekeeping.DTO.GuestbookDTO;
 import com.housekeeping.entity.Guestbook;
-import com.housekeeping.entity.UserEntity;
+import com.housekeeping.entity.User;
 
 public class GuestbookMapper {
 
@@ -22,7 +22,7 @@ public class GuestbookMapper {
                 .build();
     }
 
-    public static Guestbook toEntity(GuestbookDTO guestDTO, UserEntity guestbookOwner, UserEntity guestbookWriter) {
+    public static Guestbook toEntity(GuestbookDTO guestDTO, User guestbookOwner, User guestbookWriter) {
         return Guestbook.builder()
                 .guestbookId(guestDTO.getGuestbookId())
                 .guestbookOwner(guestbookOwner)
