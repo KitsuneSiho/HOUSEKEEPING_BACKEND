@@ -33,7 +33,7 @@ public class ChatServiceTest {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomType(ChatRoomType.SINGLE)
-                .chatRoomCreatedAt(LocalDateTime.now())
+                .chatRoomUpdatedAt(LocalDateTime.now())
                 .build();
 
 //        ChatRoom chatRoom = new ChatRoom();
