@@ -1,5 +1,8 @@
 package com.housekeeping.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +31,9 @@ public class Room {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private int roomPollution = 0;
+
+    @Column(columnDefinition = "json", nullable = false)
+    private String roomWallsColor;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Schedule> schedules;
