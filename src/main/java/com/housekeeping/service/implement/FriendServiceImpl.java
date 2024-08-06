@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,5 +101,17 @@ public class FriendServiceImpl implements FriendService {
 
         friendRepository.save(friend);
     }
+
+    @Override
+    public void deleteFriendship(Long userId1, Long userId2) {
+        // 친구 관계를 찾기
+        Friend friend = friendRepository
+                .findByUsers(userId1, userId2)
+                .orElseThrow(() -> new RuntimeException("Friend relationship not found"));
+
+        // 친구 관계를 삭제
+        friendRepository.delete(friend);
+    }
+
 
 }

@@ -20,6 +20,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
+    @JsonBackReference // 순환 참조 방지
     private User user;
 
     @Column(nullable = false)

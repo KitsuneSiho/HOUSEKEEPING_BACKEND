@@ -7,5 +7,6 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
+    List<Room> findByUserUserId(Long userId);
     List<Room> findByRoomIdIn(List<Long> roomIds);
 }

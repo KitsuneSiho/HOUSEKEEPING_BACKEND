@@ -13,8 +13,9 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @PostMapping("/names")
-    public List<RoomDTO> getRoomNames(@RequestBody List<Long> roomIds) {
-        return roomService.getRoomNamesByIds(roomIds);
+    // 유저 ID로 방과 스케줄 정보를 반환하는 엔드포인트
+    @PostMapping("/details")
+    public List<RoomDTO> getRoomDetailsByUserId(@RequestBody Long userId) {
+        return roomService.getRoomDetailsByUserId(userId);
     }
 }
