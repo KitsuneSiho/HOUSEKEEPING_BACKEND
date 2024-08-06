@@ -15,7 +15,7 @@ public class Cloth {
     private Long clothId; // 옷 아이디
 
     @ManyToOne(fetch = FetchType.LAZY) //지연 로딩(Lazy Loading)을 통한 최적화
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
