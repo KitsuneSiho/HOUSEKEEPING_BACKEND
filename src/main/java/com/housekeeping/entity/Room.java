@@ -1,5 +1,6 @@
 package com.housekeeping.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
+    @JsonBackReference // 순환 참조 방지
     private User user;
 
     @Column(nullable = false)

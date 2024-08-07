@@ -25,38 +25,43 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String access = request.getHeader("access");
+        String authorization = request.getHeader("Authorization");
 
-        // access token null
-        if (access == null) {
+        // Authorization header null or doesn't start with "Bearer "
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-        // access token expired
+
+        String token = authorization.substring(7);  // Remove "Bearer " prefix
+
         try {
-            jwtUtil.isExpired(access);
+            if (jwtUtil.isExpired(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+            String category = jwtUtil.getCategory(token);
+
+            // not access token
+            if (!category.equals("access")) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+            String username = jwtUtil.getUsername(token);
+            String role = jwtUtil.getRole(token);
+            Long userId = jwtUtil.getUserId(token);
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    username, null, Collections.singleton(() -> "ROLE_" + role));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            request.setAttribute("userId", userId);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-
-        String category = jwtUtil.getCategory(access);
-
-        // not access token
-        if (!category.equals("access")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        String username = jwtUtil.getUsername(access);
-        String role = jwtUtil.getRole(access);
-        Long userId = jwtUtil.getUserId(access);
-
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                username, null, Collections.singleton(() -> "ROLE_" + role));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        request.setAttribute("userId", userId);
 
         filterChain.doFilter(request, response);
     }

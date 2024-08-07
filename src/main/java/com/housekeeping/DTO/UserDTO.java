@@ -19,5 +19,6 @@ public class UserDTO {
     private String phoneNumber;
     private String role;
     private UserPlatform userPlatform;
+    private String provider;
     private boolean isNewUser;
 }

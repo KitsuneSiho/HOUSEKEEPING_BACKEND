@@ -89,7 +89,9 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/", "/login", "/join", "/logout", "/oauth2-jwt-header").permitAll()
+                .requestMatchers("/","/login", "/logout", "/oauth2-jwt-header","/api/auth/complete-registration").permitAll()
+                .requestMatchers( "/firstlogin","/firstmain","/firstlivingroom","/firstroomdesign","firsttoiletroom").permitAll()
+                .requestMatchers("/mainpage").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
