@@ -18,7 +18,8 @@ public class ChatRoomDTO {
     private Long chatRoomId;
     private String chatRoomName;
     private ChatRoomType chatRoomType;
-    private LocalDateTime chatRoomCreatedAt;
+    private LocalDateTime chatRoomUpdatedAt;
+    private String recentMessage;
     private List<Long> userIdList;
     private List<String> nickNameList;
     private Long unreadMessageCount;

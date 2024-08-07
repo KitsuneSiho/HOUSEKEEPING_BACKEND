@@ -23,4 +23,10 @@ public class FurniturePlacement {
 
     @Column(columnDefinition = "json", nullable = false)
     private String placementLocation;
+
+    @Column(nullable = false)
+    private double placementAngle;
+
+    @Column(nullable = false)
+    private double placementSize;
 }

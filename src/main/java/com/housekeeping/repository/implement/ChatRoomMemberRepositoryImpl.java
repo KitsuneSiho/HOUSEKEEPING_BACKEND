@@ -23,6 +23,7 @@ public class ChatRoomMemberRepositoryImpl implements ChatRoomMemberRepositoryCus
         return queryFactory.select(qChatRoomMember.chatRoom)
                 .from(qChatRoomMember)
                 .where(qChatRoomMember.user.userId.eq(userId))
+                .orderBy(qChatRoomMember.chatRoom.chatRoomUpdatedAt.desc())
                 .fetch();
     }
 
