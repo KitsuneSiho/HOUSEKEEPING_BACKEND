@@ -1,12 +1,16 @@
 package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.entity.LevelEXPTable;
 import com.housekeeping.entity.User;
+import com.housekeeping.repository.LevelEXPTableRepository;
 import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final LevelEXPTableRepository levelEXPTableRepository;
 
     @Override
     public User getUserById(Long id) {
@@ -27,31 +32,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+        return userRepository.findByNickname(nickname).orElse(null);
     }
 
     @Override
     public UserDTO completeRegistration(UserDTO userDTO) {
-        // 닉네임 중복 체크
-        if (userRepository.existsByNickname(userDTO.getNickname())) {
+        Optional<User> existingUser = userRepository.findByNickname(userDTO.getNickname());
+
+        if (existingUser.isPresent()) {
             throw new RuntimeException("Nickname already exists");
         }
 
-        // 새 사용자 정보 저장 또는 기존 사용자 정보 업데이트
-        User user = userRepository.findByEmail(userDTO.getEmail())
-                .orElse(new User());
+        Optional<LevelEXPTable> defaultLevelOpt = levelEXPTableRepository.findByLevelLevel(1);
 
-        user.setNickname(userDTO.getNickname());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setUserPlatform(userDTO.getUserPlatform());
-        // 기타 필요한 필드 설정...
+        if (defaultLevelOpt.isEmpty()) {
+            throw new RuntimeException("Default level not found. Please check LevelEXPTable data.");
+        }
 
-        user = userRepository.save(user);
+        User user = User.builder()
+                .username(userDTO.getUsername())
+                .name(userDTO.getName())
+                .email(userDTO.getEmail())
+                .nickname(userDTO.getNickname())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .userPlatform(userDTO.getUserPlatform())
+                .role(userDTO.getRole() != null ? userDTO.getRole() : "ROLE_USER")
+                .level(defaultLevelOpt.get())
+                .build();
 
-        // 저장된 사용자 정보를 DTO로 변환하여 반환
-        return convertToDTO(user);
+        User savedUser = userRepository.save(user);
+        return convertToDTO(savedUser);
     }
 
     private UserDTO convertToDTO(User user) {
@@ -62,8 +72,9 @@ public class UserServiceImpl implements UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
-                .role(user.getRole().name())
+                .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .level(user.getLevel().getLevelLevel())
                 .isNewUser(false)
                 .build();
     }

@@ -1,9 +1,11 @@
 package com.housekeeping.DTO.oauth2;
 
 import com.housekeeping.DTO.UserDTO;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ public class CustomOAuth2User implements OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(() -> oAuth2UserDto.getRole());
+        String role = oAuth2UserDto.getRole() != null ? oAuth2UserDto.getRole() : "ROLE_USER";  // 기본 역할 설정
+        collection.add(new SimpleGrantedAuthority(role));  // role.name() 대신 role 직접 사용
         return collection;
     }
 

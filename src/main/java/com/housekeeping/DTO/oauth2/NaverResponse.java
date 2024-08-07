@@ -33,4 +33,9 @@ public class NaverResponse implements OAuth2Response {
     public String getPhoneNumber() {
         return attribute.get("mobile").toString();
     }
+
+    @Override
+    public String getNickname() {
+        return "";
+    }
 }

@@ -36,4 +36,9 @@ public class KakaoResponse implements OAuth2Response {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attribute.get("kakao_account");
         return kakaoAccount != null ? (String) kakaoAccount.get("phone_number") : null;
     }
+
+    @Override
+    public String getNickname() {
+        return "";
+    }
 }

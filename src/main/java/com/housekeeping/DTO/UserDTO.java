@@ -21,4 +21,6 @@ public class UserDTO {
     private UserPlatform userPlatform;
     private String provider;
     private boolean isNewUser;
+    private String accessToken;
+    private int level;
 }

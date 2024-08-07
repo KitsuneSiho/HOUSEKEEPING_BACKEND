@@ -1,7 +1,7 @@
 package com.housekeeping.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.housekeeping.entity.enums.Role;
+
 import com.housekeeping.entity.enums.UserPlatform;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,6 +42,7 @@ public class User {
     private UserPlatform userPlatform;
 
     @Column(nullable = false)
+    @Builder.Default
     private LocalDateTime userEnrollment = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,9 +60,8 @@ public class User {
 
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private String role;
 
     @OneToMany(mappedBy = "messageSender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
