@@ -1,15 +1,13 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.UserDTO;
+import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,13 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
+    private final JWTUtil jwtUtil;
 
     @PostMapping("/complete-registration")
     public ResponseEntity<?> completeRegistration(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            // 여기서 토큰 유효성을 확인하는 로직을 추가하세요
+            if (!jwtUtil.isValid(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
@@ -35,4 +36,4 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    }
+}
