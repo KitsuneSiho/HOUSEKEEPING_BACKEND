@@ -6,6 +6,8 @@ import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.Message;
+import com.housekeeping.entity.enums.ChatRoomType;
+import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.service.ChatService;
 import com.housekeeping.service.FriendService;
 import com.housekeeping.service.UserService;
@@ -188,5 +190,19 @@ public class ChatController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    // 친구의 이름을 이용해서 1대1 채팅 방이 이미 존재하는지 판별
+    @GetMapping("/room/exist")
+    public Long isChatRoomExist (@RequestParam("myUserId") Long myUserId, @RequestParam("friendUserId") Long friendUserId) {
+
+        return chatService.findChatRoomIdByNicknameAndUserId(myUserId, friendUserId);
+    }
+
+    // 채팅 방에 있는 유저들 중 나를 제외한 유저들의 닉네임들 반환
+    @GetMapping("/room/member/list")
+    public List<String> chatRoomUserList (@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("userId") Long userId) {
+
+        return chatService.chatRoomUserList(chatRoomId, userId);
     }
 }
