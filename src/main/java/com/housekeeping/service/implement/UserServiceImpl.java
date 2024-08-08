@@ -3,6 +3,7 @@ package com.housekeeping.service.implement;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.LevelEXPTable;
 import com.housekeeping.entity.User;
+import com.housekeeping.entity.enums.UserPlatform;
 import com.housekeeping.repository.LevelEXPTableRepository;
 import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.UserService;
@@ -33,6 +34,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname).orElse(null);
+    }
+
+    @Override
+    public boolean isNewUser(String email, UserPlatform platform) {
+        return userRepository.findByEmailAndUserPlatform(email, platform).isEmpty();
     }
 
     @Override

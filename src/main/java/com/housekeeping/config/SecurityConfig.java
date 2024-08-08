@@ -6,6 +6,7 @@ import com.housekeeping.jwt.JWTFilter;
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.repository.RefreshRepository;
 import com.housekeeping.service.RefreshTokenService;
+import com.housekeeping.service.UserService;
 import com.housekeeping.service.oauth2.CustomOAuth2UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final RefreshTokenService refreshTokenService;
     private final RefreshRepository refreshRepository;
+    private final UserService userService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -73,7 +75,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .userInfoEndpoint((userinfo) -> userinfo
                                 .userService(customOAuth2UserService))
-                        .successHandler(new CustomOAuth2SuccessHandler(jwtUtil, refreshTokenService))
+                        .successHandler(new CustomOAuth2SuccessHandler(jwtUtil, refreshTokenService, userService))
                         .failureHandler(authenticationFailureHandler())
                         .permitAll());
 

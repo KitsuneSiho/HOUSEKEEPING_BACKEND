@@ -2,6 +2,7 @@ package com.housekeeping.service;
 
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.User;
+import com.housekeeping.entity.enums.UserPlatform;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -16,5 +17,6 @@ public interface UserService {
 
     UserDTO completeRegistration(UserDTO userDTO);
 
+    boolean isNewUser(String email, UserPlatform platform);
 
 }
