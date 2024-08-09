@@ -33,17 +33,12 @@ public class AuthController {
             return ResponseEntity.status(500).body("Default level not found");
         }
 
-        User user = User.builder()
-                .username(userDTO.getUsername())
-                .name(userDTO.getName())
-                .email(userDTO.getEmail())
-                .nickname(userDTO.getNickname())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .userPlatform(userDTO.getUserPlatform())
-                .role(userDTO.getRole())
-                .userEnrollment(LocalDateTime.now())
-                .level(defaultLevelOpt.get())
-                .build();
+        System.out.println("Asdfasdfasdfasdfasdfa: " + userDTO);
+
+        User user = userRepository.findByEmailAndUserPlatform(userDTO.getEmail(), userDTO.getUserPlatform()).orElseThrow();
+
+        user.setNickname(userDTO.getNickname());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
 
         userRepository.save(user);
 
