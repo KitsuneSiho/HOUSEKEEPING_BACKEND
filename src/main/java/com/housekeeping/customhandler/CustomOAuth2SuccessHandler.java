@@ -5,11 +5,13 @@ import com.housekeeping.DTO.oauth2.CustomOAuth2User;
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.service.RefreshTokenService;
 import com.housekeeping.service.UserService;
+import com.housekeeping.util.CookieUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,10 +20,12 @@ import java.nio.charset.StandardCharsets;
 
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
     private final UserService userService;
 
     public CustomOAuth2SuccessHandler(JWTUtil jwtUtil, RefreshTokenService refreshTokenService, UserService userService) {
         this.jwtUtil = jwtUtil;
+        this.refreshTokenService = refreshTokenService;
         this.userService = userService;
     }
 
@@ -31,17 +35,23 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         UserDTO userDto = customOAuth2User.getUserDTO();
 
         String username = userDto.getUsername();
-        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        String role = userDto.getRole();
         Long userId = userDto.getUserId();
+        String nickname = userDto.getNickname();
 
         boolean isNewUser = userService.isNewUser(userDto.getEmail(), userDto.getUserPlatform());
 
+        String accessToken = jwtUtil.createJwt("access", username, role, userId, nickname, 60 * 10 * 1000L);
+        String refreshToken = jwtUtil.createJwt("refresh", username, role, userId, nickname, 60 * 60 * 24 * 1000L);
+
+        // RefreshToken을 DB에 저장
+        refreshTokenService.saveRefresh(nickname, 60 * 60 * 24, refreshToken);
+
         String redirectUrl;
         if (isNewUser) {
-            // 새 사용자인 경우 firstLogin 페이지로 리다이렉트
-            String tempToken = jwtUtil.createJwt("temp", username, role, userId, null, 5 * 60 * 1000L);
-            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/firstLogin")
-                    .queryParam("token", tempToken)
+            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+                    .queryParam("token", accessToken)
+                    .queryParam("redirectPath", "/firstLogin")
                     .queryParam("name", URLEncoder.encode(userDto.getName(), StandardCharsets.UTF_8))
                     .queryParam("email", URLEncoder.encode(userDto.getEmail(), StandardCharsets.UTF_8))
                     .queryParam("provider", userDto.getUserPlatform().toString())
@@ -53,12 +63,15 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
                         .build().toUriString();
             }
         } else {
-            // 이미 등록된 사용자인 경우 메인 페이지로 리다이렉트
-            String accessToken = jwtUtil.createJwt("access", username, role, userId, userDto.getNickname(), 60 * 10 * 1000L);
-            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/main")
+            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
                     .queryParam("token", accessToken)
+                    .queryParam("redirectPath", "/main")
                     .build().toUriString();
         }
+
+        // Set refresh token as HTTP-only cookie
+        Cookie refreshCookie = CookieUtil.createCookie("refresh", refreshToken, 60 * 60 * 24);
+        response.addCookie(refreshCookie);
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }

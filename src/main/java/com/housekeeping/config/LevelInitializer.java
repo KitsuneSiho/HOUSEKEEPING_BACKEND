@@ -16,19 +16,19 @@ public class LevelInitializer {
                 // 기본 레벨 데이터 생성
                 LevelEXPTable level1 = new LevelEXPTable();
                 level1.setLevelLevel(1);
-                level1.setLevelName("초보자");
+                level1.setLevelName("자린이");
                 level1.setLevelRequireEXP(0);
                 levelRepository.save(level1);
 
                 LevelEXPTable level2 = new LevelEXPTable();
                 level2.setLevelLevel(2);
-                level2.setLevelName("중급자");
+                level2.setLevelName("숙달된조교");
                 level2.setLevelRequireEXP(100);
                 levelRepository.save(level2);
 
                 LevelEXPTable level3 = new LevelEXPTable();
                 level3.setLevelLevel(3);
-                level3.setLevelName("고급자");
+                level3.setLevelName("자취왕");
                 level3.setLevelRequireEXP(300);
                 levelRepository.save(level3);
 
