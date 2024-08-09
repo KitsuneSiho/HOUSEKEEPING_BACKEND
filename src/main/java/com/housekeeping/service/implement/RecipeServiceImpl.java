@@ -48,7 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("messages", List.of(
                 // 시스템 메시지: API에 레시피 추천 시스템의 역할 설명
-                Map.of("role", "system", "content", "- 재료와 조건을 입력하면 레시피를 알려주는 레시피 추천 시스템\n- 서문 없이 바로 1개 레시피 추천\n- 답변 폼\n\n이름:\n재료:\n소요시간:\n레시피:\n\n\n\n"),
+                Map.of("role", "system", "content", "- 재료와 조건을 입력하면 레시피를 알려주는 레시피 추천 시스템\n- 서문 없이 바로 1개 레시피 추천\n- 답변 폼\n\n이름:\n재료:\n소요시간:\n조리법:\n\n\n\n"),
                 // 사용자 메시지: 실제 레시피 검색 쿼리
                 Map.of("role", "user", "content", buildQuery(searchCriteria))
         ));
