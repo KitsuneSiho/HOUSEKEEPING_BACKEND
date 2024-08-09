@@ -16,7 +16,7 @@ public class LevelEXPTable {
     private Long levelId;
 
     @Column(nullable = false, unique = true)
-    private int levelLevel;
+    private int levelLevel;  // levelLevel 속성 사용
 
     @Column(nullable = false)
     private String levelName;

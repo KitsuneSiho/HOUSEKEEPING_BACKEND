@@ -19,8 +19,6 @@ public interface ChatService {
     ChatRoom getChatRoomById(Long ChatRoomId);
     // 특정 회원이 들어가 있는 모든 채팅 방 정보를 반환
     List<ChatRoomDTO> getChatRoomsByUserId(Long userId);
-    // 특정 회원을 제외하고 채팅 방에 들어있는 유저들의 닉네임을 리스트로 반환
-    List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId);
     // 채팅 방 생성/업데이트
     ChatRoom saveChatRoom(ChatRoom chatRoom);
     // 채팅 방에 회원을 초대
@@ -41,6 +39,8 @@ public interface ChatService {
     List<Long> getUnreadMessageIds(Long chatRoomId, Long userId);
     // 메시지 읽음 상태 번호를 기준으로 읽음 상태로 업데이트
     void updateReadStatusTrue(Long readStatusId);
-    // 채팅 방에 있는 사람들의 목록과 채팅 방에 없는 내 친구들을 반환
+    // 채팅 방에 있는 나를 제외한 사람들의 닉네임 반환
     List<String> chatRoomUserList(Long chatRoomId, Long userId);
+    // 특정 유저와 다른 유저가 1대1 채팅을 하고있다면 그 채팅 방의 번호를 반환
+    Long findChatRoomIdByNicknameAndUserId(Long myUserId, Long friendUserId);
 }
