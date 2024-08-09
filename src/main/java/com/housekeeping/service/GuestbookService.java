@@ -1,7 +1,6 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.GuestbookDTO;
-import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.Guestbook;
 import com.housekeeping.entity.User;
 import com.housekeeping.mapper.GuestbookMapper;
