@@ -29,10 +29,13 @@ public class Cloth {
 
     @Column(nullable = false)
     private String clothMaterial; //옷 소재
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClothSeason clothSeason;
+
+    @Column(nullable = false)
+    private String clothHowWash ="세탁라벨 참조";
 
     private String clothCustomTag;
 
