@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -79,5 +80,13 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<String> getAllIngredientNames() {
         return foodRepository.findAllIngredientNames();
+    }
+
+    @Override
+    public List<String> getUserIngredients(Long userId) { //안쓰이는 것 같은데?
+        List<FoodDTO> userFoods = foodRepository.findAllUserFoods(userId);
+        return userFoods.stream()
+                .map(FoodDTO::getFoodName)
+                .collect(Collectors.toList());
     }
 }
