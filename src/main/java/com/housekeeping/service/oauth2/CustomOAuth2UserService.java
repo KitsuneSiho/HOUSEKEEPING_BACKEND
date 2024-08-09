@@ -2,6 +2,7 @@ package com.housekeeping.service.oauth2;
 
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.DTO.oauth2.*;
+import com.housekeeping.entity.LevelEXPTable;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.UserPlatform;
 import com.housekeeping.repository.UserRepository;
@@ -44,6 +45,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String email = oAuth2Response.getEmail();
         String name = oAuth2Response.getName();
+        String phone = oAuth2Response.getPhoneNumber();
+
         final String nickname = oAuth2Response.getNickname() != null && !oAuth2Response.getNickname().trim().isEmpty()
                 ? oAuth2Response.getNickname()
                 : clientName + "_" + oAuth2Response.getProviderId();
@@ -57,7 +60,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userOptional.isPresent()) {
             user = userOptional.get();
         } else {
-            user = createNewUser(email, name, nickname, userPlatform);
+            user = createNewUser(email, name, nickname, userPlatform, phone);
         }
 
         UserDTO userDTO = UserDTO.builder()
@@ -67,19 +70,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .phoneNumber(user.getPhoneNumber())
                 .build();
 
         return new CustomOAuth2User(userDTO);
     }
 
-    private User createNewUser(String email, String name, String nickname, UserPlatform userPlatform) {
+    private User createNewUser(String email, String name, String nickname, UserPlatform userPlatform, String phone) {
         User newUser = User.builder()
                 .email(email)
+                .username(email.split("@", 2)[0])
                 .name(name)
                 .nickname(nickname)
                 .userPlatform(userPlatform)
                 .role("ROLE_USER")
+                .level(LevelEXPTable.builder().levelId(1L).build())
                 .build();
+
+        if (phone != null && phone.startsWith("010")) {
+            newUser.setPhoneNumber(phone);
+        } else if (phone != null && phone.startsWith("+82 10")) {
+            newUser.setPhoneNumber(phone.replace("+82 10", "010"));
+        }
+
         return userRepository.save(newUser);
     }
 }

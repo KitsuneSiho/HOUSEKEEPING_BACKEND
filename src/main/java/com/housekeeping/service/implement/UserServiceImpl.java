@@ -38,7 +38,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isNewUser(String email, UserPlatform platform) {
-        return userRepository.findByEmailAndUserPlatform(email, platform).isEmpty();
+
+        User user = userRepository.findByEmailAndUserPlatform(email, platform).orElseThrow();
+
+        return (user.getNickname().startsWith("kakao_") || user.getNickname().startsWith("naver_") || user.getNickname().startsWith("google_"));
     }
 
     @Override
