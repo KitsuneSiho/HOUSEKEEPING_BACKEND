@@ -157,9 +157,9 @@ public class RecipeServiceImpl implements RecipeService {
                     recipe.put("name", line.substring(5).trim());
                 } else if (line.startsWith("재료 : ")) {
                     recipe.put("ingredients", line.substring(5).trim());
-                } else if (line.startsWith("소요 시간 : ")) {
+                } else if (line.startsWith("소요시간 : ")) {
                     recipe.put("time", line.substring(8).trim());
-                } else if (line.startsWith("레시피 : ")) {
+                } else if (line.startsWith("조리법 : ")) {
                     recipeStepsIndex = i;
                     break;
                 }
@@ -194,9 +194,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipe.put("ingredients", ingredientRecipe[0]);
 
-        recipe.put("time", ingredientRecipe[1].split("레시피 : \n", 2)[0]);
+        recipe.put("time", ingredientRecipe[1].split("조리법 : \n", 2)[0]);
 
-        recipe.put("steps", ingredientRecipe[1].split("레시피 : \n", 2)[1]);
+        recipe.put("steps", ingredientRecipe[1].split("조리법 : \n", 2)[1]);
 
         List<Map<String, String>> recipes = new ArrayList<>();
 
