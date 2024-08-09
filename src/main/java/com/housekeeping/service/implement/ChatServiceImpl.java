@@ -2,7 +2,6 @@ package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.ChatRoomDTO;
 import com.housekeeping.DTO.MessageDTO;
-import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.*;
 import com.housekeeping.repository.ChatRoomMemberRepository;
 import com.housekeeping.repository.ChatRoomRepository;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Transactional
 @Service
@@ -49,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
                     .chatRoomName(chatRoom.getChatRoomName())
                     .chatRoomType(chatRoom.getChatRoomType())
                     .chatRoomUpdatedAt(chatRoom.getChatRoomUpdatedAt())
-                    .nickNameList(findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
+                    .nickNameList(chatRoomMemberRepository.findUserNicknamesByChatRoomId(chatRoom.getChatRoomId(), userId))
                     .unreadMessageCount(getUnreadMessageCount(chatRoom.getChatRoomId(), userId))
                     .build();
 
@@ -63,11 +61,6 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return chatRoomDTOS;
-    }
-
-    @Override
-    public List<String> findUserNicknamesByChatRoomId(Long chatRoomId, Long userId) {
-        return chatRoomMemberRepository.findUserNicknamesByChatRoomId(chatRoomId, userId);
     }
 
     @Override
@@ -174,5 +167,23 @@ public class ChatServiceImpl implements ChatService {
     public List<String> chatRoomUserList(Long chatRoomId, Long userId) {
 
         return chatRoomMemberRepository.findUserNicknamesByChatRoomId(chatRoomId, userId);
+    }
+
+    @Override
+    public Long findChatRoomIdByNicknameAndUserId(Long myUserId, Long friendUserId) {
+
+        List<Long> chatRoomIds = chatRoomRepository.findChatRoomIdsByUserId(myUserId);
+
+        Long result = null;
+
+        for (Long chatRoomId : chatRoomIds) {
+            result = chatRoomRepository.findChatRoomIdByChatRoomIdAndUserId(chatRoomId, friendUserId);
+
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
     }
 }

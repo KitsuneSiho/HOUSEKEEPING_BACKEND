@@ -4,6 +4,7 @@ import com.housekeeping.DTO.RoomColorDTO;
 import com.housekeeping.DTO.RoomDTO;
 import com.housekeeping.DTO.ScheduleDTO;
 import com.housekeeping.entity.Room;
+import com.housekeeping.entity.Schedule;
 import com.housekeeping.entity.User;
 import com.housekeeping.repository.RoomRepository;
 import com.housekeeping.repository.ScheduleRepository;
@@ -87,5 +88,17 @@ public class RoomService {
 
         return roomColorDTO;
     }
+
+    public void renameRoom(Long roomId, String newName) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+
+        room.setRoomName(newName);
+        roomRepository.save(room);
+    }
+
+
+
+
 
 }
