@@ -1,7 +1,6 @@
 package com.housekeeping.entity;
 
 import com.housekeeping.entity.enums.GuestbookColor;
-import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
