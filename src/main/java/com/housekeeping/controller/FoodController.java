@@ -3,6 +3,7 @@ package com.housekeeping.controller;
 import com.housekeeping.DTO.FoodDTO;
 import com.housekeeping.entity.enums.FoodCategory;
 import com.housekeeping.service.FoodService;
+import com.housekeeping.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,14 @@ import java.util.List;
 public class FoodController {
 
     private final FoodService foodService;
+    private final RecipeService recipeService;
 
     @Autowired
-    public FoodController(FoodService foodService) {
+    public FoodController(FoodService foodService, RecipeService recipeService) {
         this.foodService = foodService;
+        this.recipeService = recipeService;
     }
+
 
     @GetMapping("/livingroom") //냉장고 초기 페이지
     public List<FoodCategory> getLivingRoom(@RequestParam("userId") Long userId) {
@@ -65,6 +69,14 @@ public class FoodController {
             return ResponseEntity.internalServerError().body("식재료 삭제 중 오류가 발생했습니다.");
         }
     }
+
+    @GetMapping("/ingredients") //레시피 식재료
+    public ResponseEntity<List<String>> getAllIngredients() {
+        List<String> ingredients = foodService.getAllIngredientNames();
+        return ResponseEntity.ok(ingredients);
+    }
+
+
 
 
 }

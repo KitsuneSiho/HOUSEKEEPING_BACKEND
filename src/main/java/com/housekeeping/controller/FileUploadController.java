@@ -2,16 +2,17 @@ package com.housekeeping.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -27,8 +28,11 @@ public class FileUploadController {
     @Value("${ncp.bucket.name}")
     private String bucketName;
 
+    @Value("${rembg.server.url}")
+    private String rembgServerUrl;
+
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
         String fileName = UUID.randomUUID().toString(); // 랜덤 UUID 생성
         String fileExtension = "";
@@ -42,13 +46,35 @@ public class FileUploadController {
         String newFileName = fileName + fileExtension;
 
         try {
+            // Call the Rembg server to remove the background
+            RestTemplate restTemplate = new RestTemplate();
+            byte[] fileBytes = file.getBytes();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", new ByteArrayResource(fileBytes) {
+                @Override
+                public String getFilename() {
+                    return originalFileName;
+                }
+            });
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            ResponseEntity<byte[]> response = restTemplate.postForEntity(rembgServerUrl + "/remove-bg", requestEntity, byte[].class);
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<>("Failed to remove background", response.getStatusCode());
+            }
+
+            byte[] resultBytes = response.getBody();
+
             // 메타데이터 설정
             ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
+            metadata.setContentLength(resultBytes.length);
             metadata.setContentType(file.getContentType());
 
             // PutObjectRequest 생성 및 PublicRead 권한 설정
-            PutObjectRequest request = new PutObjectRequest(bucketName, newFileName, file.getInputStream(), metadata)
+            PutObjectRequest request = new PutObjectRequest(bucketName, newFileName, new ByteArrayInputStream(resultBytes), metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead);
 
             // 파일 업로드
@@ -56,10 +82,10 @@ public class FileUploadController {
 
             // 업로드된 파일의 URL 생성
             String fileUrl = amazonS3.getUrl(bucketName, newFileName).toString();
-            return fileUrl; // URL 반환
+            return ResponseEntity.ok(fileUrl); // URL 반환
         } catch (Exception e) {
             e.printStackTrace();
-            return "Failed to upload file: " + originalFileName;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + originalFileName);
         }
     }
 
@@ -80,5 +106,4 @@ public class FileUploadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 삭제 실패: " + fileName);
         }
     }
-
 }
