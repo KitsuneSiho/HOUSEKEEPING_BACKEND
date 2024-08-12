@@ -1,6 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.RoutineDTO;
+import com.housekeeping.entity.RecommendRoutine;
 import com.housekeeping.entity.Routine;
 import com.housekeeping.service.RoutineService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class RoutineController {
 
     // 만들어진 루틴 보기
     @GetMapping("/group/{groupName}")
-    public List<RoutineDTO> getRoutinesByGroupName(@PathVariable String groupName) {
+    public List<RoutineDTO> getRoutinesByGroupName(@PathVariable("groupName") String groupName) {
         return routineService.findByGroupName(groupName);
     }
 
@@ -51,13 +52,13 @@ public class RoutineController {
 
     // 루틴 삭제하기
     @DeleteMapping("/delete/{routineId}")
-    public void deleteRoutine(@PathVariable Long routineId) {
+    public void deleteRoutine(@PathVariable("routineId") Long routineId) {
         routineService.deleteRoutine(routineId);
     }
 
     // 루틴 그룹 통째로 삭제하기
     @DeleteMapping("/deleteGroup/{groupName}")
-    public ResponseEntity<String> deleteRoutineGroup(@PathVariable String groupName) {
+    public ResponseEntity<String> deleteRoutineGroup(@PathVariable("groupName") String groupName) {
         try {
             routineService.deleteRoutineGroup(groupName);
             return ResponseEntity.ok("루틴 그룹이 성공적으로 삭제되었습니다.");
@@ -68,18 +69,20 @@ public class RoutineController {
         }
     }
 
+    // 추천 루틴 조회
+    @GetMapping("/recommend/view")
+    public ResponseEntity<List<RecommendRoutine>> getRecommendRoutines() {
+        List<RecommendRoutine> recommendRoutines = routineService.getAllRecommendRoutines();
+        return ResponseEntity.ok(recommendRoutines);
+    }
+
     // 루틴 목록 중 적용할 루틴 선택
     @PostMapping("/apply")
     public void routineApply() {
 
     }
 
-    // 추천 루틴 조회
-    @GetMapping("/recommend/view")
-    public void routineRecommendView() {
 
-
-    }
 
     // 추천 루틴 수정해서 내 루틴으로 저장
     @PutMapping("/recommend/update")

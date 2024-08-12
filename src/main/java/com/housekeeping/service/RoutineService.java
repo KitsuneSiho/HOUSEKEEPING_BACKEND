@@ -1,9 +1,11 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.RoutineDTO;
+import com.housekeeping.entity.RecommendRoutine;
 import com.housekeeping.entity.Room;
 import com.housekeeping.entity.Routine;
 import com.housekeeping.mapper.RoutineMapper;
+import com.housekeeping.repository.RecommendRoutineRepository;
 import com.housekeeping.repository.RoutineRepository;
 import com.housekeeping.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
     private final RoutineMapper routineMapper;
     private final RoomRepository roomRepository;
+    private final RecommendRoutineRepository recommendRoutineRepository;
 
     public List<String> getRoutineGroupNamesByUserId(Long userId) {
         return routineRepository.findDistinctRoutineGroupNamesByUserId(userId);
@@ -99,6 +102,11 @@ public class RoutineService {
             throw new RuntimeException("No routines found for the group: " + groupName);
         }
         routineRepository.deleteAll(routines);
+    }
+
+    // 추천 루틴 조회
+    public List<RecommendRoutine> getAllRecommendRoutines() {
+        return recommendRoutineRepository.findAll();
     }
 
 }

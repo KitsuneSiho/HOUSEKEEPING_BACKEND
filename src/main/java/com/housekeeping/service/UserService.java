@@ -19,4 +19,5 @@ public interface UserService {
 
     boolean isNewUser(String email, UserPlatform platform);
 
+    int getUserLevel(Long userId);
 }
