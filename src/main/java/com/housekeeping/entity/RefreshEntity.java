@@ -18,7 +18,7 @@ public class RefreshEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String nickname;
+    private Long userId;
 
     @Column(nullable = false, unique = true, length = 500)
     private String refresh;

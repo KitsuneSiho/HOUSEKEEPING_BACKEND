@@ -1,6 +1,5 @@
 package com.housekeeping.config;
 
-import com.housekeeping.customhandler.CustomLogoutFilter;
 import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
 import com.housekeeping.jwt.JWTUtil;
@@ -23,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -112,7 +110,7 @@ public class SecurityConfig {
 
         // custom logout filter 등록
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         // session stateless
         http
