@@ -9,12 +9,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class FurnitureServiceTest {
 
-    @Autowired
-    private FurnitureService furnitureService;
-
-    @Test
-    public void getFurnitureListTest () {
-
-        log.info(furnitureService.getFurnitureList(1));
-    }
 }

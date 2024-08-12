@@ -48,7 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
+    public AuthenticationFailureHandler authenticationFailureHandler() {
         return new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -91,11 +91,13 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/","/login", "/logout", "/oauth2-jwt-header","/api/auth/complete-registration").permitAll()
-                .requestMatchers( "/firstlogin","/firstmain","/firstlivingroom","/firstroomdesign","firsttoiletroom").permitAll()
+                .requestMatchers("/", "/login", "/logout", "/oauth2-jwt-header", "/api/auth/complete-registration").permitAll()
+                .requestMatchers("/firstlogin", "/firstmain", "/firstlivingroom", "/firstroomdesign", "firsttoiletroom").permitAll()
+                .requestMatchers("/reissue").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
                 .requestMatchers("/mainpage").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
+
 
         // 인가되지 않은 사용자에 대한 exception -> 프론트엔드로 코드 응답
         http.exceptionHandling((exception) ->
