@@ -73,7 +73,7 @@ public class JWTUtil {
     }
 
     public String createAccessToken(User user) {
-        return createJwt("access", user.getUsername(), user.getRole(), user.getUserId(), user.getNickname(), 60 * 10 * 1000L);
+        return createJwt("access", user.getUsername(), user.getRole(), user.getUserId(), user.getNickname(), 10 * 1000L);
     }
 
     public String createRefreshToken(User user) {
