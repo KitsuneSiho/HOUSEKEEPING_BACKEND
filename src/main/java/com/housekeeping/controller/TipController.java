@@ -32,7 +32,6 @@ public class TipController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TipDTO> getTipById(@PathVariable Long id) {
-        System.out.println("컨트롤러응답" + id);
         Tip tip = tipService.getTipById(id);
         return ResponseEntity.ok(convertToDTO(tip));
     }
