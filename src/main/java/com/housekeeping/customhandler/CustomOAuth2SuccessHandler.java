@@ -39,7 +39,9 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         Long userId = userDto.getUserId();
         String nickname = userDto.getNickname();
 
-        boolean isNewUser = userService.isNewUser(userDto.getEmail(), userDto.getUserPlatform());
+//        boolean isNewUser = userService.isNewUser(userDto.getEmail(), userDto.getUserPlatform());
+
+        boolean isNewUser = userService.isNewUserTemp(userDto.getNickname());
 
         String accessToken = jwtUtil.createJwt("access", username, role, userId, nickname, 60 * 10 * 1000L);
         String refreshToken = jwtUtil.createJwt("refresh", username, role, userId, nickname, 60 * 60 * 24 * 1000L);

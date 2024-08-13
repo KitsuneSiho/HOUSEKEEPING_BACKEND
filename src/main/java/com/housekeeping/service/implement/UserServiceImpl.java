@@ -59,6 +59,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isNewUserTemp(String nickname) {
+        // 구현 로직
+        return nickname.startsWith("kakao_") || nickname.startsWith("naver_") || nickname.startsWith("google_");
+    }
+
+    @Override
     public UserDTO updateUserInfo(UserDTO userDTO) {
         User user = getUserById(userDTO.getUserId());
         user.setName(userDTO.getName());
