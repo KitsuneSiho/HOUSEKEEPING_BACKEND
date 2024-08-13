@@ -148,14 +148,16 @@ public class ClothService {
 //                .collect(Collectors.toList());
 //    }
 
-    public List<Cloth> getClothesByTemperatureAndUserId(int temperature, Long userId) {
+    public List<ClothDTO> getClothesByTemperatureAndUserId(int temperature, Long userId) {
         List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
         return allClothes.stream()
                 .filter(cloth -> isSuitableForTemperature(cloth, temperature))
+                .map(this::convertToDTO) // Cloth 엔티티를 ClothDTO로 변환
                 .collect(Collectors.toList());
     }
 
     private boolean isSuitableForTemperature(Cloth cloth, int temperature) {
+        // 기존의 온도에 따른 필터링 로직
         if (temperature >= 28) {
             return cloth.getClothType().equals("반팔") || cloth.getClothType().equals("셔츠") ||
                     cloth.getClothType().equals("반바지") || cloth.getClothType().equals("스커트") ||
@@ -168,5 +170,17 @@ public class ClothService {
                     cloth.getClothType().equals("코트") || cloth.getClothType().equals("부츠");
         }
         return false;
+    }
+
+    private ClothDTO convertToDTO(Cloth cloth) {
+        ClothDTO dto = new ClothDTO();
+        dto.setClothId(cloth.getClothId());
+        dto.setClothName(cloth.getClothName());
+        dto.setClothType(cloth.getClothType());
+        dto.setClothColor(cloth.getClothColor());
+        dto.setClothMaterial(cloth.getClothMaterial());
+        dto.setClothSeason(cloth.getClothSeason());
+        dto.setImageUrl(cloth.getImageUrl());
+        return dto;
     }
 }

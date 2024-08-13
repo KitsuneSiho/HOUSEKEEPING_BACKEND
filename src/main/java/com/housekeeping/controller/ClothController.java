@@ -64,12 +64,12 @@ public class ClothController {
         }
     }
 
-    @GetMapping("/clothes/recommend")
-    public ResponseEntity<List<Cloth>> getRecommendedClothes(
+    @GetMapping("/recommend")
+    public ResponseEntity<List<ClothDTO>> getRecommendedClothes(
             @RequestParam int temperature,
-            @RequestParam Long userId) {
+            @RequestParam(name = "user_id") Long userId) {
 
-        List<Cloth> recommendedClothes = clothService.getClothesByTemperatureAndUserId(temperature, userId);
+        List<ClothDTO> recommendedClothes = clothService.getClothesByTemperatureAndUserId(temperature, userId);
         return ResponseEntity.ok(recommendedClothes);
     }
 }
