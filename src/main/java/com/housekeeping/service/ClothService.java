@@ -141,13 +141,6 @@ public class ClothService {
         }
     }
 
-//    public List<Cloth> getClothesByTemperatureAndUser(int temperature, Long userId) {
-//        List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
-//        return allClothes.stream()
-//                .filter(cloth -> isSuitableForTemperature(cloth, temperature))
-//                .collect(Collectors.toList());
-//    }
-
     public List<ClothDTO> getClothesByTemperatureAndUserId(int temperature, Long userId) {
         List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
         return allClothes.stream()
@@ -175,6 +168,7 @@ public class ClothService {
     private ClothDTO convertToDTO(Cloth cloth) {
         ClothDTO dto = new ClothDTO();
         dto.setClothId(cloth.getClothId());
+        dto.setUserId(cloth.getUser().getUserId()); // userId를 ClothDTO로 설정
         dto.setClothName(cloth.getClothName());
         dto.setClothType(cloth.getClothType());
         dto.setClothColor(cloth.getClothColor());

@@ -73,16 +73,3 @@ public class ClothController {
         return ResponseEntity.ok(recommendedClothes);
     }
 }
-
-//    @GetMapping("/clothes/recommend")
-//    public ResponseEntity<List<Cloth>> getRecommendedClothes(@RequestParam int temperature) {
-//        Long userId = getCurrentUserId();
-//        List<Cloth> recommendedClothes = clothService.getClothesByTemperatureAndUser(temperature, userId);
-//        return ResponseEntity.ok(recommendedClothes);
-//    }
-//
-//    private Long getCurrentUserId() {
-//        DefaultOAuth2User userDetails = (DefaultOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return (Long) userDetails.getAttribute("userId");
-//    }
-//}
