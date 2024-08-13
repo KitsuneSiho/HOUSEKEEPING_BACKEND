@@ -14,6 +14,8 @@ public interface UserService {
     User getUserByNickname(String nickname);
     UserDTO completeRegistration(UserDTO userDTO);
     boolean isNewUser(String email, UserPlatform platform);
+    // 일단 임시로 만든 신규 유저 판별
+    boolean isNewUserTemp(String nickname);
     UserDTO updateUserInfo(UserDTO userDTO);
     void deleteUser(Long userId);
     void updateUserStatus(Long userId, boolean isOnline);
