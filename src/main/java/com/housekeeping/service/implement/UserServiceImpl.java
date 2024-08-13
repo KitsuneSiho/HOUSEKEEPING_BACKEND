@@ -40,6 +40,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int getUserLevel(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getLevel().getLevelLevel();
+    }
+
+    @Override
     public UserDTO completeRegistration(UserDTO userDTO) {
         // 구현 로직
         return userDTO;

@@ -1,5 +1,6 @@
 package com.housekeeping.config;
 
+import com.housekeeping.customhandler.CustomLogoutFilter;
 import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
 import com.housekeeping.jwt.JWTUtil;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -93,6 +95,7 @@ public class SecurityConfig {
                 .requestMatchers( "/firstlogin","/firstmain","/firstlivingroom","/firstroomdesign","firsttoiletroom").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/user/**").authenticated()
+                .requestMatchers("/reissue").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
                 .requestMatchers("/mainpage").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());

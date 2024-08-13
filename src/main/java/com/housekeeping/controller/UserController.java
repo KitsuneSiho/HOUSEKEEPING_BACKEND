@@ -1,6 +1,5 @@
 package com.housekeeping.controller;
 
-import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.User;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +38,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    // 유저 닉네임을 이용해서 해당 유저의 로그인 상태를 업데이트
     @PutMapping("/status/update2")
     public ResponseEntity<String> updateStatus(@RequestParam("nickname") String nickname, @RequestParam("isOnline") boolean isOnline) {
         userService.updateUserStatusByNickname(nickname, isOnline);
         return ResponseEntity.ok().build();
+    }
+
+    // 유저의 아이디로 유저의 레벨을 반환
+    @GetMapping("/level")
+    public int getUserLevel(@RequestParam("userId") Long userId) {
+        return userService.getUserLevel(userId);
     }
 }
