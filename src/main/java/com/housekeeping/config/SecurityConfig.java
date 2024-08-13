@@ -1,6 +1,5 @@
 package com.housekeeping.config;
 
-import com.housekeeping.customhandler.CustomLogoutFilter;
 import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
 import com.housekeeping.jwt.JWTUtil;
@@ -23,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,7 +46,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public AuthenticationFailureHandler authenticationFailureHandler(){
         return new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -91,13 +89,13 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/", "/login", "/logout", "/oauth2-jwt-header", "/api/auth/complete-registration").permitAll()
-                .requestMatchers("/firstlogin", "/firstmain", "/firstlivingroom", "/firstroomdesign", "firsttoiletroom").permitAll()
-                .requestMatchers("/reissue").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
+                .requestMatchers("/","/login", "/logout", "/oauth2-jwt-header","/api/auth/complete-registration").permitAll()
+                .requestMatchers( "/firstlogin","/firstmain","/firstlivingroom","/firstroomdesign","firsttoiletroom").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/mainpage").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
-
 
         // 인가되지 않은 사용자에 대한 exception -> 프론트엔드로 코드 응답
         http.exceptionHandling((exception) ->
@@ -112,7 +110,7 @@ public class SecurityConfig {
 
         // custom logout filter 등록
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         // session stateless
         http

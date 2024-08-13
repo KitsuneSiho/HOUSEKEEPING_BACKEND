@@ -1,6 +1,5 @@
 package com.housekeeping.customhandler;
 
-
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.repository.RefreshRepository;
 import com.housekeeping.util.CookieUtil;
@@ -17,14 +16,11 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * 로그아웃 필터
- * refresh 토큰 만료
- */
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
@@ -66,16 +62,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        Boolean isExist = refreshRepository.existsByRefresh(refresh);
+        Long userId = jwtUtil.getUserId(refresh);
 
-        // not exist in DB
-        if(!isExist){
+        // Check if refresh token exists for the user
+        if(!refreshRepository.existsByUserId(userId)){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         // logout
-        refreshRepository.deleteByRefresh(refresh);
+        refreshRepository.deleteByUserId(userId);
 
         Cookie cookie = CookieUtil.createCookie("refresh", null, 0);
         response.addCookie(cookie);
