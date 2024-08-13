@@ -20,8 +20,31 @@ public class TipServiceImpl implements TipService {
         this.tipRepository = tipRepository;
     }
 
+
     @Override
     public List<Tip> getAllTips() {
-       return tipRepository.findAll();
+        return tipRepository.findAll();
+    }
+
+    @Override
+    public Tip getTipById(Long id) {
+        System.out.println("서비스 받음");
+        return tipRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tip not found with id: " + id));
+    }
+
+    @Override
+    public Tip updateTip(Long id, Tip tipDetails) {
+        Tip tip = getTipById(id);
+        tip.setTipCategory(tipDetails.getTipCategory());
+        tip.setTipTitle(tipDetails.getTipTitle());
+        tip.setTipContent(tipDetails.getTipContent());
+        return tipRepository.save(tip);
+    }
+
+    @Override
+    public void deleteTip(Long id) {
+        Tip tip = getTipById(id);
+        tipRepository.delete(tip);
     }
 }
