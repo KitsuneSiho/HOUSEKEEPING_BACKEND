@@ -12,9 +12,4 @@ public class HousekeepingBackApplication {
         SpringApplication.run(HousekeepingBackApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.ClothDTO;
+import com.housekeeping.entity.Cloth;
 import com.housekeeping.service.ClothService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class ClothController {
 
     //옷장 아이템 조회
     @GetMapping("/items")
-    public List<ClothDTO> getClothes(@RequestParam(value = "name",  required = false) String name,
+    public List<ClothDTO> getClothes(@RequestParam(value = "name", required = false) String name,
                                      @RequestParam(value = "category", required = false) String category,
                                      @RequestParam(value = "details", required = false) String details) {
         return clothService.getClothes(name, category, details);
@@ -36,6 +37,7 @@ public class ClothController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     // 옷 아이템 수정
     @PutMapping("/items/{id}")
     public ResponseEntity<ClothDTO> updateCloth(@PathVariable("id") Long id, @RequestBody ClothDTO clothDTO) {
@@ -60,4 +62,9 @@ public class ClothController {
         }
     }
 
+    @GetMapping("/clothes/recommend")
+    public ResponseEntity<List<Cloth>> getRecommendedClothes(@RequestParam int temperature) {
+        List<Cloth> recommendedClothes = clothService.getClothesByTemperature(temperature);
+        return ResponseEntity.ok(recommendedClothes);
+    }
 }
