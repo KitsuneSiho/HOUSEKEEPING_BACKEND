@@ -1,17 +1,14 @@
 package com.housekeeping.service.implement;
 
 import com.housekeeping.DTO.UserDTO;
-import com.housekeeping.entity.LevelEXPTable;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.UserPlatform;
-import com.housekeeping.repository.LevelEXPTableRepository;
 import com.housekeeping.repository.UserRepository;
+import com.housekeeping.repository.RefreshRepository;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -19,11 +16,17 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final LevelEXPTableRepository levelEXPTableRepository;
+    private final RefreshRepository refreshRepository;
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public UserDTO getUserDTOById(Long id) {
+        User user = getUserById(id);
+        return convertToDTO(user);
     }
 
     @Override
@@ -33,58 +36,62 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname).orElse(null);
-    }
-
-    @Override
-    public boolean isNewUser(String email, UserPlatform platform) {
-
-        User user = userRepository.findByEmailAndUserPlatform(email, platform).orElseThrow();
-
-        return (user.getNickname().startsWith("kakao_") || user.getNickname().startsWith("naver_") || user.getNickname().startsWith("google_"));
+        return userRepository.findByNickname(nickname).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Override
     public UserDTO completeRegistration(UserDTO userDTO) {
-        Optional<User> existingUser = userRepository.findByNickname(userDTO.getNickname());
+        // 구현 로직
+        return userDTO;
+    }
 
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("Nickname already exists");
-        }
+    @Override
+    public boolean isNewUser(String email, UserPlatform platform) {
+        // 구현 로직
+        return false;
+    }
 
-        Optional<LevelEXPTable> defaultLevelOpt = levelEXPTableRepository.findByLevelLevel(1);
+    @Override
+    public UserDTO updateUserInfo(UserDTO userDTO) {
+        User user = getUserById(userDTO.getUserId());
+        user.setName(userDTO.getName());
+        user.setNickname(userDTO.getNickname());
+        user.setEmail(userDTO.getEmail());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        User updatedUser = saveUser(user);
+        return convertToDTO(updatedUser);
+    }
 
-        if (defaultLevelOpt.isEmpty()) {
-            throw new RuntimeException("Default level not found. Please check LevelEXPTable data.");
-        }
+    @Override
+    public void deleteUser(Long userId) {
+        refreshRepository.deleteByUserId(userId);
+        userRepository.deleteById(userId);
+    }
 
-        User user = User.builder()
-                .username(userDTO.getUsername())
-                .name(userDTO.getName())
-                .email(userDTO.getEmail())
-                .nickname(userDTO.getNickname())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .userPlatform(userDTO.getUserPlatform())
-                .role(userDTO.getRole() != null ? userDTO.getRole() : "ROLE_USER")
-                .level(defaultLevelOpt.get())
-                .build();
+    @Override
+    public void updateUserStatus(Long userId, boolean isOnline) {
+        User user = getUserById(userId);
+        user.setUserIsOnline(isOnline);
+        saveUser(user);
+    }
 
-        User savedUser = userRepository.save(user);
-        return convertToDTO(savedUser);
+    @Override
+    public void updateUserStatusByNickname(String nickname, boolean isOnline) {
+        User user = getUserByNickname(nickname);
+        user.setUserIsOnline(isOnline);
+        saveUser(user);
     }
 
     private UserDTO convertToDTO(User user) {
         return UserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
-                .nickname(user.getNickname())
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
-                .level(user.getLevel().getLevelLevel())
-                .isNewUser(false)
                 .build();
     }
 }

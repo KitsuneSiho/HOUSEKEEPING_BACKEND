@@ -37,7 +37,6 @@ public class JWTFilter extends OncePerRequestFilter {
             String username = claims.get("username", String.class);
             String role = claims.get("role", String.class);
 
-            // role이 null이거나 빈 문자열인 경우 기본값 설정
             if (role == null || role.trim().isEmpty()) {
                 role = "ROLE_USER";
             }

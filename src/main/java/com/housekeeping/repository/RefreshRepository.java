@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RefreshRepository extends JpaRepository<RefreshEntity, Long> {
-    void deleteByNickname(String nickname);
+    Optional<RefreshEntity> findByUserId(Long userId);
+    void deleteByUserId(Long userId);
+    Boolean existsByUserId(Long userId);
     Boolean existsByRefresh(String refresh);
-    void deleteByRefresh(String refresh);
-    Optional<RefreshEntity> findByNickname(String nickname);
 }
