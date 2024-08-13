@@ -85,5 +85,15 @@ public class FoodRepositoryImpl implements FoodRepositoryCustom {
         return deletedCount > 0;
     }
 
+    @Override
+    public List<String> findAllIngredientNames() {
+        QFood food = QFood.food;
+        return queryFactory
+                .select(food.foodName)
+                .from(food)
+                .distinct()
+                .fetch();
+    }
+
 
 }
