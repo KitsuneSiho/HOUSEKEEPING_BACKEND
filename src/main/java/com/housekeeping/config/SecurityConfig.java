@@ -46,7 +46,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
+    public AuthenticationFailureHandler authenticationFailureHandler() {
         return new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -89,9 +89,10 @@ public class SecurityConfig {
 
         // authorization
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/","/login", "/logout", "/oauth2-jwt-header","/api/auth/complete-registration").permitAll()
-                .requestMatchers( "/firstlogin","/firstmain","/firstlivingroom","/firstroomdesign","firsttoiletroom").permitAll()
+                .requestMatchers("/", "/login", "/logout", "/oauth2-jwt-header", "/api/auth/complete-registration").permitAll()
+                .requestMatchers("/firstlogin", "/firstmain", "/firstlivingroom", "/firstroomdesign", "firsttoiletroom").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/reissue").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/mainpage").hasRole("USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
@@ -123,11 +124,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000","http://192.168.0.42:5000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true); // 자격 증명을 허용하도록 설정
-        configuration.setExposedHeaders(Collections.singletonList("access"));
+        configuration.setExposedHeaders(Arrays.asList("access", "Authorization"));
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

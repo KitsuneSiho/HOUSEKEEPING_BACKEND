@@ -48,7 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("messages", List.of(
                 // 시스템 메시지: API에 레시피 추천 시스템의 역할 설명
-                Map.of("role", "system", "content", "- 재료와 조건을 입력하면 레시피를 알려주는 레시피 추천 시스템\n- 서문 없이 바로 1개 레시피 추천\n- 답변 폼\n\n이름:\n재료:\n소요시간:\n레시피:\n\n\n\n"),
+                Map.of("role", "system", "content", "- 재료와 조건을 입력하면 레시피를 알려주는 레시피 추천 시스템\n- 서문 없이 바로 1개 레시피 추천\n- 답변 폼\n\n이름:\n재료:\n소요시간:\n조리법:\n\n\n\n"),
                 // 사용자 메시지: 실제 레시피 검색 쿼리
                 Map.of("role", "user", "content", buildQuery(searchCriteria))
         ));
@@ -157,9 +157,9 @@ public class RecipeServiceImpl implements RecipeService {
                     recipe.put("name", line.substring(5).trim());
                 } else if (line.startsWith("재료 : ")) {
                     recipe.put("ingredients", line.substring(5).trim());
-                } else if (line.startsWith("소요 시간 : ")) {
+                } else if (line.startsWith("소요시간 : ")) {
                     recipe.put("time", line.substring(8).trim());
-                } else if (line.startsWith("레시피 : ")) {
+                } else if (line.startsWith("조리법 : ")) {
                     recipeStepsIndex = i;
                     break;
                 }
@@ -194,9 +194,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipe.put("ingredients", ingredientRecipe[0]);
 
-        recipe.put("time", ingredientRecipe[1].split("레시피 : \n", 2)[0]);
+        recipe.put("time", ingredientRecipe[1].split("조리법 : \n", 2)[0]);
 
-        recipe.put("steps", ingredientRecipe[1].split("레시피 : \n", 2)[1]);
+        recipe.put("steps", ingredientRecipe[1].split("조리법 : \n", 2)[1]);
 
         List<Map<String, String>> recipes = new ArrayList<>();
 
