@@ -12,6 +12,9 @@ public interface UserService {
     UserDTO getUserDTOById(Long id);
     User saveUser(User user);
     User getUserByNickname(String nickname);
+
+    int getUserLevel(Long userId);
+
     UserDTO completeRegistration(UserDTO userDTO);
     boolean isNewUser(String email, UserPlatform platform);
     UserDTO updateUserInfo(UserDTO userDTO);
