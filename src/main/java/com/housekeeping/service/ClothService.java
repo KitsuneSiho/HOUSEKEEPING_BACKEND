@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.housekeeping.DTO.ClothDTO;
 import com.housekeeping.entity.Cloth;
 import com.housekeeping.entity.User;
+import com.housekeeping.entity.enums.ClothSeason;
 import com.housekeeping.repository.ClothRepository;
 import com.housekeeping.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class ClothService {
                 .collect(Collectors.toList());
     }
 
-//    public ClothDTO saveCloth(ClothDTO clothDTO) {
+    //    public ClothDTO saveCloth(ClothDTO clothDTO) {
 //        Long userId = clothDTO.getUserId();
 //        System.out.println("받고있는 userId: " + userId); // 디버깅을 위한 로그 추가
 //        User user = userService.getUserById(userId);
@@ -51,24 +52,24 @@ public class ClothService {
 //        if (user == null) {
 //            throw new IllegalArgumentException("User with ID " + userId + " not found in the system.");
 //        }
-public ClothDTO saveCloth(ClothDTO clothDTO) {
-    try {
-        // User 엔티티를 조회
-        User user = userRepository.findById(clothDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + clothDTO.getUserId()));
+    public ClothDTO saveCloth(ClothDTO clothDTO) {
+        try {
+            // User 엔티티를 조회
+            User user = userRepository.findById(clothDTO.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + clothDTO.getUserId()));
 
-        // ClothDTO를 Cloth 엔티티로 변환
-        Cloth cloth = toEntity(clothDTO, user);
-        // Cloth 엔티티 저장
-        Cloth savedCloth = clothRepository.save(cloth);
-        // 저장된 Cloth 엔티티를 ClothDTO로 변환하여 반환
-        return toDTO(savedCloth);
-    } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException("Failed to save Cloth. Error: " + e.getMessage(), e);
-    } catch (Exception e) {
-        throw new RuntimeException("Unexpected error occurred while saving Cloth: " + e.getMessage(), e);
+            // ClothDTO를 Cloth 엔티티로 변환
+            Cloth cloth = toEntity(clothDTO, user);
+            // Cloth 엔티티 저장
+            Cloth savedCloth = clothRepository.save(cloth);
+            // 저장된 Cloth 엔티티를 ClothDTO로 변환하여 반환
+            return toDTO(savedCloth);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to save Cloth. Error: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error occurred while saving Cloth: " + e.getMessage(), e);
+        }
     }
-}
 
 
     private ClothDTO toDTO(Cloth cloth) {
@@ -139,4 +140,41 @@ public ClothDTO saveCloth(ClothDTO clothDTO) {
             throw new RuntimeException("옷 삭제 중 오류 발생: " + e.getMessage(), e);
         }
     }
+
+    public List<ClothDTO> getClothesByTemperatureAndUserId(int temperature, Long userId) {
+        List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
+        return allClothes.stream()
+                .filter(cloth -> isSuitableForTemperature(cloth, temperature))
+                .map(this::convertToDTO) // Cloth 엔티티를 ClothDTO로 변환
+                .collect(Collectors.toList());
     }
+
+    private boolean isSuitableForTemperature(Cloth cloth, int temperature) {
+        // 기존의 온도에 따른 필터링 로직
+        if (temperature >= 28) {
+            return cloth.getClothType().equals("반팔") || cloth.getClothType().equals("셔츠") ||
+                    cloth.getClothType().equals("반바지") || cloth.getClothType().equals("스커트") ||
+                    cloth.getClothType().equals("샌들/슬리퍼");
+        } else if (temperature >= 17 && temperature < 28) {
+            return cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("후드티") ||
+                    cloth.getClothType().equals("청바지") || cloth.getClothType().equals("운동화");
+        } else if (temperature < 17) {
+            return cloth.getClothType().equals("니트") || cloth.getClothType().equals("패딩") ||
+                    cloth.getClothType().equals("코트") || cloth.getClothType().equals("부츠");
+        }
+        return false;
+    }
+
+    private ClothDTO convertToDTO(Cloth cloth) {
+        ClothDTO dto = new ClothDTO();
+        dto.setClothId(cloth.getClothId());
+        dto.setUserId(cloth.getUser().getUserId()); // userId를 ClothDTO로 설정
+        dto.setClothName(cloth.getClothName());
+        dto.setClothType(cloth.getClothType());
+        dto.setClothColor(cloth.getClothColor());
+        dto.setClothMaterial(cloth.getClothMaterial());
+        dto.setClothSeason(cloth.getClothSeason());
+        dto.setImageUrl(cloth.getImageUrl());
+        return dto;
+    }
+}

@@ -1,10 +1,13 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.ClothDTO;
+import com.housekeeping.entity.Cloth;
 import com.housekeeping.service.ClothService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +21,7 @@ public class ClothController {
 
     //옷장 아이템 조회
     @GetMapping("/items")
-    public List<ClothDTO> getClothes(@RequestParam(value = "name",  required = false) String name,
+    public List<ClothDTO> getClothes(@RequestParam(value = "name", required = false) String name,
                                      @RequestParam(value = "category", required = false) String category,
                                      @RequestParam(value = "details", required = false) String details) {
         return clothService.getClothes(name, category, details);
@@ -36,6 +39,7 @@ public class ClothController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     // 옷 아이템 수정
     @PutMapping("/items/{id}")
     public ResponseEntity<ClothDTO> updateCloth(@PathVariable("id") Long id, @RequestBody ClothDTO clothDTO) {
@@ -60,4 +64,12 @@ public class ClothController {
         }
     }
 
+    @GetMapping("/recommend")
+    public ResponseEntity<List<ClothDTO>> getRecommendedClothes(
+            @RequestParam int temperature,
+            @RequestParam(name = "user_id") Long userId) {
+
+        List<ClothDTO> recommendedClothes = clothService.getClothesByTemperatureAndUserId(temperature, userId);
+        return ResponseEntity.ok(recommendedClothes);
+    }
 }
