@@ -105,6 +105,10 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .level(user.getLevel().getLevelLevel())
+                .levelName(user.getLevel().getLevelName())
+                .exp(user.getUserEXP())
+                .nextLevelExp(user.getLevel().getLevelRequireEXP())
                 .build();
     }
 }
