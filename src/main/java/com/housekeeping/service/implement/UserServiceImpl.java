@@ -40,6 +40,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int getUserLevel(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getLevel().getLevelLevel();
+    }
+
+    @Override
     public UserDTO completeRegistration(UserDTO userDTO) {
         // 구현 로직
         return userDTO;
@@ -49,6 +56,12 @@ public class UserServiceImpl implements UserService {
     public boolean isNewUser(String email, UserPlatform platform) {
         // 구현 로직
         return false;
+    }
+
+    @Override
+    public boolean isNewUserTemp(String nickname) {
+        // 구현 로직
+        return nickname.startsWith("kakao_") || nickname.startsWith("naver_") || nickname.startsWith("google_");
     }
 
     @Override

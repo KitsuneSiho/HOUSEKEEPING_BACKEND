@@ -44,4 +44,10 @@ public class UserController {
         userService.updateUserStatusByNickname(nickname, isOnline);
         return ResponseEntity.ok().build();
     }
+
+    // 유저의 아이디로 유저의 레벨을 반환
+    @GetMapping("/level")
+    public int getUserLevel(@RequestParam("userId") Long userId) {
+        return userService.getUserLevel(userId);
+    }
 }
