@@ -12,13 +12,13 @@ public interface UserService {
     UserDTO getUserDTOById(Long id);
     User saveUser(User user);
     User getUserByNickname(String nickname);
-
-    int getUserLevel(Long userId);
-
     UserDTO completeRegistration(UserDTO userDTO);
     boolean isNewUser(String email, UserPlatform platform);
+    // 일단 임시로 만든 신규 유저 판별
+    boolean isNewUserTemp(String nickname);
     UserDTO updateUserInfo(UserDTO userDTO);
     void deleteUser(Long userId);
     void updateUserStatus(Long userId, boolean isOnline);
     void updateUserStatusByNickname(String nickname, boolean isOnline);
+    int getUserLevel(Long userId);
 }
