@@ -1,5 +1,7 @@
 package com.housekeeping.jwt;
 
+import com.housekeeping.entity.User;
+import com.housekeeping.entity.enums.UserPlatform;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,5 +70,17 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(key)
                 .compact();
+    }
+
+    public String createAccessToken(User user) {
+        return createJwt("access", user.getUsername(), user.getRole(), user.getUserId(), user.getNickname(), 60 * 10 * 1000L);
+    }
+
+    public String createRefreshToken(User user) {
+        return createJwt("refresh", user.getUsername(), user.getRole(), user.getUserId(), user.getNickname(), 60 * 60 * 24 * 1000L);
+    }
+
+    public UserPlatform getTokenPlatform(String token) {
+        return UserPlatform.valueOf(getClaims(token).get("platform", String.class));
     }
 }
