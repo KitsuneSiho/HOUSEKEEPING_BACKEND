@@ -6,6 +6,8 @@ import com.housekeeping.service.ClothService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,8 +65,24 @@ public class ClothController {
     }
 
     @GetMapping("/clothes/recommend")
-    public ResponseEntity<List<Cloth>> getRecommendedClothes(@RequestParam int temperature) {
-        List<Cloth> recommendedClothes = clothService.getClothesByTemperature(temperature);
+    public ResponseEntity<List<Cloth>> getRecommendedClothes(
+            @RequestParam int temperature,
+            @RequestParam Long userId) {
+
+        List<Cloth> recommendedClothes = clothService.getClothesByTemperatureAndUserId(temperature, userId);
         return ResponseEntity.ok(recommendedClothes);
     }
 }
+
+//    @GetMapping("/clothes/recommend")
+//    public ResponseEntity<List<Cloth>> getRecommendedClothes(@RequestParam int temperature) {
+//        Long userId = getCurrentUserId();
+//        List<Cloth> recommendedClothes = clothService.getClothesByTemperatureAndUser(temperature, userId);
+//        return ResponseEntity.ok(recommendedClothes);
+//    }
+//
+//    private Long getCurrentUserId() {
+//        DefaultOAuth2User userDetails = (DefaultOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return (Long) userDetails.getAttribute("userId");
+//    }
+//}

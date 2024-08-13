@@ -141,8 +141,15 @@ public class ClothService {
         }
     }
 
-    public List<Cloth> getClothesByTemperature(int temperature) {
-        List<Cloth> allClothes = clothRepository.findAll();
+//    public List<Cloth> getClothesByTemperatureAndUser(int temperature, Long userId) {
+//        List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
+//        return allClothes.stream()
+//                .filter(cloth -> isSuitableForTemperature(cloth, temperature))
+//                .collect(Collectors.toList());
+//    }
+
+    public List<Cloth> getClothesByTemperatureAndUserId(int temperature, Long userId) {
+        List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
         return allClothes.stream()
                 .filter(cloth -> isSuitableForTemperature(cloth, temperature))
                 .collect(Collectors.toList());
