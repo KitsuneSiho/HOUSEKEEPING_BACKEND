@@ -67,6 +67,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUserInfo(UserDTO userDTO) {
         User user = getUserById(userDTO.getUserId());
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         user.setName(userDTO.getName());
         user.setNickname(userDTO.getNickname());
         user.setEmail(userDTO.getEmail());
