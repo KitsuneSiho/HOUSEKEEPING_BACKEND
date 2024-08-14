@@ -16,6 +16,7 @@ public class UserDTO {
     private String username;
     private String name;
     private String email;
+    private String profileImageUrl;
     private String phoneNumber;
     private String role;
     private UserPlatform userPlatform;
@@ -23,7 +24,7 @@ public class UserDTO {
     private boolean isNewUser;
     private String accessToken;
     private int level;
-    private String levelName;  // 새로 추가된 필드
-    private int exp;           // 새로 추가된 필드
-    private int nextLevelExp;  // 새로 추가된 필드
+    private String levelName;
+    private int exp;
+    private int nextLevelExp;
 }

@@ -3,8 +3,10 @@ package com.housekeeping.controller;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/user")
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final FileUploadController fileUploadController;
+
 
     @GetMapping("/info")
     public ResponseEntity<UserDTO> getUserInfo(@RequestParam("userId") Long userId) {
@@ -52,4 +56,21 @@ public class UserController {
     public int getUserLevel(@RequestParam("userId") Long userId) {
         return userService.getUserLevel(userId);
     }
+
+    @PostMapping("/update-profile-image")
+    public ResponseEntity<UserDTO> updateProfileImage(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
+        try {
+            ResponseEntity<String> uploadResponse = fileUploadController.uploadFile(file);
+            if (uploadResponse.getStatusCode() == HttpStatus.OK) {
+                String imageUrl = uploadResponse.getBody();
+                UserDTO updatedUser = userService.updateProfileImage(userId, imageUrl);
+                return ResponseEntity.ok(updatedUser);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
+

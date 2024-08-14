@@ -52,8 +52,8 @@ public class User {
     @Column(nullable = false)
     private int userEXP = 0;
 
-    @Lob
-    private byte[] userImage;
+    @Column
+    private String profileImageUrl;
 
     @Column(nullable = false)
     private boolean userIsOnline = false;

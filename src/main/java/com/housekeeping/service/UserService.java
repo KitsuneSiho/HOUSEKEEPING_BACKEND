@@ -21,4 +21,6 @@ public interface UserService {
     void updateUserStatus(Long userId, boolean isOnline);
     void updateUserStatusByNickname(String nickname, boolean isOnline);
     int getUserLevel(Long userId);
+
+    UserDTO updateProfileImage(Long userId, String profileImageUrl);
 }
