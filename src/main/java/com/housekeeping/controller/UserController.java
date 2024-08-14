@@ -1,7 +1,6 @@
 package com.housekeeping.controller;
 
 import com.housekeeping.DTO.UserDTO;
-import com.housekeeping.entity.User;
 import com.housekeeping.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,9 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserDTO userDTO) {
+        if (userDTO.getUserId() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
         UserDTO updatedUser = userService.updateUserInfo(userDTO);
         return ResponseEntity.ok(updatedUser);
     }
