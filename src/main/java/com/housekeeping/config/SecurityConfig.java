@@ -79,9 +79,15 @@ public class SecurityConfig {
 
         // logout
         http
-                .logout((auth) -> auth
-                        .logoutSuccessUrl("/")
-                        .permitAll());
+                .logout(logout -> logout
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                        .logoutUrl("/api/auth/logout")
+                        .deleteCookies("JSESSIONID", "refresh")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                );
 
         // cors
         http
