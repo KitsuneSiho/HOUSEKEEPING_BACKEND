@@ -34,8 +34,12 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestParam("userId") Long userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.ok().build();
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().body("User successfully deleted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user: " + e.getMessage());
+        }
     }
 
     // 기존의 상태 업데이트 메서드들은 유지
