@@ -69,6 +69,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUserInfo(UserDTO userDTO) {
         User user = getUserById(userDTO.getUserId());
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         user.setName(userDTO.getName());
         user.setNickname(userDTO.getNickname());
         user.setEmail(userDTO.getEmail());
@@ -107,6 +110,10 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .level(user.getLevel().getLevelLevel())
+                .levelName(user.getLevel().getLevelName())
+                .exp(user.getUserEXP())
+                .nextLevelExp(user.getLevel().getLevelRequireEXP())
                 .build();
     }
 }
