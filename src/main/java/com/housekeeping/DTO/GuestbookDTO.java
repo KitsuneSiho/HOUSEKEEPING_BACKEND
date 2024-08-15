@@ -1,6 +1,5 @@
 package com.housekeeping.DTO;
 
-import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.GuestbookColor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
