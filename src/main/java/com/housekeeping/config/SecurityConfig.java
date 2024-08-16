@@ -100,7 +100,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/logout", "/oauth2-jwt-header", "/api/auth/complete-registration").permitAll()
                 .requestMatchers("/firstlogin", "/firstmain", "/firstlivingroom", "/firstroomdesign", "firsttoiletroom").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/reissue").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
+                .requestMatchers("/reissue", "/reissue/socket").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/mainpage").hasRole("USER")
 
