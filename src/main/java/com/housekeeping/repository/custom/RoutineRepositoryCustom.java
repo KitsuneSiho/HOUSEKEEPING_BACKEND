@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface RoutineRepositoryCustom {
     List<String> findDistinctRoutineGroupNamesByUserId(Long userId);
+    String findDistinctCheckedRoutineGroupNamesByUserId(Long userId);
 }
