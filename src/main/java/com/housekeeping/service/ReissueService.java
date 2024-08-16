@@ -27,8 +27,6 @@ public class ReissueService {
     public ResponseEntity<?> reissueTokens(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = CookieUtil.getCookieValue(request, "refresh");
 
-        System.out.println("refreshToken: " + refreshToken);
-
         if (refreshToken == null || !jwtUtil.isValid(refreshToken)) {
             return new ResponseEntity<>("Invalid refresh token", HttpStatus.BAD_REQUEST);
         }
@@ -43,7 +41,6 @@ public class ReissueService {
         String newAccessToken = jwtUtil.createAccessToken(user);
 //        String newRefreshToken = jwtUtil.createRefreshToken(user);
 
-        System.out.println("newAccessToken: " + newAccessToken);
 //        System.out.println("newRefreshToken: " + newRefreshToken);
 
 //        refreshTokenService.deleteRefreshToken(userId);

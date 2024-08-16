@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
     public int getUserLevel(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
+        System.out.println("level: " + user.getLevel().getLevelLevel());
+
         return user.getLevel().getLevelLevel();
     }
 

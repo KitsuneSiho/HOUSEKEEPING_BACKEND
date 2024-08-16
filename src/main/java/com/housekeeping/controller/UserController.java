@@ -58,6 +58,7 @@ public class UserController {
     // 유저의 아이디로 유저의 레벨을 반환
     @GetMapping("/level")
     public int getUserLevel(@RequestParam("userId") Long userId) {
+        System.out.println("asdfasdf");
         return userService.getUserLevel(userId);
     }
 
