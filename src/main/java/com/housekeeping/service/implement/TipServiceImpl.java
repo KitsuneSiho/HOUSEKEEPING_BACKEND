@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +21,6 @@ public class TipServiceImpl implements TipService {
         this.tipRepository = tipRepository;
     }
 
-
     @Override
     public List<Tip> getAllTips() {
         return tipRepository.findAll();
@@ -28,9 +28,26 @@ public class TipServiceImpl implements TipService {
 
     @Override
     public Tip getTipById(Long id) {
-        System.out.println("서비스 받음");
         return tipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tip not found with id: " + id));
+    }
+
+    @Override
+    public Tip saveTip(Tip tip) {
+        if (tip.getTipTitle() == null || tip.getTipTitle().isEmpty()) {
+            throw new IllegalArgumentException("제목을 입력하세요.");
+        }
+        if (tip.getTipContent() == null || tip.getTipContent().isEmpty()) {
+            throw new IllegalArgumentException("내용을 입력하세요.");
+        }
+
+        // 현재 시간을 설정
+        tip.setTipCreatedDate(LocalDateTime.now());
+
+        // 조회수 초기화
+        tip.setTipViews(0);
+
+        return tipRepository.save(tip);
     }
 
     @Override
@@ -46,5 +63,13 @@ public class TipServiceImpl implements TipService {
     public void deleteTip(Long id) {
         Tip tip = getTipById(id);
         tipRepository.delete(tip);
+    }
+
+    @Override
+    @Transactional
+    public Tip incrementViewAndGetTip(Long id) {
+        Tip tip = getTipById(id);
+        tip.setTipViews(tip.getTipViews() + 1);
+        return tipRepository.save(tip);
     }
 }

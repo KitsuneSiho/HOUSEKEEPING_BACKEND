@@ -4,6 +4,7 @@ import com.housekeeping.DTO.TipDTO;
 import com.housekeeping.entity.Tip;
 import com.housekeeping.service.TipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +37,16 @@ public class TipController {
         return ResponseEntity.ok(convertToDTO(tip));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TipDTO> updateTip(@PathVariable Long id, @RequestBody TipDTO tipDTO) {
-        Tip updatedTip = tipService.updateTip(id, convertToEntity(tipDTO));
+    @PostMapping("/save")
+    public ResponseEntity<TipDTO> saveTip(@RequestBody TipDTO tipDTO) {
+        Tip tip = convertToEntity(tipDTO);
+        Tip savedTip = tipService.saveTip(tip);
+        return new ResponseEntity<>(convertToDTO(savedTip), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<TipDTO> updateTip(@RequestBody TipDTO tipDTO) {
+        Tip updatedTip = tipService.updateTip(tipDTO.getTipId(), convertToEntity(tipDTO));
         return ResponseEntity.ok(convertToDTO(updatedTip));
     }
 
@@ -46,6 +54,12 @@ public class TipController {
     public ResponseEntity<Void> deleteTip(@PathVariable Long id) {
         tipService.deleteTip(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/view")
+    public ResponseEntity<TipDTO> incrementViewAndGetTip(@PathVariable Long id) {
+        Tip updatedTip = tipService.incrementViewAndGetTip(id);
+        return ResponseEntity.ok(convertToDTO(updatedTip));
     }
 
     private TipDTO convertToDTO(Tip tip) {

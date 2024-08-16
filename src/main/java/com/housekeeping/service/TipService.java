@@ -9,7 +9,11 @@ public interface TipService {
 
     Tip getTipById(Long id);
 
+    Tip saveTip(Tip tip);
+
     Tip updateTip(Long id, Tip tip);
 
     void deleteTip(Long id);
+
+    Tip incrementViewAndGetTip(Long id);
 }
