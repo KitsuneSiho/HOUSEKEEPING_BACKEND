@@ -232,4 +232,25 @@ public class RoutineController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/toggle-alarms")
+    public ResponseEntity<Void>  toggleRoomAlarms(@RequestBody Map<String, Object> request) {
+        Long roomId = Long.parseLong(request.get("roomId").toString());
+        String routineGroupName = request.get("routineGroupName").toString();
+
+        routineService.toggleRoomAlarms(roomId, routineGroupName);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/toggle-notification")
+    public ResponseEntity<Void> toggleNotification(
+            @RequestParam Long routineId,
+            @RequestParam boolean routineIsAlarm) {
+        try {
+            routineService.toggleNotification(routineId, routineIsAlarm);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
