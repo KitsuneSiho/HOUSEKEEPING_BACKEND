@@ -100,7 +100,16 @@ public class UserServiceImpl implements UserService {
         saveUser(user);
     }
 
-    private UserDTO convertToDTO(User user) {
+    @Override
+    public UserDTO updateProfileImage(Long userId, String profileImageUrl) {
+        User user = getUserById(userId);
+        user.setProfileImageUrl(profileImageUrl);
+        User updatedUser = saveUser(user);
+        return convertToDTO(updatedUser);
+    }
+
+    @Override
+    public UserDTO convertToDTO(User user) {
         return UserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
@@ -110,6 +119,7 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .profileImageUrl(user.getProfileImageUrl())
                 .level(user.getLevel().getLevelLevel())
                 .levelName(user.getLevel().getLevelName())
                 .exp(user.getUserEXP())
