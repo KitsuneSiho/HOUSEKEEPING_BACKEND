@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,35 +35,48 @@ public class ClothService {
     @Autowired
     private UserService userService; // UserRepository 주입
 
-    public List<ClothDTO> getClothes(String name, String category, String details) {
-        // Cloth 엔티티 목록을 조회
-        List<Cloth> clothes = clothRepository.findAll();
-        // Cloth 엔티티 목록을 ClothDTO 목록으로 변환하여 반환
-        return clothes.stream()
+    public List<ClothDTO> getClothes(String name, String category, String details, Long userId) {
+        List<String> categories = null;
+
+        if (category != null) {
+            switch (category.toLowerCase()) {
+                case "top":
+                    categories = Arrays.asList("반팔", "긴팔", "셔츠", "민소매", "카라티", "니트");
+                    break;
+                case "outer":
+                    categories = Arrays.asList("후드 집업", "가디건", "코트", "패딩", "바람막이");
+                    break;
+                case "bottom":
+                    categories = Arrays.asList("반바지", "긴바지", "스커트", "원피스");
+                    break;
+                case "bag":
+                    categories = Arrays.asList("백팩", "크로스백", "토트백", "숄더백", "웨이스트백");
+                    break;
+                case "shoes":
+                    categories = Arrays.asList("운동화", "스니커즈", "구두", "샌들/슬리퍼");
+                    break;
+                case "accessory":
+                    categories = Arrays.asList("모자", "양말", "선글라스");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return clothRepository.findByUserUserIdAndFilters(userId, name, categories, details)
+                .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    //    public ClothDTO saveCloth(ClothDTO clothDTO) {
-//        Long userId = clothDTO.getUserId();
-//        System.out.println("받고있는 userId: " + userId); // 디버깅을 위한 로그 추가
-//        User user = userService.getUserById(userId);
-//
-//        // 유저가 없는 경우에 대한 예외 처리
-//        if (user == null) {
-//            throw new IllegalArgumentException("User with ID " + userId + " not found in the system.");
-//        }
+
     public ClothDTO saveCloth(ClothDTO clothDTO) {
         try {
-            // User 엔티티를 조회
             User user = userRepository.findById(clothDTO.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + clothDTO.getUserId()));
 
-            // ClothDTO를 Cloth 엔티티로 변환
             Cloth cloth = toEntity(clothDTO, user);
-            // Cloth 엔티티 저장
             Cloth savedCloth = clothRepository.save(cloth);
-            // 저장된 Cloth 엔티티를 ClothDTO로 변환하여 반환
             return toDTO(savedCloth);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Failed to save Cloth. Error: " + e.getMessage(), e);
@@ -70,38 +84,6 @@ public class ClothService {
             throw new RuntimeException("Unexpected error occurred while saving Cloth: " + e.getMessage(), e);
         }
     }
-
-
-    private ClothDTO toDTO(Cloth cloth) {
-        // Cloth 엔티티를 ClothDTO로 변환
-        ClothDTO dto = new ClothDTO();
-        dto.setClothId(cloth.getClothId());
-        dto.setUserId(cloth.getUser().getUserId());
-        dto.setClothName(cloth.getClothName());
-        dto.setClothType(cloth.getClothType());
-        dto.setClothColor(cloth.getClothColor());
-        dto.setClothMaterial(cloth.getClothMaterial());
-        dto.setClothSeason(cloth.getClothSeason());
-        dto.setClothCustomTag(cloth.getClothCustomTag());
-        dto.setImageUrl(cloth.getImageUrl()); // 추가된 부분
-        return dto;
-    }
-
-    private Cloth toEntity(ClothDTO clothDTO, User user) {
-        // ClothDTO를 Cloth 엔티티로 변환
-        Cloth cloth = new Cloth();
-        cloth.setUser(user);
-        cloth.setClothName(clothDTO.getClothName());
-        cloth.setClothType(clothDTO.getClothType());
-        cloth.setClothColor(clothDTO.getClothColor());
-        cloth.setClothMaterial(clothDTO.getClothMaterial());
-        cloth.setClothSeason(clothDTO.getClothSeason());
-        cloth.setClothCustomTag(clothDTO.getClothCustomTag());
-        cloth.setImageUrl(clothDTO.getImageUrl()); // 추가된 부분
-        return cloth;
-    }
-
-    // 옷 아이템 수정
 
     public ClothDTO updateCloth(Long id, ClothDTO clothDTO) {
         Cloth cloth = clothRepository.findById(id)
@@ -119,21 +101,17 @@ public class ClothService {
         return toDTO(updatedCloth);
     }
 
-    // 옷 아이템 삭제
     public void deleteClothAndImage(Long id) {
         try {
             Cloth cloth = clothRepository.findById(id).orElse(null);
 
             if (cloth != null) {
-                // S3에서 이미지 파일 삭제
                 String imageUrl = cloth.getImageUrl();
                 if (imageUrl != null && !imageUrl.isEmpty()) {
                     String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-                    // 파일 이름을 URL 인코딩하지 않음
                     amazonS3.deleteObject(bucketName, fileName);
                 }
 
-                // DB에서 옷 정보 삭제
                 clothRepository.deleteById(id);
             }
         } catch (Exception e) {
@@ -145,12 +123,11 @@ public class ClothService {
         List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
         return allClothes.stream()
                 .filter(cloth -> isSuitableForTemperature(cloth, temperature))
-                .map(this::convertToDTO) // Cloth 엔티티를 ClothDTO로 변환
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     private boolean isSuitableForTemperature(Cloth cloth, int temperature) {
-        // 기존의 온도에 따른 필터링 로직
         if (temperature >= 28) {
             return cloth.getClothType().equals("반팔") || cloth.getClothType().equals("셔츠") ||
                     cloth.getClothType().equals("반바지") || cloth.getClothType().equals("스커트") ||
@@ -165,16 +142,30 @@ public class ClothService {
         return false;
     }
 
-    private ClothDTO convertToDTO(Cloth cloth) {
+    private ClothDTO toDTO(Cloth cloth) {
         ClothDTO dto = new ClothDTO();
         dto.setClothId(cloth.getClothId());
-        dto.setUserId(cloth.getUser().getUserId()); // userId를 ClothDTO로 설정
+        dto.setUserId(cloth.getUser().getUserId());
         dto.setClothName(cloth.getClothName());
         dto.setClothType(cloth.getClothType());
         dto.setClothColor(cloth.getClothColor());
         dto.setClothMaterial(cloth.getClothMaterial());
         dto.setClothSeason(cloth.getClothSeason());
+        dto.setClothCustomTag(cloth.getClothCustomTag());
         dto.setImageUrl(cloth.getImageUrl());
         return dto;
+    }
+
+    private Cloth toEntity(ClothDTO clothDTO, User user) {
+        Cloth cloth = new Cloth();
+        cloth.setUser(user);
+        cloth.setClothName(clothDTO.getClothName());
+        cloth.setClothType(clothDTO.getClothType());
+        cloth.setClothColor(clothDTO.getClothColor());
+        cloth.setClothMaterial(clothDTO.getClothMaterial());
+        cloth.setClothSeason(clothDTO.getClothSeason());
+        cloth.setClothCustomTag(clothDTO.getClothCustomTag());
+        cloth.setImageUrl(clothDTO.getImageUrl());
+        return cloth;
     }
 }

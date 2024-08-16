@@ -23,8 +23,9 @@ public class ClothController {
     @GetMapping("/items")
     public List<ClothDTO> getClothes(@RequestParam(value = "name", required = false) String name,
                                      @RequestParam(value = "category", required = false) String category,
-                                     @RequestParam(value = "details", required = false) String details) {
-        return clothService.getClothes(name, category, details);
+                                     @RequestParam(value = "details", required = false) String details,
+                                     @RequestParam(value = "user_id") Long userId) {
+        return clothService.getClothes(name, category, details, userId);
     }
 
     // 옷 아이템 저장
