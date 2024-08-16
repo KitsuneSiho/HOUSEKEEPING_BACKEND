@@ -5,11 +5,13 @@ import com.housekeeping.repository.LevelEXPTableRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 @Configuration
 public class LevelInitializer {
 
     @Bean
+    @Order(1)
     public CommandLineRunner initializeLevels(LevelEXPTableRepository levelRepository) {
         return args -> {
             if (levelRepository.count() == 0) {

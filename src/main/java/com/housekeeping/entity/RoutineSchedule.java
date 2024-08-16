@@ -2,15 +2,16 @@ package com.housekeeping.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Schedule {
+public class RoutineSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scheduleId;
@@ -26,7 +27,7 @@ public class Schedule {
     private String scheduleDetail;
 
     @Column(nullable = false)
-    private ZonedDateTime scheduleDate;
+    private LocalDateTime scheduleDate;
 
     @Column(nullable = false)
     private boolean scheduleIsChecked = false;
@@ -35,6 +36,6 @@ public class Schedule {
     private boolean scheduleIsAlarm = true;
 
     @ManyToOne
-    @JoinColumn(name = "routineId", nullable = true)
+    @JoinColumn(name = "routineId", nullable = false)
     private Routine routine;
 }
