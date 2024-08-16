@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
     public int getUserLevel(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
+        System.out.println("level: " + user.getLevel().getLevelLevel());
+
         return user.getLevel().getLevelLevel();
     }
 
@@ -67,6 +69,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUserInfo(UserDTO userDTO) {
         User user = getUserById(userDTO.getUserId());
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         user.setName(userDTO.getName());
         user.setNickname(userDTO.getNickname());
         user.setEmail(userDTO.getEmail());
@@ -95,7 +100,16 @@ public class UserServiceImpl implements UserService {
         saveUser(user);
     }
 
-    private UserDTO convertToDTO(User user) {
+    @Override
+    public UserDTO updateProfileImage(Long userId, String profileImageUrl) {
+        User user = getUserById(userId);
+        user.setProfileImageUrl(profileImageUrl);
+        User updatedUser = saveUser(user);
+        return convertToDTO(updatedUser);
+    }
+
+    @Override
+    public UserDTO convertToDTO(User user) {
         return UserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
@@ -105,6 +119,11 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .userPlatform(user.getUserPlatform())
+                .profileImageUrl(user.getProfileImageUrl())
+                .level(user.getLevel().getLevelLevel())
+                .levelName(user.getLevel().getLevelName())
+                .exp(user.getUserEXP())
+                .nextLevelExp(user.getLevel().getLevelRequireEXP())
                 .build();
     }
 }
