@@ -1,8 +1,6 @@
 package com.housekeeping.controller;
 
-import com.housekeeping.DTO.CommentDTO;
 import com.housekeeping.DTO.TipDTO;
-import com.housekeeping.entity.Comment;
 import com.housekeeping.entity.Tip;
 import com.housekeeping.service.TipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,32 +63,13 @@ public class TipController {
     }
 
     private TipDTO convertToDTO(Tip tip) {
-        TipDTO.TipDTOBuilder builder = TipDTO.builder()
+        return TipDTO.builder()
                 .tipId(tip.getTipId())
                 .tipCategory(tip.getTipCategory())
                 .tipTitle(tip.getTipTitle())
                 .tipContent(tip.getTipContent())
                 .tipViews(tip.getTipViews())
-                .tipCreatedDate(tip.getTipCreatedDate());
-
-        if (tip.getComments() != null) {
-            builder.comments(tip.getComments().stream()
-                    .map(this::convertToCommentDTO)
-                    .collect(Collectors.toList()));
-        } else {
-            builder.comments(new ArrayList<>());
-        }
-
-        return builder.build();
-    }
-
-    private CommentDTO convertToCommentDTO(Comment comment) {
-        return CommentDTO.builder()
-                .commentId(comment.getCommentId())
-                .tipId(comment.getTip().getTipId())
-                .userId(comment.getUser().getUserId())
-                .commentContent(comment.getCommentContent())
-                .commentCreatedDate(comment.getCommentCreatedDate())
+                .tipCreatedDate(tip.getTipCreatedDate())
                 .build();
     }
 

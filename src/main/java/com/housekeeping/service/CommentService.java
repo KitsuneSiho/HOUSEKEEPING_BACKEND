@@ -6,8 +6,8 @@ import com.housekeeping.entity.Comment;
 import java.util.List;
 
 public interface CommentService {
-    Comment createComment(CommentDTO commentDTO);
+    Comment saveComment(Long tipId, CommentDTO commentDTO);
     List<Comment> getCommentsByTipId(Long tipId);
-    Comment updateComment(Long id, CommentDTO commentDTO);
-    void deleteComment(Long id);
+    Comment updateComment(Long commentId, CommentDTO commentDTO);
+    void deleteComment(Long commentId);
 }

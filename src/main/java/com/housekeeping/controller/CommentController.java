@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
+
     private final CommentService commentService;
 
     @Autowired
@@ -21,9 +22,9 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDTO) {
-        Comment createdComment = commentService.createComment(commentDTO);
+    @PostMapping("/tip/{tipId}")
+    public ResponseEntity<CommentDTO> createComment(@PathVariable Long tipId, @RequestBody CommentDTO commentDTO) {
+        Comment createdComment = commentService.saveComment(tipId, commentDTO);
         return new ResponseEntity<>(convertToDTO(createdComment), HttpStatus.CREATED);
     }
 
@@ -36,15 +37,15 @@ public class CommentController {
         return ResponseEntity.ok(commentDTOs);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody CommentDTO commentDTO) {
-        Comment updatedComment = commentService.updateComment(id, commentDTO);
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
+        Comment updatedComment = commentService.updateComment(commentId, commentDTO);
         return ResponseEntity.ok(convertToDTO(updatedComment));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }
 
@@ -52,6 +53,7 @@ public class CommentController {
         return CommentDTO.builder()
                 .commentId(comment.getCommentId())
                 .tipId(comment.getTip().getTipId())
+                .userId(comment.getUser().getUserId())
                 .commentContent(comment.getCommentContent())
                 .commentCreatedDate(comment.getCommentCreatedDate())
                 .build();

@@ -42,13 +42,9 @@ public class TipServiceImpl implements TipService {
             throw new IllegalArgumentException("내용을 입력하세요.");
         }
 
-        // 현재 시간을 설정
         tip.setTipCreatedDate(LocalDateTime.now());
-
-        // 조회수 초기화
         tip.setTipViews(0);
-
-        tip.setComments(new ArrayList<>());  // comments 초기화
+        tip.setComments(new ArrayList<>());
 
         return tipRepository.save(tip);
     }
