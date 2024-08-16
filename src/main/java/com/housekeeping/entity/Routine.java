@@ -4,6 +4,8 @@ import com.housekeeping.entity.enums.RoutineFrequency;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -43,4 +45,8 @@ public class Routine {
     // 알람 허용 여부
     @Column(nullable = false)
     private boolean routineIsAlarm = true;
+
+    // Routine이 삭제되면 관련된 Schedule도 삭제되도록 설정
+    @OneToMany(mappedBy = "routine", cascade = CascadeType.REMOVE)
+    private List<Schedule> schedules;
 }
