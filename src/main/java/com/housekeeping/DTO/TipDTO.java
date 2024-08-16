@@ -1,6 +1,6 @@
 package com.housekeeping.DTO;
 
-import com.housekeeping.entity.Comment;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.housekeeping.entity.enums.TipCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder //빌더 패턴을 자동으로 구현
-@NoArgsConstructor //매개변수가 없는 기본 생성자를 자동으로 생성
-@AllArgsConstructor //클래스의 모든 필드를 매개변수로 받는 생성
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TipDTO {
     private Long tipId;
     private TipCategory tipCategory;
@@ -21,5 +22,7 @@ public class TipDTO {
     private String tipContent;
     private int tipViews;
     private LocalDateTime tipCreatedDate;
-    private List<Comment> comments;
+
+    @JsonIgnoreProperties("tip")
+    private List<CommentDTO> comments;
 }

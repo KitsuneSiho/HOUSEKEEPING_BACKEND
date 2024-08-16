@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,6 +47,8 @@ public class TipServiceImpl implements TipService {
 
         // 조회수 초기화
         tip.setTipViews(0);
+
+        tip.setComments(new ArrayList<>());  // comments 초기화
 
         return tipRepository.save(tip);
     }
