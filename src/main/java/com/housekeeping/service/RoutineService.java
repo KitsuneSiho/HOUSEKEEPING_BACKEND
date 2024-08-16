@@ -15,6 +15,7 @@ import com.housekeeping.repository.custom.RoutineRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -228,6 +229,33 @@ public class RoutineService {
     }
     public String getDistinctCheckedRoutineGroupNames(Long userId) {
         return routineRepository.findDistinctCheckedRoutineGroupNamesByUserId(userId);
+    }
+
+    @Transactional
+    public void toggleRoomAlarms(Long roomId, String routineGroupName) {
+        routineRepository.toggleRoomAlarms(roomId, routineGroupName);
+    }
+
+    @Transactional
+    public void toggleNotification(Long routineId, boolean isAlarm) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid routine ID"));
+        routine.setRoutineIsAlarm(isAlarm);
+        routineRepository.save(routine);
+
+        // 루틴에 연결된 스케줄들 업데이트
+        updateScheduleAlarms(routine, isAlarm);
+    }
+
+
+    private void updateScheduleAlarms(Routine routine, boolean isAlarm) {
+        // 루틴에 연결된 스케줄들을 가져옵니다
+        List<Schedule> schedules = scheduleRepository.findByRoutine_RoutineId(routine.getRoutineId());
+
+        for (Schedule schedule : schedules) {
+            schedule.setScheduleIsAlarm(isAlarm);
+            scheduleRepository.save(schedule);
+        }
     }
 
 }
