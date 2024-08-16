@@ -1,16 +1,25 @@
 package com.housekeeping.service;
 
 import com.housekeeping.DTO.RoutineDTO;
+import com.housekeeping.DTO.ScheduleDTO;
 import com.housekeeping.entity.RecommendRoutine;
 import com.housekeeping.entity.Room;
 import com.housekeeping.entity.Routine;
+import com.housekeeping.entity.Schedule;
 import com.housekeeping.mapper.RoutineMapper;
 import com.housekeeping.repository.RecommendRoutineRepository;
 import com.housekeeping.repository.RoutineRepository;
 import com.housekeeping.repository.RoomRepository;
+import com.housekeeping.repository.ScheduleRepository;
+import com.housekeeping.repository.custom.RoutineRepositoryCustom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +28,7 @@ import java.util.stream.Collectors;
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
+    private final ScheduleRepository scheduleRepository;
     private final RoutineMapper routineMapper;
     private final RoomRepository roomRepository;
     private final RecommendRoutineRepository recommendRoutineRepository;
@@ -107,6 +117,117 @@ public class RoutineService {
     // 추천 루틴 조회
     public List<RecommendRoutine> getAllRecommendRoutines() {
         return recommendRoutineRepository.findAll();
+    }
+
+    // 적용 루틴 변경
+    public void updateRoutine(String routineGroupName) {
+        // 그룹 명으로 검색해서 해당하는 기존 루틴을 가져오기
+        List<Routine> routines = routineRepository.findByRoutineGroupName(routineGroupName);
+
+        // 루틴의 스케줄을 업데이트하거나 추가하는 로직
+        List<ScheduleDTO> schedulesToUpdate = new ArrayList<>();
+
+        for (Routine routine : routines) {
+            // 루틴의 DTO 변환
+            RoutineDTO routineDTO = RoutineDTO.builder()
+                    .routineId(routine.getRoutineId())
+                    .roomId(routine.getRoom().getRoomId())
+                    .routineGroupName(routine.getRoutineGroupName())
+                    .routineName(routine.getRoutineName())
+                    .routineFrequency(routine.getRoutineFrequency())
+                    .routineInterval(routine.getRoutineInterval())
+                    .routineIsChecked(true) // 활성화 상태로 설정
+                    .routineIsAlarm(routine.isRoutineIsAlarm())
+                    .build();
+
+            // 주어진 주기와 주기를 바탕으로 스케줄 생성
+            List<ScheduleDTO> scheduleDTOs = createSchedules(routineDTO);
+            schedulesToUpdate.addAll(scheduleDTOs);
+        }
+
+        // 스케줄 저장
+        saveSchedules(schedulesToUpdate);
+    }
+
+    private List<ScheduleDTO> createSchedules(RoutineDTO routineDTO) {
+        List<ScheduleDTO> schedules = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endDate = now.plusYears(1);
+
+        switch (routineDTO.getRoutineFrequency()) {
+            case DAILY:
+                for (LocalDateTime date = now; date.isBefore(endDate); date = date.plusDays(1)) {
+                    schedules.add(createScheduleDTO(routineDTO, date));
+                }
+                break;
+            case WEEKLY:
+                String[] intervals = routineDTO.getRoutineInterval().split(",");
+                for (LocalDateTime date = now; date.isBefore(endDate); date = date.plusWeeks(1)) {
+                    for (String interval : intervals) {
+                        // 요일 확인 후 추가
+                        if (date.getDayOfWeek().name().equalsIgnoreCase(interval)) {
+                            schedules.add(createScheduleDTO(routineDTO, date));
+                        }
+                    }
+                }
+                break;
+            case MONTHLY:
+                String[] dates = routineDTO.getRoutineInterval().split(",");
+                for (LocalDateTime date = now; date.isBefore(endDate); date = date.plusMonths(1)) {
+                    for (String day : dates) {
+                        LocalDateTime scheduleDate = date.withDayOfMonth(Integer.parseInt(day));
+                        schedules.add(createScheduleDTO(routineDTO, scheduleDate));
+                    }
+                }
+                break;
+        }
+
+        return schedules;
+    }
+
+    private ScheduleDTO createScheduleDTO(RoutineDTO routineDTO, LocalDateTime localDateTime) {
+        // Convert LocalDateTime to ZonedDateTime with a specific time zone
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Seoul"));
+
+        return ScheduleDTO.builder()
+                .scheduleId(null) // 신규 스케줄인 경우 ID는 null
+                .roomId(routineDTO.getRoomId())
+                .scheduleName(routineDTO.getRoutineName())
+                .scheduleDetail("") // 필요한 경우 추가
+                .scheduleDate(zonedDateTime) // 저장 시 LocalDateTime으로 변환
+                .scheduleIsChecked(false)
+                .scheduleIsAlarm(routineDTO.isRoutineIsAlarm())
+                .build();
+    }
+
+    public void saveSchedules(List<ScheduleDTO> scheduleDTOs) {
+        // ScheduleDTO에서 Room 정보를 조회하여 Schedule 엔티티에 설정
+        List<Schedule> schedules = scheduleDTOs.stream()
+                .map(dto -> {
+                    Room room = roomRepository.findById(dto.getRoomId())
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+
+                    Routine routine = routineRepository.findById(dto.getRoutineId())
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+
+
+                    return Schedule.builder()
+                            .scheduleId(dto.getScheduleId())
+                            .room(room) // Room 객체를 직접 설정
+                            .scheduleName(dto.getScheduleName())
+                            .scheduleDetail(dto.getScheduleDetail())
+                            .scheduleDate(dto.getScheduleDate())
+                            .scheduleIsChecked(dto.isScheduleIsChecked())
+                            .scheduleIsAlarm(dto.isScheduleIsAlarm())
+                            .routine(routine)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        scheduleRepository.saveAll(schedules);
+    }
+    public String getDistinctCheckedRoutineGroupNames(Long userId) {
+        return routineRepository.findDistinctCheckedRoutineGroupNamesByUserId(userId);
     }
 
 }

@@ -33,15 +33,21 @@ public class RoomService {
         return rooms.stream().map(room -> {
             // 방 ID로 스케줄을 가져옵니다.
             List<ScheduleDTO> schedules = scheduleRepository.findByRoom_RoomId(room.getRoomId()).stream()
-                    .map(schedule -> new ScheduleDTO(
-                            schedule.getScheduleId(),
-                            schedule.getRoom().getRoomId(),
-                            schedule.getScheduleName(),
-                            schedule.getScheduleDetail(),
-                            schedule.getScheduleDate(),
-                            schedule.isScheduleIsChecked(),
-                            schedule.isScheduleIsAlarm()
-                    ))
+                    .map(schedule -> {
+                        // Routine이 null일 수 있는 경우를 처리
+                        Long routineId = (schedule.getRoutine() != null) ? schedule.getRoutine().getRoutineId() : null;
+
+                        return new ScheduleDTO(
+                                schedule.getScheduleId(),
+                                schedule.getRoom().getRoomId(),
+                                schedule.getScheduleName(),
+                                schedule.getScheduleDetail(),
+                                schedule.getScheduleDate(),
+                                schedule.isScheduleIsChecked(),
+                                schedule.isScheduleIsAlarm(),
+                                routineId // Routine이 null인 경우, routineId도 null로 설정
+                        );
+                    })
                     .collect(Collectors.toList());
 
             return RoomDTO.builder()
@@ -52,6 +58,7 @@ public class RoomService {
                     .schedules(schedules)
                     .build();
         }).collect(Collectors.toList());
+
     }
 
     public List<RoomDTO> getRoomNamesByIds(List<Long> roomIds) {
