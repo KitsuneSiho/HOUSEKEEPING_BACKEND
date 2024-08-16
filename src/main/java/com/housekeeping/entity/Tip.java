@@ -1,9 +1,15 @@
 package com.housekeeping.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.housekeeping.entity.enums.TipCategory;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,5 +39,6 @@ public class Tip {
     private LocalDateTime tipCreatedDate = LocalDateTime.now();
 
     @OneToMany(mappedBy = "tip", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @JsonIgnoreProperties("tip")
+    private List<Comment> comments = new ArrayList<>();
 }
