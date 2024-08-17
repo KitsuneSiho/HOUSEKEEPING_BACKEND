@@ -8,7 +8,7 @@ COPY ${JAR_FILE} app.jar
 FROM nginx:alpine
 
 # Install required tools, Java, and Certbot
-RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx supervisor
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
@@ -20,5 +20,8 @@ RUN mkdir -p /var/www/certbot /etc/letsencrypt
 # Expose ports for HTTP and HTTPS
 EXPOSE 80 443
 
-# Start Nginx, Certbot, and the Spring Boot application
-CMD ["sh", "-c", "certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email your-email@example.com -d your-domain.com && java -jar /app.jar & nginx -g 'daemon off;'"]
+# Copy Supervisor configuration file
+COPY supervisord.conf /etc/supervisord.conf
+
+# Start Supervisor (which will manage Nginx, Certbot, and the Spring Boot application)
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
