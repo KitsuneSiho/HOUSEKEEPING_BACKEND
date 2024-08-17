@@ -8,16 +8,11 @@ COPY ${JAR_FILE} app.jar
 FROM nginx:alpine
 
 # Install Java
-RUN apk add --no-cache openjdk17-jre certbot certbot-nginx openssl
+RUN apk add --no-cache openjdk17-jre
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
 COPY nginx.http.conf /etc/nginx/conf.d/default.conf
-
-# Create necessary directories for Certbot and Nginx
-RUN mkdir -p /var/www/certbot /etc/letsencrypt
-
-RUN openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
 
 # Expose port for HTTP
 EXPOSE 80
