@@ -10,7 +10,7 @@ COPY ${JAR_FILE} app.jar
 FROM nginx:alpine
 
 # Install Java
-RUN apk add --no-cache openjdk17-jre
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
