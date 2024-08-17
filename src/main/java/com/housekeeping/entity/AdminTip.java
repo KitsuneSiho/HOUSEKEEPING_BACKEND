@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post {
+public class AdminTip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,4 +33,8 @@ public class Post {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipCategory category;
+
+    @Column(nullable = false)
+    private int viewCount = 0;
+
 }
