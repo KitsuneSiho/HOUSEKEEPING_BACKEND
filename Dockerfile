@@ -1,15 +1,24 @@
-# Use the official OpenJDK slim image as a base image
-FROM openjdk:17-slim
+# Stage 1: Build the Spring Boot application
+FROM openjdk:17-slim AS build
 
-# Install required tools including apt-get
-USER root
-RUN apt-get update && apt-get install -y default-mysql-client
-
-# Set the argument for the JAR file location
 ARG JAR_FILE=build/libs/housekeeping-0.0.1-SNAPSHOT.jar
-
-# Copy the JAR file to the container
 COPY ${JAR_FILE} app.jar
 
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Stage 2: Set up Nginx, Spring Boot application, and Certbot
+FROM nginx:alpine
+
+# Install required tools, Java, and Certbot
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
+
+# Copy the built JAR file and Nginx config
+COPY --from=build /app.jar /app.jar
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Set up directories for Certbot
+RUN mkdir -p /var/www/certbot /etc/letsencrypt
+
+# Expose ports for HTTP and HTTPS
+EXPOSE 80 443
+
+# Start Nginx, Certbot, and the Spring Boot application
+CMD ["sh", "-c", "certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email your-email@example.com -d your-domain.com && java -jar /app.jar & nginx -g 'daemon off;'"]
