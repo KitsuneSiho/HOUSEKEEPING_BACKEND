@@ -9,14 +9,14 @@ COPY ${JAR_FILE} app.jar
 # Stage 2: Set up Nginx, Spring Boot application, and Certbot
 FROM nginx:alpine
 
-# Install required tools, Java, Certbot, curl, and openssl
-RUN apk add --no-cache openjdk17-jre certbot certbot-nginx curl openssl
+# Install required tools, Java, and Certbot
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx openssl curl
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
 COPY nginx.https.conf /etc/nginx/conf.d/default.conf
 
-# Create directories for Certbot and generate ssl-dhparams.pem
+# Set up directories for Certbot and generate ssl-dhparams.pem
 RUN mkdir -p /var/www/certbot /etc/letsencrypt && \
     curl -o /etc/letsencrypt/options-ssl-nginx.conf https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf && \
     openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
