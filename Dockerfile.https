@@ -25,4 +25,4 @@ RUN mkdir -p /var/www/certbot /etc/letsencrypt \
 EXPOSE 80 443
 
 # Start Nginx, Certbot, and the Spring Boot application
-CMD ["sh", "-c", "certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email your-email@example.com -d your-domain.com && java -jar /app.jar & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email djawlgns7@gmail.com -d back.bit-two.com && java -jar /app.jar & nginx -g 'daemon off;'"]
