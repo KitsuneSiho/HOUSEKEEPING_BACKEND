@@ -10,7 +10,10 @@ COPY ${JAR_FILE} app.jar
 FROM nginx:alpine
 
 # Install Java
-RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
+RUN apk add --no-cache openjdk17-jre
+
+# Create the directory for Certbot
+RUN mkdir -p /var/www/certbot
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
