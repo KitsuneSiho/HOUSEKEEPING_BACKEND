@@ -9,8 +9,8 @@ COPY ${JAR_FILE} app.jar
 # Stage 2: Set up Nginx, Spring Boot application, and Certbot
 FROM nginx:alpine
 
-# Install required tools, Java, and Certbot
-RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
+# Install required tools, Java, Certbot, curl, and openssl
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx curl openssl
 
 # Copy the built JAR file and Nginx config
 COPY --from=build /app.jar /app.jar
