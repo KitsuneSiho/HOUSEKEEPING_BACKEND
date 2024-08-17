@@ -16,12 +16,12 @@ RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
 COPY --from=build /app.jar /app.jar
 COPY nginx.https.conf /etc/nginx/conf.d/default.conf
 
-# Copy a sample options-ssl-nginx.conf or create an empty file to avoid Nginx startup issues
-RUN mkdir -p /etc/letsencrypt && \
+# Set up directories for Certbot and create options-ssl-nginx.conf
+RUN mkdir -p /var/www/certbot /etc/letsencrypt && \
     curl -o /etc/letsencrypt/options-ssl-nginx.conf https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
 
 # Expose ports for HTTP and HTTPS
 EXPOSE 80 443
 
 # Start Nginx and the Spring Boot application
-CMD ["sh", "-c", "certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email djawlgns7@gmail.com -d back.bit-two.com && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "java -jar /app.jar & sleep 5 && certbot certonly --webroot --webroot-path=/var/www/certbot --non-interactive --agree-tos --email djawlgns7@gmail.com -d back.bit-two.com && nginx -g 'daemon off;'"]
