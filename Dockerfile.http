@@ -9,8 +9,8 @@ COPY ${JAR_FILE} app.jar
 # Stage 2: Set up Nginx and Spring Boot application
 FROM nginx:alpine
 
-# Install Java
-RUN apk add --no-cache openjdk17-jre
+# Install Java and Certbot
+RUN apk add --no-cache openjdk17-jre certbot certbot-nginx
 
 # Create the directory for Certbot
 RUN mkdir -p /var/www/certbot
