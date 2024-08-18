@@ -11,6 +11,7 @@ import com.housekeeping.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,8 +105,14 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    @Transactional
+    public void updateRoomPollution(Long roomId, int pollutionValue) {
+        roomRepository.updateRoomPollution(roomId, pollutionValue);
+    }
 
-
-
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getRoomPollution(List<Long> roomIds) {
+        return roomRepository.findRoomPollutionByRoomIds(roomIds);
+    }
 
 }
