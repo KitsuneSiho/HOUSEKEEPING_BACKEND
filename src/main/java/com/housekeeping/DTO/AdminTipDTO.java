@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDTO {
+public class AdminTipDTO {
     private Long id;
     private String title;
     private String content;
@@ -20,4 +20,5 @@ public class PostDTO {
     private LocalDateTime createdAt;
     private String authorName;
     private Long authorId;
+    private int viewCount;
 }
