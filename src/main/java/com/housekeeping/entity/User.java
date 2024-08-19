@@ -52,8 +52,8 @@ public class User {
     @Column(nullable = false)
     private int userEXP = 0;
 
-    @Lob
-    private byte[] userImage;
+    @Column
+    private String profileImageUrl;
 
     @Column(nullable = false)
     private boolean userIsOnline = false;
@@ -102,4 +102,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // 순환 참조 방지
     private List<Room> rooms;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Post> posts;
 }
