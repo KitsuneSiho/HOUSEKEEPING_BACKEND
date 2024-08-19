@@ -4,6 +4,7 @@ import com.housekeeping.customhandler.CustomOAuth2SuccessHandler;
 import com.housekeeping.jwt.JWTFilter;
 import com.housekeeping.jwt.JWTUtil;
 import com.housekeeping.repository.RefreshRepository;
+import com.housekeeping.repository.UserRepository;
 import com.housekeeping.service.RefreshTokenService;
 import com.housekeeping.service.UserService;
 import com.housekeeping.service.oauth2.CustomOAuth2UserService;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -57,7 +59,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
         // disable
         http
                 .httpBasic((basic) -> basic.disable())
@@ -101,7 +103,16 @@ public class SecurityConfig {
                 .requestMatchers("/reissue", "/reissue/socket").permitAll() // /reissue 엔드포인트를 인증 없이 접근 허용
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/mainpage").hasRole("USER")
+
+
+                .requestMatchers(HttpMethod.POST, "/api/posts/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/posts/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+
+
                 .requestMatchers("/admin").hasRole("ADMIN")
+
                 .anyRequest().authenticated());
 
         // 인가되지 않은 사용자에 대한 exception -> 프론트엔드로 코드 응답
@@ -113,11 +124,11 @@ public class SecurityConfig {
 
         // jwt filter
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
         // custom logout filter 등록
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
         // session stateless
         http

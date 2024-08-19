@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
@@ -16,7 +17,8 @@ public class ScheduleDTO {
     private Long roomId;
     private String scheduleName;
     private String scheduleDetail;
-    private LocalDateTime scheduleDate;
+    private ZonedDateTime scheduleDate;
     private boolean scheduleIsChecked;
     private boolean scheduleIsAlarm;
+    private Long routineId;
 }
