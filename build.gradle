@@ -59,6 +59,9 @@ dependencies {
 
 // AWS SDK for S3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.506'
+
+//nurigo SMS service
+    implementation 'net.nurigo:sdk:4.2.7'
 }
 
 tasks.named('test') {
