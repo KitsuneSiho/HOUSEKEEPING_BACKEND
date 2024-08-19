@@ -16,6 +16,7 @@ public class UserDTO {
     private String username;
     private String name;
     private String email;
+    private String profileImageUrl;
     private String phoneNumber;
     private String role;
     private UserPlatform userPlatform;
