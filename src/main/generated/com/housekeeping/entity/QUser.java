@@ -52,9 +52,13 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath phoneNumber = createString("phoneNumber");
 
+    public final ListPath<Post, QPost> posts = this.<Post, QPost>createList("posts", Post.class, QPost.class, PathInits.DIRECT2);
+
+    public final StringPath profileImageUrl = createString("profileImageUrl");
+
     public final ListPath<FriendRequest, QFriendRequest> receivedFriendRequests = this.<FriendRequest, QFriendRequest>createList("receivedFriendRequests", FriendRequest.class, QFriendRequest.class, PathInits.DIRECT2);
 
-    public final EnumPath<com.housekeeping.entity.enums.Role> role = createEnum("role", com.housekeeping.entity.enums.Role.class);
+    public final StringPath role = createString("role");
 
     public final ListPath<Room, QRoom> rooms = this.<Room, QRoom>createList("rooms", Room.class, QRoom.class, PathInits.DIRECT2);
 
@@ -65,8 +69,6 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Integer> userEXP = createNumber("userEXP", Integer.class);
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
-
-    public final ArrayPath<byte[], Byte> userImage = createArray("userImage", byte[].class);
 
     public final BooleanPath userIsOnline = createBoolean("userIsOnline");
 
