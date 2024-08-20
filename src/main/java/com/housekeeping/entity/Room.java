@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.housekeeping.entity.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -28,8 +29,8 @@ public class Room {
     @Column(nullable = false)
     private RoomType roomType;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private int roomPollution = 0;
+    @Column(nullable = false, columnDefinition = "int default 100") // 기본값을 100으로 설정
+    private int roomPollution = 100;
 
     @Column(columnDefinition = "json", nullable = false)
     private String roomWallsColor;
@@ -42,4 +43,6 @@ public class Room {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<FurniturePlacement> furniturePlacements;
+
+
 }

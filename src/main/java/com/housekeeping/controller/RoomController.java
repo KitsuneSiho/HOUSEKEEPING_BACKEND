@@ -43,21 +43,10 @@ public class RoomController {
         return ResponseEntity.ok("Room name updated successfully");
     }
 
-    // 방 오염도 받기
-    @GetMapping("/getPollution")
-    public ResponseEntity<List<RoomDTO>> getRoomPollution(@RequestParam List<Long> roomIds) {
-        List<RoomDTO> pollutionData = roomService.getRoomPollution(roomIds);
-        return ResponseEntity.ok(pollutionData);
-    }
     // 방 오염도 업데이트
-    @PatchMapping("/updatePollution")
-    public ResponseEntity<?> updateRoomPollution(@RequestBody Map<String, Object> payload) {
-        Long roomId = ((Number) payload.get("roomId")).longValue();
-        int pollutionValue = (int) payload.get("pollution");
-
-        roomService.updateRoomPollution(roomId, pollutionValue);
+    @PatchMapping("/updatePollution/{roomId}")
+    public ResponseEntity<Void> updatePollution(@PathVariable Long roomId, @RequestBody RoomDTO roomDTO) {
+        roomService.updateRoomPollution(roomId, roomDTO.getRoomPollution());
         return ResponseEntity.ok().build();
     }
-
-
 }
