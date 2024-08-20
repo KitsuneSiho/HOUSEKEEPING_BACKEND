@@ -23,4 +23,7 @@ public interface UserService {
     int getUserLevel(Long userId);
     UserDTO convertToDTO(User user);
     UserDTO updateProfileImage(Long userId, String profileImageUrl);
+    boolean checkAttendance(Long userId);
+    boolean isAttendanceCheckedToday(Long userId);
+
 }
