@@ -94,6 +94,8 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Food> findFoodsExpiringBetween(LocalDate start, LocalDate end) {
-        return foodRepository.findByFoodExpirationDateBetween(start, end);
+        // 날짜 범위에서 유통기한이 포함된 식재료를 검색하는 쿼리
+        return foodRepository.findByFoodExpirationDateBetween(start.atStartOfDay(), end.plusDays(1).atStartOfDay());
     }
+
 }
