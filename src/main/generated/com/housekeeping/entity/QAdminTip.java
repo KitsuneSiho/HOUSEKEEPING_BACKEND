@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QPost is a Querydsl query type for Post
+ * QAdminTip is a Querydsl query type for AdminTip
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QPost extends EntityPathBase<Post> {
+public class QAdminTip extends EntityPathBase<AdminTip> {
 
-    private static final long serialVersionUID = 690985575L;
+    private static final long serialVersionUID = 314774803L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QPost post = new QPost("post");
+    public static final QAdminTip adminTip = new QAdminTip("adminTip");
 
     public final QUser author;
 
@@ -34,23 +34,25 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath title = createString("title");
 
-    public QPost(String variable) {
-        this(Post.class, forVariable(variable), INITS);
+    public final NumberPath<Integer> viewCount = createNumber("viewCount", Integer.class);
+
+    public QAdminTip(String variable) {
+        this(AdminTip.class, forVariable(variable), INITS);
     }
 
-    public QPost(Path<? extends Post> path) {
+    public QAdminTip(Path<? extends AdminTip> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QPost(PathMetadata metadata) {
+    public QAdminTip(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QPost(PathMetadata metadata, PathInits inits) {
-        this(Post.class, metadata, inits);
+    public QAdminTip(PathMetadata metadata, PathInits inits) {
+        this(AdminTip.class, metadata, inits);
     }
 
-    public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
+    public QAdminTip(Class<? extends AdminTip> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new QUser(forProperty("author"), inits.get("author")) : null;
     }

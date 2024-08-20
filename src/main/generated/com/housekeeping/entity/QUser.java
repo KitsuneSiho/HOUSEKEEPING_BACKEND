@@ -52,7 +52,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath phoneNumber = createString("phoneNumber");
 
-    public final ListPath<Post, QPost> posts = this.<Post, QPost>createList("posts", Post.class, QPost.class, PathInits.DIRECT2);
+    public final ListPath<AdminTip, QAdminTip> posts = this.<AdminTip, QAdminTip>createList("posts", AdminTip.class, QAdminTip.class, PathInits.DIRECT2);
 
     public final StringPath profileImageUrl = createString("profileImageUrl");
 
