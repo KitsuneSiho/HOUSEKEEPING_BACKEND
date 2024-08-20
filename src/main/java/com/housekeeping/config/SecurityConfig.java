@@ -141,7 +141,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://192.168.0.42:5000", "https://socket.bit-two.com", "https://re.bit-two.com"));
+        configuration.setAllowedOrigins(Arrays.asList("http://192.168.0.42:5000", "https://socket.bit-two.com", "https://re.bit-two.com", "http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true); // 자격 증명을 허용하도록 설정

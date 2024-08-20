@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .exposedHeaders("Set-Cookie", "access", "Authorization")
-                .allowedOrigins("http://192.168.0.42:5000", "https://socket.bit-two.com", "https://re.bit-two.com")
+                .allowedOrigins("http://192.168.0.42:5000", "https://socket.bit-two.com", "https://re.bit-two.com", "http://localhost:5173")
                 .exposedHeaders("Set-Cookie", "access")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
