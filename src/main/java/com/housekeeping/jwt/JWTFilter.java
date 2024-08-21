@@ -33,25 +33,27 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        logger.debug("Authorization header: {}", authorization);
+        logger.info("Authorization header: {}", authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            logger.debug("No valid authorization header found, passing to next filter");
+            logger.info("No valid authorization header found, passing to next filter");
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authorization.split(" ")[1];
-        logger.debug("JWT token extracted: {}", token);
+        logger.info("JWT token extracted: {}", token);
 
         try {
             if (jwtUtil.isValid(token)) {
                 Claims claims = jwtUtil.getClaims(token);
-                logger.debug("JWT claims: {}", claims);
+                logger.info("JWT claims: {}", claims);
 
                 String username = claims.get("username", String.class);
                 String role = claims.get("role", String.class);
                 Long userId = claims.get("userId", Long.class);
+
+                logger.info("Extracted userId: {}", userId);
 
                 if (role == null || role.trim().isEmpty()) {
                     role = "ROLE_USER";
@@ -64,14 +66,14 @@ public class JWTFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(role)));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                logger.debug("Authentication set for user: {}", username);
+                logger.info("Authentication set for user: {}", username);
             }
         } catch (JwtException e) {
             logger.error("JWT token validation failed: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         } catch (RuntimeException e) {
-            logger.error("Error during authentication: {}", e.getMessage());
+            logger.error("Error during authentication: {}", e.getMessage(), e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

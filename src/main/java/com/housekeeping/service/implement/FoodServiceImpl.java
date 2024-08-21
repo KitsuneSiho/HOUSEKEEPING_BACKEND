@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,10 +84,19 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<String> getUserIngredients(Long userId) { //안쓰이는 것 같은데?
+    public List<String> getUserIngredients(Long userId) {
         List<FoodDTO> userFoods = foodRepository.findAllUserFoods(userId);
         return userFoods.stream()
                 .map(FoodDTO::getFoodName)
+                .distinct()
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    public List<Food> findFoodsExpiringBetween(LocalDate start, LocalDate end) {
+        // 날짜 범위에서 유통기한이 포함된 식재료를 검색하는 쿼리
+        return foodRepository.findByFoodExpirationDateBetween(start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+    }
+
 }
