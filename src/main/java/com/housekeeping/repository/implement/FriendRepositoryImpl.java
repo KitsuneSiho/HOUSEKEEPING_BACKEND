@@ -26,7 +26,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
         QFriend qFriend = QFriend.friend;
 
-        return jpaQueryFactory.select(qFriend.friendUser1.userId, qFriend.friendUser1.nickname)
+        return jpaQueryFactory.select(qFriend.friendUser1.userId, qFriend.friendUser1.nickname, qFriend.friendUser1.profileImageUrl)
                 .from(qFriend)
                 .where(qFriend.friendUser2.userId.eq(userId))
                 .fetch();
@@ -37,7 +37,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
         QFriend qFriend = QFriend.friend;
 
-        return jpaQueryFactory.select(qFriend.friendUser2.userId, qFriend.friendUser2.nickname)
+        return jpaQueryFactory.select(qFriend.friendUser2.userId, qFriend.friendUser2.nickname, qFriend.friendUser2.profileImageUrl)
                 .from(qFriend)
                 .where(qFriend.friendUser1.userId.eq(userId))
                 .fetch();
@@ -48,7 +48,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
         QFriend qFriend = QFriend.friend;
 
-        return jpaQueryFactory.select(qFriend.friendUser1.userId, qFriend.friendUser1.nickname)
+        return jpaQueryFactory.select(qFriend.friendUser1.userId, qFriend.friendUser1.nickname, qFriend.friendUser1.profileImageUrl)
                 .from(qFriend)
                 .where(qFriend.friendUser2.userId.eq(userId).and(qFriend.friendUser1.userIsOnline.eq(true)))
                 .fetch();
@@ -59,7 +59,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
 
         QFriend qFriend = QFriend.friend;
 
-        return jpaQueryFactory.select(qFriend.friendUser2.userId, qFriend.friendUser2.nickname)
+        return jpaQueryFactory.select(qFriend.friendUser2.userId, qFriend.friendUser2.nickname, qFriend.friendUser2.profileImageUrl)
                 .from(qFriend)
                 .where(qFriend.friendUser1.userId.eq(userId).and(qFriend.friendUser2.userIsOnline.eq(true)))
                 .fetch();
