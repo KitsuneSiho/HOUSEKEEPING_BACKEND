@@ -1,9 +1,10 @@
 package com.housekeeping.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -31,6 +32,9 @@ public class FileUploadController {
 
     @Value("${rembg.server.url}")
     private String rembgServerUrl;
+
+    @Value("${fuck.server}")
+    private String fuck;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -68,6 +72,10 @@ public class FileUploadController {
             }
 
             byte[] resultBytes = response.getBody();
+
+//            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(fuck + "/classify", requestEntity, String.class);
+//            String classify = classifyResponse.getBody();
+//            System.out.println(classify);
 
             // 메타데이터 설정
             ObjectMetadata metadata = new ObjectMetadata();
