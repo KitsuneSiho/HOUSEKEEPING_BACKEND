@@ -34,7 +34,6 @@ public class AuthController {
             return ResponseEntity.status(500).body(null);
         }
 
-        System.out.println("Asdfasdfasdfasdfasdfa: " + userDTO);
 
         User user = userRepository.findByEmailAndUserPlatform(userDTO.getEmail(), userDTO.getUserPlatform()).orElseThrow();
 
