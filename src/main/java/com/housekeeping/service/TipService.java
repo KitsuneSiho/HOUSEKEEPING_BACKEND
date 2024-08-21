@@ -16,4 +16,6 @@ public interface TipService {
     void deleteTip(Long id);
 
     Tip incrementViewAndGetTip(Long id);
+
+    boolean isAuthorizedToModifyTip(Long userId, Long tipId);
 }
