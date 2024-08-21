@@ -31,7 +31,6 @@ public class RecipeServiceImpl implements RecipeService {
     // HTTP 요청을 위한 RestTemplate
     private final RestTemplate restTemplate;
 
-    // 생성자 주입을 통한 RestTemplate 초기화
     public RecipeServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
