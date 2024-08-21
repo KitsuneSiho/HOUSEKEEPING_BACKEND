@@ -45,7 +45,7 @@ public class FriendServiceImpl implements FriendService {
             friendDTOs.add(UserDTO.builder()
                     .userId(friend.get(QFriend.friend.friendUser2.userId))
                     .nickname(friend.get(QFriend.friend.friendUser2.nickname))
-                    .profileImageUrl(friend.get(QFriend.friend.friendUser1.profileImageUrl))
+                    .profileImageUrl(friend.get(QFriend.friend.friendUser2.profileImageUrl))
                     .build());
         }
 
