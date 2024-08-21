@@ -17,7 +17,7 @@ COPY nginx.https.conf /etc/nginx/conf.d/default.conf
 # Create necessary directories for Certbot and Nginx
 RUN mkdir -p /var/www/certbot /etc/letsencrypt
 
-RUN openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
+# RUN openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
 
 # Expose port for HTTP
 EXPOSE 80
