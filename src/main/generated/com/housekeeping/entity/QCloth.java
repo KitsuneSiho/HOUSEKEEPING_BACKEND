@@ -26,6 +26,8 @@ public class QCloth extends EntityPathBase<Cloth> {
 
     public final StringPath clothCustomTag = createString("clothCustomTag");
 
+    public final StringPath clothHowWash = createString("clothHowWash");
+
     public final NumberPath<Long> clothId = createNumber("clothId", Long.class);
 
     public final StringPath clothMaterial = createString("clothMaterial");
