@@ -137,7 +137,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://re.bit-two.com", "https://socket.bit-two.com","http://192.168.0.42:5000"));
+//        configuration.setAllowedOrigins(Arrays.asList("https://re.bit-two.com", "https://socket.bit-two.com","http://192.168.0.42:5000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000","http://192.168.0.42:5000"));
         //알림 기능 실사용시 API 대시보드에 호스팅된 서버 IP 추가
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
