@@ -32,6 +32,9 @@ public class FileUploadController {
     @Value("${rembg.server.url}")
     private String rembgServerUrl;
 
+    @Value("${label.server.url}")
+    private String classifyServerUrl;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
@@ -68,6 +71,11 @@ public class FileUploadController {
             }
 
             byte[] resultBytes = response.getBody();
+
+            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(classifyServerUrl + "/classify", requestEntity, String.class);
+            String classify = classifyResponse.getBody();
+            System.out.println(classify);
+
 
             // 메타데이터 설정
             ObjectMetadata metadata = new ObjectMetadata();
