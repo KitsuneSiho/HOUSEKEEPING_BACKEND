@@ -14,7 +14,7 @@ import java.io.IOException;
 @RestController
 public class ClothesClassficationController {
 
-    @Value("${flask.server.url}")
+    @Value("${rembg.server.url}")
     private String flaskServerUrl;
 
     @PostMapping("/upload")
