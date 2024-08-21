@@ -10,7 +10,9 @@ import com.housekeeping.repository.RoomRepository;
 import com.housekeeping.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,8 +106,9 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-
-
-
+    @Transactional
+    public void updateRoomPollution(Long roomId, int pollution) {
+        roomRepository.updateRoomPollution(roomId, pollution);
+    }
 
 }
