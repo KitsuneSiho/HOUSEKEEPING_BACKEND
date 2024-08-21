@@ -51,7 +51,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String redirectUrl;
         if (isNewUser) {
-            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+            redirectUrl = UriComponentsBuilder.fromUriString("https://re.bit-two.com/oauth2/redirect")
                     .queryParam("token", accessToken)
                     .queryParam("redirectPath", "/firstLogin")
                     .queryParam("name", URLEncoder.encode(userDto.getName(), StandardCharsets.UTF_8))
@@ -65,7 +65,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
                         .build().toUriString();
             }
         } else {
-            redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+            redirectUrl = UriComponentsBuilder.fromUriString("https://re.bit-two.com/oauth2/redirect")
                     .queryParam("token", accessToken)
                     .queryParam("redirectPath", "/main")
                     .build().toUriString();
