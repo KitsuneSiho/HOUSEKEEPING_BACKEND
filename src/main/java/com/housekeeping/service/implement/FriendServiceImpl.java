@@ -37,6 +37,7 @@ public class FriendServiceImpl implements FriendService {
             friendDTOs.add(UserDTO.builder()
                     .userId(friend.get(QFriend.friend.friendUser1.userId))
                     .nickname(friend.get(QFriend.friend.friendUser1.nickname))
+                    .profileImageUrl(friend.get(QFriend.friend.friendUser1.profileImageUrl))
                     .build());
         }
 
@@ -44,6 +45,7 @@ public class FriendServiceImpl implements FriendService {
             friendDTOs.add(UserDTO.builder()
                     .userId(friend.get(QFriend.friend.friendUser2.userId))
                     .nickname(friend.get(QFriend.friend.friendUser2.nickname))
+                    .profileImageUrl(friend.get(QFriend.friend.friendUser2.profileImageUrl))
                     .build());
         }
 
@@ -61,6 +63,7 @@ public class FriendServiceImpl implements FriendService {
             friendDTOs.add(UserDTO.builder()
                     .userId(friend.get(QFriend.friend.friendUser1.userId))
                     .nickname(friend.get(QFriend.friend.friendUser1.nickname))
+                    .profileImageUrl(friend.get(QFriend.friend.friendUser1.profileImageUrl))
                     .build());
         }
 
@@ -68,6 +71,7 @@ public class FriendServiceImpl implements FriendService {
             friendDTOs.add(UserDTO.builder()
                     .userId(friend.get(QFriend.friend.friendUser2.userId))
                     .nickname(friend.get(QFriend.friend.friendUser2.nickname))
+                    .profileImageUrl(friend.get(QFriend.friend.friendUser1.profileImageUrl))
                     .build());
         }
 
@@ -81,6 +85,7 @@ public class FriendServiceImpl implements FriendService {
                 .map(user -> UserDTO.builder()
                         .userId(user.getUserId())
                         .nickname(user.getNickname())
+                        .profileImageUrl(user.getProfileImageUrl())
                         .build())
                 .collect(Collectors.toList());
     }

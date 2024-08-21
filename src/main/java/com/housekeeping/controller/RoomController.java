@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/room")
@@ -42,4 +43,10 @@ public class RoomController {
         return ResponseEntity.ok("Room name updated successfully");
     }
 
+    // 방 오염도 업데이트
+    @PatchMapping("/updatePollution/{roomId}")
+    public ResponseEntity<Void> updatePollution(@PathVariable Long roomId, @RequestBody RoomDTO roomDTO) {
+        roomService.updateRoomPollution(roomId, roomDTO.getRoomPollution());
+        return ResponseEntity.ok().build();
+    }
 }
