@@ -44,7 +44,7 @@ public class FoodExpirationAlertController {
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
     }
 
-    @Scheduled(cron = "0 19 21 * * ?")
+    @Scheduled(cron = "0 13 19 * * ?")
     public void checkFoodExpirationAndSendAlerts() {
         logger.info("checkFoodExpirationAndSendAlerts method started.");
         LocalDate today = LocalDate.now();
@@ -85,7 +85,7 @@ public class FoodExpirationAlertController {
     private void sendExpirationAlert(User user, Food food, String timeFrame) {
         logger.info("Attempting to send alert for food: {} to user: {}", food.getFoodName(), user.getPhoneNumber());
         Message message = new Message();
-        message.setFrom("01041017756"); // 실제 등록된 발신번호
+        message.setFrom("01052740124"); // 실제 등록된 발신번호
         message.setTo(user.getPhoneNumber());
         message.setText(String.format("[냉장고 관리 알림] %s의 유통기한이 %s 만료됩니다. 확인해주세요!", food.getFoodName(), timeFrame));
 
