@@ -37,8 +37,8 @@ public class FileUploadController {
     @Value("${label.server.url}")
     private String classifyServerUrl;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/closetUpload")
+    public ResponseEntity<String> closetUploadFile(@RequestParam("file") MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
         String fileName = UUID.randomUUID().toString(); // 랜덤 UUID 생성
         String fileExtension = "";
@@ -147,6 +147,64 @@ public class FileUploadController {
             String fileUrl = amazonS3.getUrl(bucketName, newFileName).toString();
             String combined_data = fileUrl+","+classify;
             return ResponseEntity.ok(combined_data); // URL 반환
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + originalFileName);
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String originalFileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString(); // 랜덤 UUID 생성
+        String fileExtension = "";
+
+        // 파일 확장자 추출
+        if (originalFileName != null && originalFileName.contains(".")) {
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
+
+        // 새 파일명 생성
+        String newFileName = fileName + fileExtension;
+
+        try {
+            // Call the Rembg server to remove the background
+            RestTemplate restTemplate = new RestTemplate();
+            byte[] fileBytes = file.getBytes();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", new ByteArrayResource(fileBytes) {
+                @Override
+                public String getFilename() {
+                    return originalFileName;
+                }
+            });
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            ResponseEntity<byte[]> response = restTemplate.postForEntity(rembgServerUrl + "/remove-bg", requestEntity, byte[].class);
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<>("Failed to remove background", response.getStatusCode());
+            }
+
+            byte[] resultBytes = response.getBody();
+
+            // 메타데이터 설정
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(resultBytes.length);
+            metadata.setContentType(file.getContentType());
+
+            // PutObjectRequest 생성 및 PublicRead 권한 설정
+            PutObjectRequest request = new PutObjectRequest(bucketName, newFileName, new ByteArrayInputStream(resultBytes), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead);
+
+            // 파일 업로드
+            amazonS3.putObject(request);
+
+            // 업로드된 파일의 URL 생성
+            String fileUrl = amazonS3.getUrl(bucketName, newFileName).toString();
+            return ResponseEntity.ok(fileUrl); // URL 반환
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + originalFileName);
