@@ -84,7 +84,7 @@ public class PollutionAlertController {
         }
 
     }
-    @Scheduled(cron = "00 30 19 * * ?")
+    @Scheduled(cron = "00 40 19 * * ?")
     public void checkPollutionLevelsAtNight() {
         logger.info("Scheduled task to check pollution levels at 20:00 started.");
         List<Long> roomIds = roomService.getAllRoomIds(); // 모든 방의 ID를 가져오는 메서드가 필요합니다.
