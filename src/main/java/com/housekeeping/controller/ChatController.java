@@ -6,6 +6,7 @@ import com.housekeeping.DTO.MessageDTO;
 import com.housekeeping.DTO.UserDTO;
 import com.housekeeping.entity.ChatRoom;
 import com.housekeeping.entity.Message;
+import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.ChatRoomType;
 import com.housekeeping.repository.ChatRoomRepository;
 import com.housekeeping.service.ChatService;
@@ -82,9 +83,12 @@ public class ChatController {
 
         List<UserDTO> chatRoomUser = new ArrayList<>();
 
-        for (String user : chatRoomUserList) {
-            chatRoomUser.add(UserDTO.builder().nickname(user).build());
+        for (String userNickname : chatRoomUserList) {
+
+            User user = userService.getUserByNickname(userNickname);
+            chatRoomUser.add(UserDTO.builder().nickname(userNickname).profileImageUrl(user.getProfileImageUrl()).build());
         }
+
         List<UserDTO> friends = friendService.getFriends(userId).stream()
                 .filter(friend -> !chatRoomUserList.contains(friend.getNickname()))
                 .collect(Collectors.toList());
