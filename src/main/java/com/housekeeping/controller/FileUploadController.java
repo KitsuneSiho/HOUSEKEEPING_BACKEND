@@ -18,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/files")
@@ -63,10 +65,62 @@ public class FileUploadController {
                 }
             });
 
+            //누끼 따진 이미지를 분류서버로 올려 라벨추출
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             ResponseEntity<String> classifyResponse = restTemplate.postForEntity(classifyServerUrl + "/classify", requestEntity, String.class);
-            String classify = classifyResponse.getBody();
-            System.out.println(classify);
+            //JSON 형식의 반환값.
+            String classify_json = classifyResponse.getBody();
+            System.out.println(classify_json);
+            //이를 한국어로 변환
+            String classify = "";
+            // "label" 값을 추출하기 위한 정규식 패턴
+            Pattern pattern = Pattern.compile("\"label\"\\s*:\\s*\"(.*?)\"");
+            Matcher matcher = pattern.matcher(classify_json);
+            if (matcher.find()) {
+                // label 값 추출
+                String label = matcher.group(1);
+
+                // label 값을 한국어로 변환
+                switch (label) {
+                    case "dress":
+                        classify = "드레스";
+                        break;
+                    case "hat":
+                        classify = "모자";
+                        break;
+                    case "longsleeve":
+                        classify = "긴팔";
+                        break;
+                    case "outwear":
+                        classify = "아우터";
+                        break;
+                    case "pants":
+                        classify = "바지";
+                        break;
+                    case "shirt":
+                        classify = "셔츠";
+                        break;
+                    case "shoes":
+                        classify = "신발";
+                        break;
+                    case "shorts":
+                        classify = "반바지";
+                        break;
+                    case "skirt":
+                        classify = "치마";
+                        break;
+                    case "t-shirt":
+                        classify = "티셔츠";
+                        break;
+                    default:
+                        classify = "알 수 없는 항목";
+                        break;
+                }
+            } else {
+                classify = "null";
+            }
+
+            System.out.println("분류 결과: " + classify);
 
             ResponseEntity<byte[]> response = restTemplate.postForEntity(rembgServerUrl + "/remove-bg", requestEntity, byte[].class);
 
