@@ -38,6 +38,8 @@ public class QRoutine extends EntityPathBase<Routine> {
 
     public final StringPath routineName = createString("routineName");
 
+    public final ListPath<Schedule, QSchedule> schedules = this.<Schedule, QSchedule>createList("schedules", Schedule.class, QSchedule.class, PathInits.DIRECT2);
+
     public QRoutine(String variable) {
         this(Routine.class, forVariable(variable), INITS);
     }

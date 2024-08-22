@@ -1,10 +1,10 @@
 package com.housekeeping.controller;
 
-import com.housekeeping.DTO.PostDTO;
-import com.housekeeping.entity.Post;
+import com.housekeeping.DTO.AdminTipDTO;
+import com.housekeeping.entity.AdminTip;
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.TipCategory;
-import com.housekeeping.service.PostService;
+import com.housekeeping.service.AdminTipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,65 +17,67 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class PostController {
-    private final PostService postService;
+public class AdminTipController {
+    private final AdminTipService postService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDto, @AuthenticationPrincipal User user) {
+    public ResponseEntity<AdminTipDTO> createPost(@RequestBody AdminTipDTO postDto, @AuthenticationPrincipal User user) {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Post post = Post.builder()
+        AdminTip post = AdminTip.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .category(postDto.getCategory())
                 .author(user)
                 .createdAt(LocalDateTime.now())
+                .viewCount(0)
                 .build();
 
-        Post savedPost = postService.createPost(post);
+        AdminTip savedPost = postService.createPost(post);
         return ResponseEntity.ok(convertToDTO(savedPost));
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<List<AdminTipDTO>> getAllPosts() {
+        List<AdminTipDTO> postDTOs = postService.getAllPosts().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(postDTOs);
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable TipCategory category) {
-        List<Post> posts = postService.getPostsByCategory(category);
-        List<PostDTO> postDTOs = posts.stream()
+    public ResponseEntity<List<AdminTipDTO>> getPostsByCategory(@PathVariable TipCategory category) {
+        List<AdminTipDTO> postDTOs = postService.getPostsByCategory(category).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(postDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable Long id) {
+    public ResponseEntity<AdminTipDTO> getPost(@PathVariable Long id) {
         log.info("Fetching post with id: {}", id);
-        Post post = postService.getPostById(id);
+        AdminTip post = postService.getPostById(id);
         if (post == null) {
             log.warn("Post not found with id: {}", id);
             return ResponseEntity.notFound().build();
         }
-        PostDTO postDTO = convertToDTO(post);
+        AdminTipDTO postDTO = convertToDTO(post);
         log.info("Returning post: {}", postDTO);
         return ResponseEntity.ok(postDTO);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
-        Post updatedPost = postService.updatePost(id, postDTO.getTitle(), postDTO.getContent());
-        return ResponseEntity.ok(updatedPost);
+    public ResponseEntity<AdminTipDTO> updatePost(@PathVariable Long id, @RequestBody AdminTipDTO postDTO) {
+        AdminTip updatedPost = postService.updatePost(id, postDTO.getTitle(), postDTO.getContent());
+        return ResponseEntity.ok(convertToDTO(updatedPost));
     }
 
     @DeleteMapping("/{id}")
@@ -85,14 +87,23 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    private PostDTO convertToDTO(Post post) {
-        return PostDTO.builder()
+    @GetMapping("/{id}/view")
+    public ResponseEntity<Void> incrementViewCount(@PathVariable Long id) {
+        log.info("Increment view count for post with id: {}", id);
+        postService.incrementViewCount(id);
+        return ResponseEntity.ok().build();
+    }
+
+    private AdminTipDTO convertToDTO(AdminTip post) {
+        return AdminTipDTO.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .category(post.getCategory())
                 .createdAt(post.getCreatedAt())
                 .authorName(post.getAuthor() != null ? post.getAuthor().getNickname() : null)
+                .authorId(post.getAuthor() != null ? post.getAuthor().getUserId() : null)
+                .viewCount(post.getViewCount())
                 .build();
     }
 }

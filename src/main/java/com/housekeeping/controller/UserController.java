@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -76,6 +78,24 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/attendance")
+    public ResponseEntity<?> checkAttendance(@RequestParam("userId") Long userId) {
+        boolean success = userService.checkAttendance(userId);
+        if (success) {
+            return ResponseEntity.ok().body("출석체크 완료");
+        } else {
+            return ResponseEntity.badRequest().body("이미 출석체크를 완료했습니다.");
+        }
+    }
+
+    @GetMapping("/attendance/status")
+    public ResponseEntity<?> getAttendanceStatus(@RequestParam("userId") Long userId) {
+        boolean checked = userService.isAttendanceCheckedToday(userId);
+        return ResponseEntity.ok().body(new HashMap<String, Boolean>() {{
+            put("checked", checked);
+        }});
     }
 }
 

@@ -1,10 +1,9 @@
 package com.housekeeping.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -19,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/files")
@@ -33,8 +34,8 @@ public class FileUploadController {
     @Value("${rembg.server.url}")
     private String rembgServerUrl;
 
-    @Value("${fuck.server}")
-    private String fuck;
+    @Value("${label.server.url}")
+    private String classifyServerUrl;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -64,7 +65,63 @@ public class FileUploadController {
                 }
             });
 
+            //누끼 따진 이미지를 분류서버로 올려 라벨추출
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(classifyServerUrl + "/classify", requestEntity, String.class);
+            //JSON 형식의 반환값.
+            String classify_json = classifyResponse.getBody();
+            System.out.println(classify_json);
+            //이를 한국어로 변환
+            String classify = "";
+            // "label" 값을 추출하기 위한 정규식 패턴
+            Pattern pattern = Pattern.compile("\"label\"\\s*:\\s*\"(.*?)\"");
+            Matcher matcher = pattern.matcher(classify_json);
+            if (matcher.find()) {
+                // label 값 추출
+                String label = matcher.group(1);
+
+                // label 값을 한국어로 변환
+                switch (label) {
+                    case "dress":
+                        classify = "드레스";
+                        break;
+                    case "hat":
+                        classify = "모자";
+                        break;
+                    case "longsleeve":
+                        classify = "긴팔";
+                        break;
+                    case "outwear":
+                        classify = "아우터";
+                        break;
+                    case "pants":
+                        classify = "바지";
+                        break;
+                    case "shirt":
+                        classify = "셔츠";
+                        break;
+                    case "shoes":
+                        classify = "신발";
+                        break;
+                    case "shorts":
+                        classify = "반바지";
+                        break;
+                    case "skirt":
+                        classify = "치마";
+                        break;
+                    case "t-shirt":
+                        classify = "티셔츠";
+                        break;
+                    default:
+                        classify = "알 수 없는 항목";
+                        break;
+                }
+            } else {
+                classify = "null";
+            }
+
+            System.out.println("분류 결과: " + classify);
+
             ResponseEntity<byte[]> response = restTemplate.postForEntity(rembgServerUrl + "/remove-bg", requestEntity, byte[].class);
 
             if (response.getStatusCode() != HttpStatus.OK) {
@@ -73,9 +130,6 @@ public class FileUploadController {
 
             byte[] resultBytes = response.getBody();
 
-//            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(fuck + "/classify", requestEntity, String.class);
-//            String classify = classifyResponse.getBody();
-//            System.out.println(classify);
 
             // 메타데이터 설정
             ObjectMetadata metadata = new ObjectMetadata();
@@ -91,7 +145,8 @@ public class FileUploadController {
 
             // 업로드된 파일의 URL 생성
             String fileUrl = amazonS3.getUrl(bucketName, newFileName).toString();
-            return ResponseEntity.ok(fileUrl); // URL 반환
+            String combined_data = fileUrl+","+classify;
+            return ResponseEntity.ok(combined_data); // URL 반환
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + originalFileName);

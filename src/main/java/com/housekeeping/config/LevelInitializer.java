@@ -24,7 +24,7 @@ public class LevelInitializer {
 
                 LevelEXPTable level2 = new LevelEXPTable();
                 level2.setLevelLevel(2);
-                level2.setLevelName("숙달된조교");
+                level2.setLevelName("숙달된 조교");
                 level2.setLevelRequireEXP(100);
                 levelRepository.save(level2);
 
@@ -34,6 +34,18 @@ public class LevelInitializer {
                 level3.setLevelRequireEXP(300);
                 levelRepository.save(level3);
 
+                LevelEXPTable level4 = new LevelEXPTable();
+                level4.setLevelLevel(4);
+                level4.setLevelName("자취마스터");
+                level4.setLevelRequireEXP(600);
+                levelRepository.save(level4);
+
+                LevelEXPTable level5 = new LevelEXPTable();
+                level5.setLevelLevel(5);
+                level5.setLevelName("자취의 신");
+                level5.setLevelRequireEXP(1000);
+                levelRepository.save(level5);
+
                 System.out.println("기본 레벨 데이터가 생성되었습니다.");
             } else {
                 System.out.println("이미 레벨 데이터가 존재합니다.");
@@ -41,3 +53,4 @@ public class LevelInitializer {
         };
     }
 }
+
