@@ -70,13 +70,9 @@ public class FoodController {
         }
     }
 
-    @GetMapping("/ingredients") //레시피 식재료
-    public ResponseEntity<List<String>> getAllIngredients() {
-        List<String> ingredients = foodService.getAllIngredientNames();
+    @GetMapping("/ingredients/{userId}") //레시피 식재료
+    public ResponseEntity<List<String>> getUserIngredients(@PathVariable Long userId) {
+        List<String> ingredients = foodService.getUserIngredients(userId);
         return ResponseEntity.ok(ingredients);
     }
-
-
-
-
 }

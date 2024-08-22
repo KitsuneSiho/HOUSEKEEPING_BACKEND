@@ -88,6 +88,7 @@ public class FoodServiceImpl implements FoodService {
         List<FoodDTO> userFoods = foodRepository.findAllUserFoods(userId);
         return userFoods.stream()
                 .map(FoodDTO::getFoodName)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
