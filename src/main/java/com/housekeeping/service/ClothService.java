@@ -99,80 +99,155 @@ public class ClothService {
 
     public List<ClothDTO> getClothesByTemperatureAndUserId(int temperature, Long userId) {
         List<Cloth> allClothes = clothRepository.findByUserUserId(userId);
-        Set<String> seenClothTypes = new HashSet<>();
 
-        ClothDTO top = null;
-        ClothDTO bottom = null;
-        ClothDTO outer = null;
-        ClothDTO shoes = null;
-        ClothDTO bag = null;
-        ClothDTO accessory = null;
+        List<ClothDTO> suitableClothes = allClothes.stream()
+                .filter(cloth -> isSuitableForTemperature(cloth, temperature))
+                .map(this::toDTO)
+                .collect(Collectors.toList());
 
-        for (Cloth cloth : allClothes) {
-            if (isSuitableForTemperature(cloth, temperature)) {
-                if (isTop(cloth) && top == null) {
-                    top = toDTO(cloth);
-                } else if (isBottom(cloth) && bottom == null) {
-                    bottom = toDTO(cloth);
-                } else if (isOuter(cloth) && outer == null) {
-                    outer = toDTO(cloth);
-                } else if (isShoes(cloth) && shoes == null) {
-                    shoes = toDTO(cloth);
-                } else if (isBag(cloth) && bag == null) {
-                    bag = toDTO(cloth);
-                } else if (isAccessory(cloth) && accessory == null) {
-                    accessory = toDTO(cloth);
+        return getRandomRecommendations(suitableClothes);
+    }
+
+    private List<ClothDTO> getRandomRecommendations(List<ClothDTO> suitableClothes) {
+        List<ClothDTO> selectedClothes = new ArrayList<>();
+
+        List<ClothDTO> tops = filterByCategory(suitableClothes, "top");
+        List<ClothDTO> bottoms = filterByCategory(suitableClothes, "bottom");
+        List<ClothDTO> outers = filterByCategory(suitableClothes, "outer");
+
+        if (!tops.isEmpty()) {
+            ClothDTO selectedTop = getRandomItem(tops);
+            selectedClothes.add(selectedTop);
+
+            // 하의와의 색상 호환성 체크
+            if (!bottoms.isEmpty()) {
+                ClothDTO selectedBottom = getRandomItem(bottoms);
+                if (areColorsCompatible(selectedTop.getClothColor(), selectedBottom.getClothColor())) {
+                    selectedClothes.add(selectedBottom);
+                } else {
+                    System.out.println("호환되지 않는 색상 조합 (상의 - 하의): " + selectedTop.getClothColor() + " - " + selectedBottom.getClothColor());
                 }
             }
 
-            // Break out of the loop if we have already selected one item from each category
-            if (top != null && bottom != null && outer != null && shoes != null && bag != null && accessory != null) {
-                break;
+            // 아우터와의 색상 호환성 체크
+            if (!outers.isEmpty()) {
+                ClothDTO selectedOuter = getRandomItem(outers);
+                if (areColorsCompatible(selectedTop.getClothColor(), selectedOuter.getClothColor())) {
+                    selectedClothes.add(selectedOuter);
+                } else {
+                    System.out.println("호환되지 않는 색상 조합 (상의 - 아우터): " + selectedTop.getClothColor() + " - " + selectedOuter.getClothColor());
+                }
             }
         }
 
-        return Arrays.asList(top, bottom, outer, shoes, bag, accessory)
-                .stream()
-                .filter(Objects::nonNull)
+        List<ClothDTO> shoes = filterByCategory(suitableClothes, "shoes");
+        if (!shoes.isEmpty()) selectedClothes.add(getRandomItem(shoes));
+
+        List<ClothDTO> bags = filterByCategory(suitableClothes, "bag");
+        if (!bags.isEmpty()) selectedClothes.add(getRandomItem(bags));
+
+        List<ClothDTO> accessories = filterByCategory(suitableClothes, "accessory");
+        if (!accessories.isEmpty()) selectedClothes.add(getRandomItem(accessories));
+
+        return selectedClothes;
+    }
+    public boolean areColorsCompatible(String color1, String color2) {
+        // 중립 색상 목록과 조합할 수 있는 색상을 정의합니다.
+        List<String> neutralColors = Arrays.asList("검정", "회색", "흰색", "베이지");
+        List<String> compatibleColors = Arrays.asList("초록", "네이비");
+
+        // 호환되지 않는 색상 조합 정의
+        Map<String, List<String>> incompatibleColorsMap = new HashMap<>();
+        incompatibleColorsMap.put("빨강", Arrays.asList("초록", "네이비"));
+        incompatibleColorsMap.put("네이비", Arrays.asList("노랑", "주황"));
+        incompatibleColorsMap.put("초록", Arrays.asList("빨강", "핑크","네이비"));
+        incompatibleColorsMap.put("주황", Arrays.asList("빨강", "핑크"));
+        // 추가적인 색상 조합을 여기에 정의
+
+
+        // 중립 색상은 어떤 색상과도 호환 가능
+        if (neutralColors.contains(color1) || neutralColors.contains(color2)) {
+            return true;
+        }
+
+        // 호환되지 않는 색상 조합이 있는지 확인
+        if (incompatibleColorsMap.containsKey(color1) && incompatibleColorsMap.get(color1).contains(color2)) {
+            return false;
+        }
+
+        if (incompatibleColorsMap.containsKey(color2) && incompatibleColorsMap.get(color2).contains(color1)) {
+            return false;
+        }
+
+        // 기본 호환 가능 색상
+        if (compatibleColors.contains(color1) && compatibleColors.contains(color2)) {
+            return true;
+        }
+
+        // 호환되지 않는 색상이 아니면서, 호환 가능한 색상도 아닌 경우, 기본적으로 호환
+        return true;
+    }
+
+    private List<ClothDTO> filterByCategory(List<ClothDTO> clothes, String category) {
+        return clothes.stream()
+                .filter(cloth -> getCategoriesByType(category).contains(cloth.getClothType()))
                 .collect(Collectors.toList());
     }
 
+    private ClothDTO getRandomItem(List<ClothDTO> clothes) {
+        Random rand = new Random();
+        return clothes.get(rand.nextInt(clothes.size()));
+    }
+
     private boolean isSuitableForTemperature(Cloth cloth, int temperature) {
-        // 온도에 따른 의상 추천 로직
         if (temperature >= 28) {
-            return isTop(cloth) && (cloth.getClothType().equals("반팔") || cloth.getClothType().equals("셔츠")) ||
-                    isBottom(cloth) && (cloth.getClothType().equals("반바지") || cloth.getClothType().equals("스커트")) ||
-                    isShoes(cloth) && cloth.getClothType().equals("샌들/슬리퍼") ||
-                    isAccessory(cloth) && (cloth.getClothType().equals("모자") || cloth.getClothType().equals("선글라스")) ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
+            return (isTop(cloth) && (cloth.getClothType().equals("반팔") || cloth.getClothType().equals("민소매"))) ||
+                    (isBottom(cloth) && (cloth.getClothType().equals("반바지") || cloth.getClothType().equals("스커트"))) ||
+                    (isShoes(cloth) && cloth.getClothType().equals("샌들/슬리퍼")) ||
+                    (isAccessory(cloth) && (cloth.getClothType().equals("모자") || cloth.getClothType().equals("선글라스"))) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
         } else if (temperature >= 23 && temperature < 28) {
-            return isTop(cloth) && (cloth.getClothType().equals("반팔") || cloth.getClothType().equals("셔츠")) ||
-                    isBottom(cloth) && cloth.getClothType().equals("긴바지") ||
-                    isShoes(cloth) && cloth.getClothType().equals("운동화") ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
-        } else if (temperature >= 17 && temperature < 23) {
-            return isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("카라티")) ||
-                    isBottom(cloth) && cloth.getClothType().equals("긴바지") ||
-                    isOuter(cloth) && (cloth.getClothType().equals("후드 집업") || cloth.getClothType().equals("바람막이")) ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
+            return (isTop(cloth) && (cloth.getClothType().equals("반팔") || cloth.getClothType().equals("긴팔"))) ||
+                    (isBottom(cloth) && (cloth.getClothType().equals("긴바지") || cloth.getClothType().equals("반바지"))) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("운동화") || cloth.getClothType().equals("스니커즈"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
+        } else if (temperature >= 20 && temperature < 23) {
+            return (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("셔츠"))) ||
+                    (isBottom(cloth) && (cloth.getClothType().equals("반바지") || cloth.getClothType().equals("긴바지"))) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("운동화") || cloth.getClothType().equals("스니커즈"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
+        } else if (temperature >= 17 && temperature < 20) {
+            return (isTop(cloth) && cloth.getClothType().equals("긴팔")) ||
+                    (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isOuter(cloth) && (cloth.getClothType().equals("후드 집업") || cloth.getClothType().equals("바람막이"))) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("운동화") || cloth.getClothType().equals("스니커즈"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
         } else if (temperature >= 12 && temperature < 17) {
-            return isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("니트")) ||
-                    isBottom(cloth) && cloth.getClothType().equals("긴바지") ||
-                    isOuter(cloth) && (cloth.getClothType().equals("가디건") || cloth.getClothType().equals("코트")) ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
+            return (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("셔츠"))) ||
+                    (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isOuter(cloth) && (cloth.getClothType().equals("후드 집업") || cloth.getClothType().equals("바람막이"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
         } else if (temperature >= 5 && temperature < 12) {
-            return isTop(cloth) && cloth.getClothType().equals("니트") ||
-                    isBottom(cloth) && cloth.getClothType().equals("긴바지") ||
-                    isOuter(cloth) && (cloth.getClothType().equals("코트") || cloth.getClothType().equals("패딩")) ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
+            return (isTop(cloth) && cloth.getClothType().equals("니트")) ||
+                    (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
+                    (isOuter(cloth) && (cloth.getClothType().equals("코트") || cloth.getClothType().equals("패딩"))) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         } else if (temperature < 5) {
-            return isOuter(cloth) && (cloth.getClothType().equals("패딩") || cloth.getClothType().equals("코트")) ||
-                    isBottom(cloth) && cloth.getClothType().equals("긴바지") ||
-                    isAccessory(cloth) && (cloth.getClothType().equals("모자") || cloth.getClothType().equals("양말")) ||
-                    isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백"));
+            return (isOuter(cloth) && (cloth.getClothType().equals("패딩") || cloth.getClothType().equals("코트"))) ||
+                    (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("니트"))) ||
+                    (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
+                    (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         }
+
         return false;
     }
+
 
     private boolean isTop(Cloth cloth) {
         return Arrays.asList("반팔", "긴팔", "셔츠", "민소매", "카라티", "니트").contains(cloth.getClothType());
@@ -245,3 +320,4 @@ public class ClothService {
         return cloth;
     }
 }
+

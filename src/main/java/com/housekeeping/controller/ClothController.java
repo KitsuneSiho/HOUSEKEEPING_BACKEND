@@ -73,4 +73,9 @@ public class ClothController {
         List<ClothDTO> recommendedClothes = clothService.getClothesByTemperatureAndUserId(temperature, userId);
         return ResponseEntity.ok(recommendedClothes);
     }
+    @GetMapping("/checkColorCompatibility")
+    public ResponseEntity<Boolean> checkColorCompatibility(@RequestParam String color1, @RequestParam String color2) {
+        boolean isCompatible = clothService.areColorsCompatible(color1, color2);
+        return ResponseEntity.ok(isCompatible);
+    }
 }
