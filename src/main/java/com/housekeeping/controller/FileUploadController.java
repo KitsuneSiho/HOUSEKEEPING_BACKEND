@@ -64,6 +64,10 @@ public class FileUploadController {
             });
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(classifyServerUrl + "/classify", requestEntity, String.class);
+            String classify = classifyResponse.getBody();
+            System.out.println(classify);
+
             ResponseEntity<byte[]> response = restTemplate.postForEntity(rembgServerUrl + "/remove-bg", requestEntity, byte[].class);
 
             if (response.getStatusCode() != HttpStatus.OK) {
@@ -71,10 +75,6 @@ public class FileUploadController {
             }
 
             byte[] resultBytes = response.getBody();
-
-            ResponseEntity<String> classifyResponse = restTemplate.postForEntity(classifyServerUrl + "/classify", requestEntity, String.class);
-            String classify = classifyResponse.getBody();
-            System.out.println(classify);
 
 
             // 메타데이터 설정
@@ -91,7 +91,8 @@ public class FileUploadController {
 
             // 업로드된 파일의 URL 생성
             String fileUrl = amazonS3.getUrl(bucketName, newFileName).toString();
-            return ResponseEntity.ok(fileUrl); // URL 반환
+            String combined_data = fileUrl+","+classify;
+            return ResponseEntity.ok(combined_data); // URL 반환
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + originalFileName);
