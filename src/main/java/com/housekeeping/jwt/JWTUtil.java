@@ -2,9 +2,14 @@ package com.housekeeping.jwt;
 
 import com.housekeeping.entity.User;
 import com.housekeeping.entity.enums.UserPlatform;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -82,5 +87,24 @@ public class JWTUtil {
 
     public UserPlatform getTokenPlatform(String token) {
         return UserPlatform.valueOf(getClaims(token).get("platform", String.class));
+    }
+
+    //게시글, 댓글 타유저 삭제/수정 방지용 본인인증
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof OAuth2User) {
+            OAuth2User oauth2User = (OAuth2User) principal;
+            return Long.parseLong(oauth2User.getName());
+        } else if (principal instanceof User) {
+            User user = (User) principal;
+            return user.getUserId();
+        }
+
+        return null;
     }
 }

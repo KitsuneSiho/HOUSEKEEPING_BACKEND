@@ -71,4 +71,10 @@ public class TipServiceImpl implements TipService {
         tip.setTipViews(tip.getTipViews() + 1);
         return tipRepository.save(tip);
     }
+
+    @Override
+    public boolean isAuthorizedToModifyTip(Long userId, Long tipId) {
+        Tip tip = getTipById(tipId);
+        return tip.getUser().getUserId().equals(userId);
+    }
 }

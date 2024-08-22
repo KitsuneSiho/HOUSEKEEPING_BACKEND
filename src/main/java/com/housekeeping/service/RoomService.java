@@ -9,10 +9,13 @@ import com.housekeeping.entity.User;
 import com.housekeeping.repository.RoomRepository;
 import com.housekeeping.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RoomService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoomService.class);
 
     @Autowired
     private final RoomRepository roomRepository;
@@ -111,4 +116,25 @@ public class RoomService {
         roomRepository.updateRoomPollution(roomId, pollution);
     }
 
+    public double getRoomPollution(Long roomId) {
+        logger.info("Fetching pollution level for roomId: {}", roomId);
+        Room room = roomRepository.findById(roomId).orElse(null);
+        double pollution = room != null ? room.getRoomPollution() : 0;
+        logger.info("Fetched pollution level for roomId: {} is {}", roomId, pollution);
+        return pollution;
+    }
+
+    public User getRoomOwner(Long roomId) {
+        logger.info("Fetching owner for roomId: {}", roomId);
+        Room room = roomRepository.findById(roomId).orElse(null);
+        User user = room != null ? room.getUser() : null;
+        logger.info("Fetched owner for roomId: {} is {}", roomId, user != null ? user.getUserId() : "null");
+        return user;
+    }
+
+    public List<Long> getAllRoomIds() {
+        return roomRepository.findAll().stream()
+                .map(Room::getRoomId)
+                .collect(Collectors.toList());
+    }
 }
