@@ -17,6 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TipDTO {
     private Long tipId;
+    private Long userId;
     private TipCategory tipCategory;
     private String tipTitle;
     private String tipContent;
