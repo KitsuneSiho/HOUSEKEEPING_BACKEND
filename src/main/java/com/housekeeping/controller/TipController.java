@@ -108,6 +108,7 @@ public class TipController {
         return ResponseEntity.ok(convertToDTO(updatedTip));
     }
 
+    //UserController로 옮기는게 나은데
     @GetMapping("/current-user")
     public ResponseEntity<Map<String, Long>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
