@@ -60,7 +60,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
                 FriendRequest friendRequest = friendRequestOptional.get();
                 statusMap.put(receiverId, friendRequest.getRequestStatus());
             } else {
-                statusMap.put(receiverId, null); // 친구 요청이 없을 경우 null로 설정
+                statusMap.put(receiverId, RequestStatus.DECLINED); // 친구 요청이 없을 경우 거절로 설정
             }
         }
 
