@@ -70,7 +70,7 @@ public class PollutionAlertController {
         Message message = new Message();
         message.setFrom("01052740124"); // 실제 등록된 발신번호
         message.setTo(user.getPhoneNumber());
-        message.setText(String.format("[환경 알림] 방의 오염도가 %s%%를 넘었습니다. 확인해주세요!", pollutionLevel));
+        message.setText(String.format("[청소 알림] 방의 오염도가 %s%%를 넘었습니다. 확인해주세요!", pollutionLevel));
 
         try {
             logger.info("Attempting to send SMS to {}", user.getPhoneNumber());

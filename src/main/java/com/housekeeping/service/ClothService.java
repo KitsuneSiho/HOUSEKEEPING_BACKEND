@@ -152,18 +152,16 @@ public class ClothService {
         return selectedClothes;
     }
     public boolean areColorsCompatible(String color1, String color2) {
-        // 중립 색상 목록과 조합할 수 있는 색상을 정의합니다.
+        // 중립 색상 목록,  조합 색상
         List<String> neutralColors = Arrays.asList("검정", "회색", "흰색", "베이지");
         List<String> compatibleColors = Arrays.asList("초록", "네이비");
 
-        // 호환되지 않는 색상 조합 정의
+        // 호환되지 않는 색상 조합
         Map<String, List<String>> incompatibleColorsMap = new HashMap<>();
         incompatibleColorsMap.put("빨강", Arrays.asList("초록", "네이비"));
         incompatibleColorsMap.put("네이비", Arrays.asList("노랑", "주황"));
         incompatibleColorsMap.put("초록", Arrays.asList("빨강", "핑크","네이비"));
         incompatibleColorsMap.put("주황", Arrays.asList("빨강", "핑크"));
-        // 추가적인 색상 조합을 여기에 정의
-
 
         // 중립 색상은 어떤 색상과도 호환 가능
         if (neutralColors.contains(color1) || neutralColors.contains(color2)) {
@@ -229,6 +227,7 @@ public class ClothService {
             return (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("셔츠"))) ||
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
                     (isOuter(cloth) && (cloth.getClothType().equals("후드 집업") || cloth.getClothType().equals("바람막이"))) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("운동화") || cloth.getClothType().equals("스니커즈"))) ||
                     (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
         } else if (temperature >= 5 && temperature < 12) {
@@ -236,11 +235,13 @@ public class ClothService {
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
                     (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
                     (isOuter(cloth) && (cloth.getClothType().equals("코트") || cloth.getClothType().equals("패딩"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         } else if (temperature < 5) {
             return (isOuter(cloth) && (cloth.getClothType().equals("패딩") || cloth.getClothType().equals("코트"))) ||
                     (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("니트"))) ||
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         }
