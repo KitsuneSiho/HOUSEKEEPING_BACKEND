@@ -44,7 +44,7 @@ public class FoodExpirationAlertController {
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
     }
 
-    @Scheduled(cron = "0 00 20 * * ?")
+    @Scheduled(cron = "0 00 22 * * ?")
     public void checkFoodExpirationAndSendAlerts() {
         logger.info("checkFoodExpirationAndSendAlerts method started.");
         LocalDate today = LocalDate.now();
