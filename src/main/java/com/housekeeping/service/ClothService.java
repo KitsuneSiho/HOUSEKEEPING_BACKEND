@@ -229,6 +229,7 @@ public class ClothService {
             return (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("셔츠"))) ||
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
                     (isOuter(cloth) && (cloth.getClothType().equals("후드 집업") || cloth.getClothType().equals("바람막이"))) ||
+                    (isShoes(cloth) && (cloth.getClothType().equals("운동화") || cloth.getClothType().equals("스니커즈"))) ||
                     (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백")));
         } else if (temperature >= 5 && temperature < 12) {
@@ -236,17 +237,20 @@ public class ClothService {
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
                     (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
                     (isOuter(cloth) && (cloth.getClothType().equals("코트") || cloth.getClothType().equals("패딩"))) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         } else if (temperature < 5) {
             return (isOuter(cloth) && (cloth.getClothType().equals("패딩") || cloth.getClothType().equals("코트"))) ||
                     (isTop(cloth) && (cloth.getClothType().equals("긴팔") || cloth.getClothType().equals("니트"))) ||
                     (isBottom(cloth) && cloth.getClothType().equals("긴바지")) ||
+                    (isAccessory(cloth) && cloth.getClothType().equals("양말")) ||
                     (isShoes(cloth) && (cloth.getClothType().equals("스니커즈") || cloth.getClothType().equals("운동화"))) ||
                     (isBag(cloth) && (cloth.getClothType().equals("백팩") || cloth.getClothType().equals("크로스백") || cloth.getClothType().equals("토트백")));
         }
 
         return false;
     }
+
 
 
     private boolean isTop(Cloth cloth) {
