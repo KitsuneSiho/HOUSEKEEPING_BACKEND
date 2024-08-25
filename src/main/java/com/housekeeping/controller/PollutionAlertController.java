@@ -70,7 +70,7 @@ public class PollutionAlertController {
         Message message = new Message();
         message.setFrom("01052740124"); // 실제 등록된 발신번호
         message.setTo(user.getPhoneNumber());
-        message.setText(String.format("[환경 알림] 방의 오염도가 %s%%를 넘었습니다. 확인해주세요!", pollutionLevel));
+        message.setText(String.format("[청소 알림] 방의 오염도가 %s%%를 넘었습니다. 확인해주세요!", pollutionLevel));
 
         try {
             logger.info("Attempting to send SMS to {}", user.getPhoneNumber());
@@ -84,7 +84,7 @@ public class PollutionAlertController {
         }
 
     }
-    @Scheduled(cron = "0 00 20 * * ?")
+    @Scheduled(cron = "0 15 17 * * ?")
     public void checkPollutionLevelsAtNight() {
         logger.info("Scheduled task to check pollution levels at 20:00 started.");
         List<Long> roomIds = roomService.getAllRoomIds(); // 모든 방의 ID를 가져오는 메서드가 필요합니다.
