@@ -78,7 +78,7 @@
 #### KitsuneSiho (팀장) : 머신러닝 분류 모델 개발, OCR 기능 구현, Git&Repository 관리
 #### HarryKang (Back-End) : Setting up project security, SNS Login Service, 계정 레벨 및 경험치 구현, Project Build Control
 #### JIHOON (Full-Stack) : NCP 를 활용한 Project Deploy, Chat Service, Entity 설계, Real-time online status display, Intro Anim및 Load Anim 제작
-#### SangWoo (Back-End) : 게시판 CRUD 구현, 조회수 및 댓글기능, SMS Alert, CLOVA AI 레시피 추
+#### SangWoo (Back-End) : 게시판 CRUD 구현, 조회수 및 댓글기능, SMS Alert, CLOVA AI 레시피 추천
 #### boddak (Front-End) : UI/UX 설계, 전체 프론트엔드 아키텍처 설계 및 구현, React, Vite, CSS, JavaScript 등을 사용한 웹 페이지 제작
 #### Hojun (Back-End) : 옷장/옷추천 기능 구현, Weather API, 방 오염도 기능, ObjectStorage, FLASK SERVER, 프로젝트 회의 및 진행사항 관리, 트러블 슈팅
 #### Jaeyoung (Back-End) : TO DO 루틴 기능, Calander, 친구 요청 및 관리, 방명록 구현
